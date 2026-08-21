@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VELOFIT STUDIO | Analisi Posizione Bici & Biomeccanica Video</title>
+  
+  <!-- Modern App Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- MediaPipe Pose & Camera Utils for Real-time AI Biomechanical Tracking -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- ===================== HEADER & MASTHEAD ===================== -->
+  <header class="masthead">
+    <div class="masthead-in">
+      <div class="masthead-top">
+        <div class="brand">
+          <div class="brand-logo">🚴</div>
+          <div class="brand-titles">
+            <div class="kicker" id="txtKicker">Studio Biomeccanico & Posizionamento Bici</div>
+            <h1 id="txtBrandTitle">VELOFIT STUDIO</h1>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center;">
+          
+          <!-- Language Toggle Switcher -->
+          <div class="seg" role="group" aria-label="Lingua / Language" style="margin-right:2px;">
+            <button id="langIT" aria-pressed="true" style="padding:5px 8px;">🇮🇹 IT</button>
+            <button id="langEN" aria-pressed="false" style="padding:5px 8px;">🇬🇧 EN</button>
+          </div>
+
+          <!-- Joint Actions & File Menu Dropdown -->
+          <div class="menu-dropdown-wrap" id="menuDropdownWrap">
+            <button class="btn-menu" id="btnToggleMenu" aria-expanded="false" aria-haspopup="true" title="Menu azioni e file">
+              <span class="hamburger-icon">☰</span> <span id="txtMenuLabel">Azioni / File</span> <span class="caret">▾</span>
+            </button>
+            <div class="menu-dropdown-panel" id="menuDropdownPanel" hidden>
+              <div class="menu-group-title" id="txtMenuSecData">Dati & Esempi</div>
+              <button class="menu-item" id="btnLoadSample">
+                <span class="menu-icon">⚡</span> <span id="txtMenuItemSample">Carica Esempio Argon 18</span>
+              </button>
+              <button class="menu-item" id="btnOpenImport">
+                <span class="menu-icon">📂</span> <span id="txtMenuItemImport">Importa File (.md / .json)</span>
+              </button>
+              
+              <div class="menu-divider"></div>
+              <div class="menu-group-title" id="txtMenuSecExport">Esportazione & Condivisione</div>
+              <button class="menu-item" id="btnExportMd">
+                <span class="menu-icon">💾</span> <span id="txtMenuItemExportMd">Esporta Dossier (.md)</span>
+              </button>
+              <button class="menu-item" id="btnExportJson">
+                <span class="menu-icon">📦</span> <span id="txtMenuItemExportJson">Esporta Dati (.json)</span>
+              </button>
+              <button class="menu-item" id="btnCopyMd">
+                <span class="menu-icon">📋</span> <span id="txtMenuItemCopy">Copia Markdown negli Appunti</span>
+              </button>
+
+              <div class="menu-divider"></div>
+              <button class="menu-item menu-item-danger" id="btnReset">
+                <span class="menu-icon">🔄</span> <span id="txtMenuItemReset">Azzera Scheda Dati</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab active" data-tab="tab-form" role="tab" id="tabNavForm">📋 Scheda Dati</button>
+        <button class="nav-tab" data-tab="tab-video" role="tab" id="tabNavVideo">🎥 Video & Angoli (Pose & Cadenza)</button>
+        <button class="nav-tab" data-tab="tab-diagnostics" role="tab" id="tabNavDiag">🩺 Diagnosi & Proposte</button>
+        <button class="nav-tab" data-tab="tab-calculator" role="tab" id="tabNavCalc">📐 Calcolatori & Simulatore Cockpit</button>
+        <button class="nav-tab" data-tab="tab-comparison" role="tab" id="tabNavComp">⚖️ Confronto Sincronizzato</button>
+        <button class="nav-tab" data-tab="tab-glossary" role="tab" id="tabNavGloss">📖 Glossario</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===================== STICKY ACTION BAR ===================== -->
+  <div class="bar">
+    <div class="bar-in">
+      <div class="seg" role="group" aria-label="Livello di dettaglio">
+        <button id="mRapido" aria-pressed="true">Rapida (40m)</button>
+        <button id="mCompleta" aria-pressed="false">Completa (Fine)</button>
+      </div>
+
+      <button class="btn" id="expandAll">Apri spiegazioni</button>
+
+      <div class="spacer"></div>
+
+      <div class="status-badge">
+        <span class="dot"></span>
+        <span id="saveStatus">Pronto</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PROGRESS TAPE ===================== -->
+  <div class="tape-container">
+    <div class="tape-in">
+      <div class="tape" id="tape">
+        <div class="tape-fill" id="tapeFill" style="width:0%"></div>
+        <svg id="tapeTicks" preserveAspectRatio="none"></svg>
+        <span class="tape-label" id="tapeLabel">0 / 0 compilati</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MAIN APP CONTENT ===================== -->
+  <main class="wrap">
+
+    <!-- TAB 1: SCHEDA DATI & MISURE -->
+    <div class="tab-pane active" id="tab-form">
+      <div id="formContainer"></div>
+    </div>
+
+    <!-- TAB 2: VIDEO ANALYZER & AI POSE ESTIMATION -->
+    <div class="tab-pane" id="tab-video">
+      <div class="video-container-card">
+        
+        <!-- Video Top Toolbar -->
+        <div class="video-top-toolbar">
+          <div class="video-source-group">
+            <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/mov" style="display:none">
+            <button class="btn btn-solid" id="btnUploadVideo">📁 Carica Video</button>
+            <button class="btn btn-accent" id="btnToggleCamera">📷 Avvia Fotocamera</button>
+            <button class="btn" id="btnPlayDemo">🚴 Demo Ciclista</button>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;"><span id="lblViewModeTxt">Inquadratura:</span>
+              <select id="viewModeSelect" style="width:auto; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
+                <option value="lateral" selected>Laterale (Angoli & Cadenza)</option>
+                <option value="frontal">Frontale (Traiettoria Ginocchio)</option>
+              </select>
+            </label>
+
+            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;"><span id="lblSideTxt">Lato:</span>
+              <select id="sideSelect" style="width:auto; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
+                <option value="auto">Auto Detect</option>
+                <option value="right" selected>Lato Destro</option>
+                <option value="left">Lato Sinistro</option>
+              </select>
+            </label>
+
+            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;">Banner:
+              <input type="text" id="bannerTextInput" value="LIVE FIT" style="width:85px; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
+            </label>
+          </div>
+        </div>
+
+        <!-- Video Stage (Canvas Overlay + Hidden Video Player) -->
+        <div class="video-stage-wrapper" id="videoStage">
+          <video id="videoPlayer" playsinline muted loop></video>
+          <canvas id="poseCanvas" width="800" height="600"></canvas>
+          <div class="countdown-overlay" id="countdownOverlay">
+            <div class="countdown-number" id="countdownNumber">3</div>
+          </div>
+        </div>
+
+        <!-- Video Controls Bar -->
+        <div class="video-controls-bar">
+          <button class="btn btn-solid" id="btnPlayPause">▶ Play</button>
+          <button class="btn btn-sm" id="btnStepBackward" title="Indietro 1 frame">⏪ -1 fr</button>
+          <button class="btn btn-sm" id="btnStepForward" title="Avanti 1 frame">⏩ +1 fr</button>
+          <button class="btn btn-sm btn-accent" id="btnSeekBDC" title="Salta automaticamente al Punto Morto Inferiore">🎯 Salta al BDC</button>
+
+          <input type="range" class="scrubber" id="videoScrubber" min="0" max="100" value="0" step="0.1">
+          <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+
+          <div style="display:flex; gap:4px;">
+            <button class="btn btn-sm" data-speed="0.25">0.25x</button>
+            <button class="btn btn-sm" data-speed="0.5">0.5x</button>
+            <button class="btn btn-sm btn-solid" data-speed="1.0">1.0x</button>
+          </div>
+        </div>
+
+        <!-- Actions Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid #1F2937;">
+          <div style="font-size:12px; color:#9CA3AF; font-family:var(--mono);" id="videoTipText">
+            💡 <i>Suggerimento:</i> Il tracker rileva automaticamente la cadenza (RPM) e calcola la mediana dell'angolo al BDC.
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-solid" id="btnCaptureSnapshot">📸 Cattura Foto con Angoli</button>
+            <button class="btn btn-tape" id="btnSaveAnglesToForm">📝 Salva Angoli nella Scheda</button>
+          </div>
+        </div>
+
+        <!-- Lateral Metrics Dashboard -->
+        <div class="angle-metrics-grid" id="lateralMetrics">
+          
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricKnee">Ginocchio al BDC (Mediana)</span>
+              <span class="metric-status" id="statusKnee">Rilevamento...</span>
+            </div>
+            <div class="metric-val" id="valKnee">0°</div>
+            <div class="metric-target" id="lblMetricKneeTarget">Target: <b>140° - 145°</b> (al punto morto inf.)</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricCadence">Cadenza di Pedalata</span>
+              <span class="metric-status status-optimal">Live RPM</span>
+            </div>
+            <div class="metric-val" id="valCadence">-- RPM</div>
+            <div class="metric-target" id="lblMetricCadenceSub">Rilevata da oscillazione caviglia</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricTorso">Inclinazione Busto (Torso)</span>
+              <span class="metric-status status-optimal">Aerodinamica</span>
+            </div>
+            <div class="metric-val" id="valTorso">0°</div>
+            <div class="metric-target" id="lblMetricTorsoTarget">Target: <b>40° - 50°</b> (Endurance) / <b>35°-42°</b> (Race)</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricShoulder">Angolo Spalla</span>
+              <span class="metric-status">Cockpit</span>
+            </div>
+            <div class="metric-val" id="valShoulder">0°</div>
+            <div class="metric-target" id="lblMetricShoulderTarget">Target: <b>80° - 90°</b> (appoggio neutro)</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricElbow">Angolo Gomito</span>
+              <span class="metric-status">Flessione braccia</span>
+            </div>
+            <div class="metric-val" id="valElbow">0°</div>
+            <div class="metric-target" id="lblMetricElbowTarget">Target: <b>150° - 165°</b> (braccia morbide)</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricHip">Anca Chiusa (TDC)</span>
+              <span class="metric-status">Compressione</span>
+            </div>
+            <div class="metric-val" id="valHip">0°</div>
+            <div class="metric-target" id="lblMetricHipTarget">Target: <b>&gt; 45°</b> (evita impingement)</div>
+          </div>
+
+        </div>
+
+        <!-- Frontal Metrics Dashboard (Hidden by default) -->
+        <div class="angle-metrics-grid hidden" id="frontalMetrics">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricFrontAlign">Allineamento Ginocchio</span>
+              <span class="metric-status status-optimal">Frontale</span>
+            </div>
+            <div class="metric-val" id="valFrontalStatus" style="font-size:18px;">Neutro</div>
+            <div class="metric-target" id="lblMetricFrontTarget">Tracciamento traiettoria asse anca-caviglia</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title" id="lblMetricFrontDev">Deviazione Laterale</span>
+              <span class="metric-status">Q-Factor & Tacchette</span>
+            </div>
+            <div class="metric-val" id="valFrontalDev">0 px</div>
+            <div class="metric-target" id="lblMetricFrontDevSub">Indicatore per spessori tacchetta o plantare</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: DIAGNOSTICA & PROPOSTE MODIFICHE (BIOMECHANICAL EXPERT ENGINE) -->
+    <div class="tab-pane" id="tab-diagnostics">
+      
+      <!-- Diagnostic Overview Banner -->
+      <div class="diag-overview-banner">
+        <div class="diag-score-box">
+          <div class="diag-score-circle" id="diagScoreCircle">--</div>
+          <div>
+            <div style="font-size:18px; font-weight:700; letter-spacing:-0.01em;" id="diagTitleText">Indice di Idoneità Posizione</div>
+            <div style="font-size:13px; color:#94A3B8; margin-top:2px;" id="diagSummaryText">Analisi delle anomalie biomeccaniche in corso...</div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="pri" id="diagHighCount" style="background:var(--danger-soft); color:var(--danger); font-size:11px; padding:4px 8px;">0 Critici</span>
+          <span class="adv" id="diagMedCount" style="background:var(--warn-soft); color:#854D0E; font-size:11px; padding:4px 8px;">0 Moderati</span>
+          <button class="btn btn-tape btn-sm" id="btnCopyActionPlan">📋 Copia Piano</button>
+          <button class="btn btn-solid btn-sm" id="btnApplyPlanToLog">📝 Inserisci nel Registro</button>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; align-items:start;">
+        
+        <!-- Left: Diagnostic Issues List -->
+        <section class="block">
+          <div class="block-head">
+            <span class="num">01</span>
+            <h2 id="diagSec1Title">Cause Biomeccaniche & Anomalie Rilevate</h2>
+          </div>
+          <div class="block-body" id="diagIssuesContainer" style="padding:16px;">
+            <!-- Issues rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- Right: Ranked 1-2-3 Action Plan -->
+        <section class="block">
+          <div class="block-head">
+            <span class="num">02</span>
+            <h2 id="diagSec2Title">Piano di Intervento Ordinato (Action Plan)</h2>
+            <span class="note" id="diagSec2Note">Una modifica per volta</span>
+          </div>
+          <div class="block-body" id="diagActionPlanContainer" style="padding:16px;">
+            <!-- Action steps rendered dynamically -->
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 4: CALCOLATORI & SIMULATORE COCKPIT -->
+    <div class="tab-pane" id="tab-calculator">
+      
+      <!-- Section A: Static Saddle Height Sizing -->
+      <section class="block">
+        <div class="block-head">
+          <span class="num">01</span>
+          <h2 id="calcSec1Heading">Calcolatore Teorico Altezza Sella (LeMond & Hamley)</h2>
+          <span class="note" id="calcSec1NoteTxt">Punto di partenza statico</span>
+        </div>
+        <div class="block-body" style="padding:16px;">
+          
+          <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;">
+            <div style="flex:1 1 200px;">
+              <label style="font-size:12px; font-weight:600; font-family:var(--mono); color:var(--ink-2); display:block; margin-bottom:4px;" id="lblCalcInseam">Cavallo (mm):</label>
+              <input type="number" id="calcInseam" placeholder="es. 770">
+            </div>
+            <div style="flex:1 1 200px;">
+              <label style="font-size:12px; font-weight:600; font-family:var(--mono); color:var(--ink-2); display:block; margin-bottom:4px;" id="lblCalcHeight">Altezza Ciclista (cm):</label>
+              <input type="number" id="calcHeight" placeholder="es. 173">
+            </div>
+            <div style="flex:1 1 200px;">
+              <label style="font-size:12px; font-weight:600; font-family:var(--mono); color:var(--ink-2); display:block; margin-bottom:4px;" id="lblCalcCrank">Lunghezza Pedivella (mm):</label>
+              <input type="number" id="calcCrank" placeholder="es. 170">
+            </div>
+            <div style="flex:1 1 200px;">
+              <label style="font-size:12px; font-weight:600; font-family:var(--mono); color:var(--ink-2); display:block; margin-bottom:4px;" id="lblCalcSaddle">Sella Attuale (mm):</label>
+              <input type="number" id="calcCurrentSaddle" placeholder="es. 750">
+            </div>
+          </div>
+
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th id="thCalcMethod">Metodo di Calcolo</th>
+                  <th id="thCalcFormula">Formula Applicata</th>
+                  <th id="thCalcVal">Valore Calcolato</th>
+                  <th id="thCalcComp">Confronto con Misura Attuale</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b id="txtLemondName">Metodo Greg LeMond</b></td>
+                  <td>Cavallo × 0.883</td>
+                  <td><b id="resLemond" style="color:var(--slate); font-size:15px;">-</b></td>
+                  <td id="resDeltaStatus">-</td>
+                </tr>
+                <tr>
+                  <td><b id="txtHamleyName">Metodo Hamley 109%</b></td>
+                  <td>(Cavallo × 1.09) - Pedivella</td>
+                  <td><b id="resHamley" style="color:var(--slate); font-size:15px;">-</b></td>
+                  <td>Riferimento con scarpe e pedale</td>
+                </tr>
+                <tr>
+                  <td><b id="txtRangeName">Range Consigliato</b></td>
+                  <td>Intervallo ottimale statico</td>
+                  <td><b id="resRange" style="color:var(--ok); font-size:15px;">-</b></td>
+                  <td><button class="btn btn-tape btn-sm" id="btnApplyCalculatedSaddle">Applica alla Scheda</button></td>
+                </tr>
+                <tr>
+                  <td><b id="txtHolmesName">Metodo Holmes (Dinamico)</b></td>
+                  <td>Angolo Ginocchio a BDC in video</td>
+                  <td><b>140° - 145° estensione</b></td>
+                  <td>Verificabile nel tab Video</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Section B: Interactive Cockpit Geometry Simulator -->
+      <section class="block">
+        <div class="block-head">
+          <span class="num">02</span>
+          <h2 id="calcSec2Heading">Simulatore Geometrico Cockpit (Attacco & Spessori)</h2>
+          <span class="note" id="calcSec2NoteTxt">Variazione vettoriale Reach & Stack</span>
+        </div>
+        <div class="block-body" style="padding:16px;">
+          <p style="font-size:13px; color:var(--ink-2); margin-bottom:14px;" id="calcSec2IntroTxt">
+            Simula graficamente l'impatto di cambiare lunghezza o inclinazione dell'attacco manubrio e l'altezza degli spessori prima di smontare la bici.
+          </p>
+
+          <div class="cockpit-sim-grid">
+            
+            <!-- Controls -->
+            <div class="sim-controls-card">
+              
+              <div class="sim-field-row">
+                <label><b id="lblSimHeadAngle">Angolo Tubo Sterzo (°):</b></label>
+                <input type="number" id="simHeadAngle" value="73" step="0.5">
+              </div>
+
+              <div class="sim-group-title">
+                <span style="color:#64748B;" id="lblSimCurSetup">Assetto Attuale (Grigio)</span>
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimCurSpacers">Spessori sotto l'attacco (mm):</label>
+                <input type="number" id="simCurSpacers" value="23">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimCurStemLen">Lunghezza Attacco (mm):</label>
+                <input type="number" id="simCurStemLen" value="120">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimCurStemAngle">Inclinazione Attacco (°):</label>
+                <input type="number" id="simCurStemAngle" value="-6">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimCurBarReach">Reach Manubrio (mm):</label>
+                <input type="number" id="simCurBarReach" value="80">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimCurBarDrop">Drop Manubrio (mm):</label>
+                <input type="number" id="simCurBarDrop" value="125">
+              </div>
+
+              <div class="sim-group-title" style="margin-top:14px;">
+                <span style="color:var(--cyan);" id="lblSimPropSetup">Nuovo Assetto Proposto (Ciano)</span>
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimPropSpacers">Spessori sotto l'attacco (mm):</label>
+                <input type="number" id="simPropSpacers" value="15">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimPropStemLen">Lunghezza Attacco (mm):</label>
+                <input type="number" id="simPropStemLen" value="100">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimPropStemAngle">Inclinazione Attacco (°):</label>
+                <input type="number" id="simPropStemAngle" value="-6">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimPropBarReach">Reach Manubrio (mm):</label>
+                <input type="number" id="simPropBarReach" value="80">
+              </div>
+              <div class="sim-field-row">
+                <label id="lblSimPropBarDrop">Drop Manubrio (mm):</label>
+                <input type="number" id="simPropBarDrop" value="125">
+              </div>
+
+            </div>
+
+            <!-- Visualizer -->
+            <div class="sim-canvas-card">
+              <div class="sim-svg-wrapper" id="cockpitSvgContainer"></div>
+              <div style="display:flex; justify-content:space-around; align-items:center; margin-top:10px; font-family:var(--mono); font-size:13px; color:#F3F4F6;">
+                <div><span id="lblDeltaReachTxt">Variazione Reach:</span> <b id="simDeltaReach" style="color:var(--cyan);">-</b></div>
+                <div><span id="lblDeltaStackTxt">Variazione Altezza/Stack:</span> <b id="simDeltaStack" style="color:var(--tape);">-</b></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TAB 5: CONFRONTO SINCRONIZZATO DUAL VIDEO -->
+    <div class="tab-pane" id="tab-comparison">
+      <section class="block">
+        <div class="block-head">
+          <span class="num">VS</span>
+          <h2 id="dualTitleHeading">Player Video Sincronizzato (Prima vs Dopo)</h2>
+          <span class="note" id="dualNoteTxt">Pedalata in lockstep al BDC</span>
+        </div>
+        <div class="block-body" style="padding:16px;">
+          
+          <div class="dual-video-grid">
+            
+            <div class="dual-video-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-weight:700; color:#EF4444; font-family:var(--mono);" id="lblDualV1">🔴 Video Assetto PRIMA</span>
+                <input type="file" id="dualFileInput1" accept="video/*" style="font-size:11px;">
+              </div>
+              <video id="dualVideo1" playsinline muted></video>
+            </div>
+
+            <div class="dual-video-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-weight:700; color:#10B981; font-family:var(--mono);" id="lblDualV2">🟢 Video Assetto DOPO</span>
+                <input type="file" id="dualFileInput2" accept="video/*" style="font-size:11px;">
+              </div>
+              <video id="dualVideo2" playsinline muted></video>
+            </div>
+
+          </div>
+
+          <div class="video-controls-bar" style="background:#0F172A; padding:12px; border-radius:6px; margin-bottom:16px;">
+            <button class="btn btn-solid" id="btnDualPlayPause">▶ Play Sincronizzato</button>
+            <button class="btn btn-tape" id="btnDualSyncBDC" title="Aggancia la fase di pedalata al punto corrente">🔗 Sincronizza Fase al BDC</button>
+            <input type="range" class="scrubber" id="dualScrubber" min="0" max="100" value="0" step="0.1">
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 6: GLOSSARIO & GUIDE -->
+    <div class="tab-pane" id="tab-glossary">
+      <section class="block">
+        <div class="block-head">
+          <span class="num">GL</span>
+          <h2 id="glossaryTitleHeading">Glossario Illustrato & Riferimenti</h2>
+          <span class="note" id="glossaryNoteHeading">Tutti i termini tecnici del bike fitting</span>
+        </div>
+        <div class="block-body" id="glossaryContainer" style="padding:18px;">
+          <!-- Glossary items rendered dynamically -->
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- ===================== IMPORT MODAL DIALOG ===================== -->
+  <dialog class="app-modal" id="modalImport">
+    <div class="modal-header">
+      <h3 id="importModalTitle">Importa Scheda / Dati Bike Fit</h3>
+      <button class="helpbtn" id="btnCloseImport">✕</button>
+    </div>
+    <div class="modal-body">
+      
+      <div class="dropzone" id="importDropzone" onclick="document.getElementById('importFileInput').click()">
+        <input type="file" id="importFileInput" accept=".md,.markdown,.json,text/plain" style="display:none">
+        <div style="font-size:24px; margin-bottom:8px;">📄</div>
+        <p><b id="importDropMain">Trascina qui il tuo file .md (Markdown) o .json</b></p>
+        <p style="font-size:12px; color:var(--muted); margin-top:4px;" id="importDropSubTxt">oppure clicca per selezionarlo dal computer</p>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label style="font-size:12px; font-weight:600; font-family:var(--mono); color:var(--ink-2); display:block; margin-bottom:4px;" id="importPasteLabel">Oppure incolla qui il testo Markdown o JSON:</label>
+        <textarea id="importTextArea" placeholder="# Scheda di rilevamento... oppure { ... }" style="min-height:100px; font-size:12px;"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-tape" onclick="document.getElementById('btnLoadSample').click()" id="btnImportLoadSample">⚡ Carica Esempio Argon 18</button>
+      <button class="btn btn-solid" id="btnProcessImport">Importa Dati</button>
+    </div>
+  </dialog>
+
+  <!-- App Scripts & WASM Binary Bridge -->
+  <script src="wasm-bundle.js"></script>
+  <script src="wasm-loader.js"></script>
+  <script src="i18n.js"></script>
+  <script src="sample-data.js"></script>
+  <script src="importer.js"></script>
+  <script src="bike-geometry.js"></script>
+  <script src="diagnostic-engine.js"></script>
+  <script src="pose-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

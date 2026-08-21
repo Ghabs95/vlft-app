@@ -1,0 +1,6 @@
+.DS_Store
+Thumbs.db
+bike_fit_core/target/
+node_modules/
+*.log
+.env
