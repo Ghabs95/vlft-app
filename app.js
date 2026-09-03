@@ -460,46 +460,46 @@ function renderForm() {
           <h4>${I18N.t("photoWizardTitle")}</h4>
           <p>${I18N.t("photoWizardSub")}</p>
         </div>
-        <button type="button" class="btn btn-solid" id="btnOpenPhotoWizard" style="font-weight:750;">${I18N.t("photoWizardBtn")}</button>
+        <button type="button" class="btn btn-action-cyan" id="btnOpenPhotoWizard">${I18N.t("photoWizardBtn")}</button>
       `;
       b.appendChild(pBtnCard);
       pBtnCard.querySelector("#btnOpenPhotoWizard")?.addEventListener("click", () => openPhotoWizard());
     }
     if (sec.id === "regolazioni") {
       const bBtnCard = document.createElement("div");
-      bBtnCard.className = "bike-wizard-btn-card";
+      bBtnCard.className = "bike-wizard-btn-card card-amber";
       bBtnCard.innerHTML = `
         <div class="bike-wizard-btn-text">
           <h4>${I18N.t("bikePhotoWizardTitle")}</h4>
           <p>${I18N.t("bikePhotoWizardSub")}</p>
         </div>
-        <button type="button" class="btn btn-solid" id="btnOpenBikePhotoWizard" style="font-weight:750; background:var(--amber); color:#040914;">${I18N.t("bikePhotoWizardBtn")}</button>
+        <button type="button" class="btn btn-action-amber" id="btnOpenBikePhotoWizard">${I18N.t("bikePhotoWizardBtn")}</button>
       `;
       b.appendChild(bBtnCard);
       bBtnCard.querySelector("#btnOpenBikePhotoWizard")?.addEventListener("click", () => openBikePhotoWizard());
     }
     if (sec.id === "ischi") {
       const sBtnCard = document.createElement("div");
-      sBtnCard.className = "bike-wizard-btn-card";
+      sBtnCard.className = "bike-wizard-btn-card card-green";
       sBtnCard.innerHTML = `
         <div class="bike-wizard-btn-text">
           <h4>${I18N.t("sitBoneModalTitle")}</h4>
           <p>${I18N.t("sitBoneModalSub")}</p>
         </div>
-        <button type="button" class="btn btn-solid" id="btnOpenSitBoneWizard" style="font-weight:750; background:var(--green); color:#040914;">${I18N.t("btnSitBoneWizard")}</button>
+        <button type="button" class="btn btn-action-green" id="btnOpenSitBoneWizard">${I18N.t("btnSitBoneWizard")}</button>
       `;
       b.appendChild(sBtnCard);
       sBtnCard.querySelector("#btnOpenSitBoneWizard")?.addEventListener("click", () => openSitBoneWizard());
     }
     if (sec.id === "scarpe") {
       const fBtnCard = document.createElement("div");
-      fBtnCard.className = "bike-wizard-btn-card";
+      fBtnCard.className = "bike-wizard-btn-card card-cyan";
       fBtnCard.innerHTML = `
         <div class="bike-wizard-btn-text">
           <h4>${I18N.t("footFlareModalTitle")}</h4>
           <p>${I18N.t("footFlareModalSub")}</p>
         </div>
-        <button type="button" class="btn btn-solid" id="btnOpenFootFlareWizard" style="font-weight:750; background:var(--cyan); color:#040914;">${I18N.t("btnFootFlareWizard")}</button>
+        <button type="button" class="btn btn-action-cyan" id="btnOpenFootFlareWizard">${I18N.t("btnFootFlareWizard")}</button>
       `;
       b.appendChild(fBtnCard);
       fBtnCard.querySelector("#btnOpenFootFlareWizard")?.addEventListener("click", () => openFootFlareWizard());
