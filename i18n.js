@@ -21,7 +21,7 @@ const I18N = {
   },
 
   setLanguage(lang) {
-    if (lang !== "it" && lang !== "en") return;
+    if (!this.DICTIONARY[lang]) return;
     this.currentLang = lang;
     try {
       localStorage.setItem("bikefit:lang", lang);
@@ -31,9 +31,11 @@ const I18N = {
   t(key, fallback) {
     const d = this.DICTIONARY[this.currentLang];
     if (d && d[key] !== undefined) return d[key];
-    const def = this.DICTIONARY["it"];
-    if (def && def[key] !== undefined) return def[key];
-    return fallback || key;
+    const en = this.DICTIONARY["en"];
+    if (en && en[key] !== undefined) return en[key];
+    const it = this.DICTIONARY["it"];
+    if (it && it[key] !== undefined) return it[key];
+    return fallback !== undefined ? fallback : key;
   },
 
   DICTIONARY: {
@@ -380,7 +382,59 @@ const I18N = {
       btnCamGuideClose: "Chiudi",
       btnCamGuideRetry: "🔄 Riprova Accesso Ora",
       btnCamGuideNative: "📱 Scatta con Fotocamera",
-      btnNativePhotoCam: "📷 Scatta Subito"
+      btnNativePhotoCam: "📷 Scatta Subito",
+
+      // SVG Technical Diagram Labels (Localized)
+      diag_bb: "MOVIMENTO CENTRALE",
+      diag_saddle_top: "top sella",
+      diag_saddle_height_title: "A = ALTEZZA SELLA",
+      diag_saddle_height_sub: "Centro mov. centrale → top sella",
+      diag_setback_title: "B = ARRETRAMENTO SELLA",
+      diag_setback_sub: "Filo a piombo mov. centrale → punta sella",
+
+      diag_saddle: "SELLA",
+      diag_rails: "CARRELLI",
+      diag_seatpost: "REGGISELLA",
+      diag_seat_tube: "PIANTONE",
+      diag_stem: "ATTACCO",
+      diag_handlebar: "MANUBRIO",
+      diag_crank: "PEDIVELLA",
+
+      diag_saddle_underside: "SELLA VISTA DA SOTTO",
+      diag_clamp: "MORSETTO",
+      diag_adjustment_marks: "tacche",
+      diag_dimension: "misura",
+
+      diag_cardboard: "CARTONE ONDULATO",
+      diag_c2c: "DISTANZA CENTRO-CENTRO",
+      diag_c2c_sub: "da centro a centro impronta",
+
+      diag_fork_steerer: "CANNOTTO FORCELLA",
+      diag_stem_length: "LUNGHEZZA ATTACCO (C-C)",
+      diag_bar_clamp: "MORSETTO MANUBRIO",
+      diag_stem_angle: "ANGOLO (es. ±6°)",
+
+      // Field Explanations (Help Popups)
+      help_h_sella: "Dal movimento centrale al top sella.",
+      help_arretramento: "Distanza orizzontale punta sella - mov centrale.",
+      help_incl_sella: "Inclinazione del piano sella in gradi (valore negativo = punta verso il basso).",
+      help_reach_sm: "Distanza diretta dalla punta della sella al centro dell'attacco manubrio.",
+      help_drop_sm: "Differenza verticale di altezza da terra tra il top sella e la parte superiore del manubrio.",
+      help_stack: "Distanza verticale dal movimento centrale al centro superiore del tubo sterzo.",
+      help_reach_telaio: "Distanza orizzontale dal movimento centrale al centro superiore del tubo sterzo.",
+      help_sella_larg: "Larghezza massima della sella nel punto posteriore di appoggio.",
+      help_attacco_lun: "Lunghezza centro-centro dell'attacco manubrio lungo il suo asse.",
+      help_cavallo: "Distanza dal pavimento al perineo a piedi scalzi, tirando un libro o livella contro il pube.",
+      help_ischi_mm: "Misura tra i centri delle impronte.",
+
+      // Glossary Descriptions
+      glossary_stem_desc: "Il pezzo che collega il manubrio al cannotto della forcella.",
+      glossary_rails_desc: "Le due barrette metalliche parallele sotto la sella, strette dal morsetto del reggisella.",
+      glossary_bb_desc: "L'asse su cui girano le pedivelle, dentro la scatola del telaio.",
+      glossary_seattube_desc: "Il piantone è il tubo del telaio; il reggisella è il tubo che porta la sella.",
+      glossary_stackreach_desc: "Stack = altezza verticale da mov centrale a tubo sterzo. Reach = distanza orizzontale.",
+      glossary_sitbones_desc: "Le due sporgenze ossee alla base del bacino su cui scaricare il peso.",
+      glossary_bdc_desc: "Il punto più basso della pedalata. È l'istante fondamentale in cui si misura l'estensione del ginocchio (target 140°-145°)."
     },
 
     en: {
@@ -726,7 +780,59 @@ const I18N = {
       btnCamGuideClose: "Close",
       btnCamGuideRetry: "🔄 Retry Camera Access",
       btnCamGuideNative: "📱 Snap with Phone Camera",
-      btnNativePhotoCam: "📷 Snap Photo"
+      btnNativePhotoCam: "📷 Snap Photo",
+
+      // SVG Technical Diagram Labels (Localized)
+      diag_bb: "BOTTOM BRACKET (BB)",
+      diag_saddle_top: "saddle top",
+      diag_saddle_height_title: "A = SADDLE HEIGHT",
+      diag_saddle_height_sub: "BB center → saddle top",
+      diag_setback_title: "B = SADDLE SETBACK",
+      diag_setback_sub: "BB vertical plumb line → saddle nose",
+
+      diag_saddle: "SADDLE",
+      diag_rails: "RAILS",
+      diag_seatpost: "SEATPOST",
+      diag_seat_tube: "SEAT TUBE",
+      diag_stem: "STEM",
+      diag_handlebar: "HANDLEBAR",
+      diag_crank: "CRANK",
+
+      diag_saddle_underside: "SADDLE UNDERSIDE VIEW",
+      diag_clamp: "CLAMP",
+      diag_adjustment_marks: "marks",
+      diag_dimension: "dimension",
+
+      diag_cardboard: "CORRUGATED CARDBOARD",
+      diag_c2c: "CENTER-TO-CENTER SPAN",
+      diag_c2c_sub: "center-to-center impression distance",
+
+      diag_fork_steerer: "FORK STEERER",
+      diag_stem_length: "STEM LENGTH (C-C)",
+      diag_bar_clamp: "HANDLEBAR CLAMP",
+      diag_stem_angle: "ANGLE (e.g. ±6°)",
+
+      // Field Explanations (Help Popups)
+      help_h_sella: "From bottom bracket center to saddle top along the seat tube.",
+      help_arretramento: "Horizontal distance from saddle nose to bottom bracket vertical plumb line.",
+      help_incl_sella: "Saddle surface tilt in degrees (negative value = nose down).",
+      help_reach_sm: "Direct distance from saddle nose tip to handlebar clamp center.",
+      help_drop_sm: "Vertical height difference between saddle top and the top of the handlebar.",
+      help_stack: "Vertical distance from bottom bracket center to top center of head tube.",
+      help_reach_telaio: "Horizontal distance from bottom bracket center to top center of head tube.",
+      help_sella_larg: "Maximum width across the widest rear section of the saddle.",
+      help_attacco_lun: "Center-to-center length of the stem along its axis.",
+      help_cavallo: "Barefoot floor-to-crotch distance, pulling a book or carpenter's level firmly against the pelvic bone.",
+      help_ischi_mm: "Measure center-to-center between the impression indentations.",
+
+      // Glossary Descriptions
+      glossary_stem_desc: "The component connecting the handlebar to the fork steerer tube. Labeled with length (mm) and angle (°).",
+      glossary_rails_desc: "The two parallel metal rails underneath the saddle, clamped by the seatpost.",
+      glossary_bb_desc: "The central axle inside the frame around which the cranks rotate.",
+      glossary_seattube_desc: "The seat tube is the frame tube; the seatpost slides inside it to hold the saddle.",
+      glossary_stackreach_desc: "Stack = vertical height from bottom bracket to top of head tube. Reach = horizontal distance.",
+      glossary_sitbones_desc: "The two bony protrusions at the base of the pelvis that bear body weight.",
+      glossary_bdc_desc: "The lowest point of the pedal stroke. Essential frame for measuring knee extension angle (target 140°-145°)."
     }
   }
 };
