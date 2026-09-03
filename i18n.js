@@ -215,6 +215,8 @@ const I18N = {
       videoRecordingSaved: "Clip registrata con successo e caricata nell'analizzatore!",
 
       // Photo Anthropometry Wizard
+      txtMenuItemPhoto: "Misure da Foto (AI)",
+      btnVideoTabOpenPhoto: "📐 Misure da Foto",
       photoWizardBtn: "Rileva Misure da Foto (AI)",
       photoWizardTitle: "Rilevamento Misure Corporee da Foto (AI)",
       photoWizardSub: "Estrae automaticamente cavallo, femore, tibia, busto e braccia",
@@ -425,6 +427,8 @@ const I18N = {
       videoRecordingSaved: "Video clip recorded successfully and loaded into analyzer!",
 
       // Photo Anthropometry Wizard
+      txtMenuItemPhoto: "AI Photo Anthropometry",
+      btnVideoTabOpenPhoto: "📐 Photo Anthropometry",
       photoWizardBtn: "Measure from Photo (AI)",
       photoWizardTitle: "AI Body Anthropometry from Photo",
       photoWizardSub: "Automatically extracts inseam, femur, tibia, torso, and arm length",

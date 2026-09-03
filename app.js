@@ -624,6 +624,7 @@ function applyLanguage() {
   setTxt("txtMenuSecData", "menuSecData");
   setTxt("txtMenuItemSample", "menuItemSample");
   setTxt("txtMenuItemImport", "menuItemImport");
+  setTxt("txtMenuItemPhoto", "txtMenuItemPhoto");
   setTxt("txtMenuSecExport", "menuSecExport");
   setTxt("txtMenuItemExportMd", "menuItemExportMd");
   setTxt("txtMenuItemExportJson", "menuItemExportJson");
@@ -646,6 +647,7 @@ function applyLanguage() {
   setTxt("expandAll", "btnExpandAll");
 
   setTxt("btnUploadVideo", "btnUploadVideo");
+  setTxt("btnVideoTabOpenPhoto", "btnVideoTabOpenPhoto");
   setTxt("btnPlayDemo", "btnPlayDemo");
   setTxt("btnRecordVideo", "btnRecordVideo");
   setTxt("btnDownloadClip", "btnDownloadRecordedVideo");
@@ -1614,6 +1616,15 @@ function initPhotoWizardEvents() {
   btnCancelCam?.addEventListener("click", () => stopPhotoCam());
   btnRetake?.addEventListener("click", () => resetPhotoWizardUI());
   btnApply?.addEventListener("click", () => applyPhotoMeasurementsToFitSheet());
+
+  // Additional quick shortcuts
+  document.getElementById("btnMenuOpenPhoto")?.addEventListener("click", () => {
+    document.getElementById("menuDropdownPanel")?.setAttribute("hidden", "");
+    openPhotoWizard();
+  });
+  document.getElementById("btnVideoTabOpenPhoto")?.addEventListener("click", () => {
+    openPhotoWizard();
+  });
 }
 
 function startDemoLoop() {
