@@ -70,7 +70,16 @@ const DiagnosticEngine = {
     const sx = state.sx || {};
     const va = state.videoAngles || {};
 
-    const disciplineKey = v.disciplina || "Strada";
+    const discMap = {
+      "Road": "Strada",
+      "Gravel": "Gravel",
+      "MTB Cross Country": "MTB cross country",
+      "MTB Trail / Enduro": "MTB trail o enduro",
+      "Cyclocross": "Ciclocross",
+      "TT / Triathlon": "Crono o triathlon",
+      "Urban / Touring": "Urbano o cicloturismo"
+    };
+    const disciplineKey = discMap[v.disciplina] || v.disciplina || "Strada";
     const targets = this.DISCIPLINE_TARGETS[disciplineKey] || this.DISCIPLINE_TARGETS["Strada"];
 
     const issues = [];

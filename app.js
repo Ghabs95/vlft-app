@@ -109,64 +109,118 @@ const ZONE = [
 
 const SCHEMA = [
   {
-    id: "profilo", title: "Profilo del rilevamento", titleEn: "Rider & Fit Profile", note: "5 minuti",
+    id: "profilo", title: "Profilo del rilevamento", titleEn: "Rider & Fit Profile", note: "5 minuti", noteEn: "5 min",
     intro: "Chi sei in bici e cosa cerchi da questa analisi.",
     introEn: "Your riding background and target fit goals.",
     fields: [
-      { id: "data", lab: "Data del rilevamento", labEn: "Session Date", t: "text", ph: "gg/mm/aaaa" },
-      { id: "disciplina", lab: "Disciplina", labEn: "Riding Discipline", pri: 1, t: "select", opt: ["", "Strada", "Gravel", "MTB cross country", "MTB trail o enduro", "Ciclocross", "Crono o triathlon", "Urbano o cicloturismo", "Altro"] },
-      { id: "tipo_manubrio", lab: "Tipo di manubrio", labEn: "Handlebar Type", pri: 1, t: "select", opt: ["", "Piega da strada", "Flat bar", "Manubrio rialzato", "Da crono con appendici", "Altro"] },
-      { id: "uso", lab: "Uso prevalente", labEn: "Primary Use", pri: 1, t: "select", opt: ["", "Allenamento e gare", "Granfondo e uscite lunghe", "Cicloturismo o viaggio", "Prevalentemente indoor", "Uso misto"] },
-      { id: "obiettivo", lab: "Obiettivo del fit", labEn: "Fit Goal", pri: 1, t: "select", opt: ["", "Comfort", "Potenza ed efficienza", "Aerodinamica", "Risolvere un fastidio specifico", "Controllo generale, niente fa male"] },
-      { id: "obiettivo_txt", lab: "Obiettivo in una frase", labEn: "Fit Goal Description", pri: 1, t: "text", ph: "cosa vorresti ottenere, con parole tue" },
-      { id: "ore", lab: "Ore settimanali", labEn: "Weekly Hours", pri: 1, t: "text" },
-      { id: "durata", lab: "Durata tipica dell'uscita", labEn: "Typical Ride Duration", pri: 1, t: "text" },
-      { id: "indoor", lab: "Indoor o outdoor", labEn: "Indoor or Outdoor", pri: 1, t: "select", opt: ["", "Solo outdoor", "Solo indoor", "Entrambi, uguale", "Entrambi, ma indoor va peggio", "Entrambi, ma outdoor va peggio"] },
-      { id: "anni", lab: "Anni di pratica", labEn: "Years of Cycling", adv: 1, t: "text" }
+      { id: "data", lab: "Data del rilevamento", labEn: "Session Date", t: "text", ph: "gg/mm/aaaa", phEn: "dd/mm/yyyy" },
+      { id: "disciplina", lab: "Disciplina", labEn: "Riding Discipline", pri: 1, t: "select",
+        opt: ["", "Strada", "Gravel", "MTB cross country", "MTB trail o enduro", "Ciclocross", "Crono o triathlon", "Urbano o cicloturismo", "Altro"],
+        optEn: ["", "Road", "Gravel", "MTB Cross Country", "MTB Trail / Enduro", "Cyclocross", "TT / Triathlon", "Urban / Touring", "Other"]
+      },
+      { id: "tipo_manubrio", lab: "Tipo di manubrio", labEn: "Handlebar Type", pri: 1, t: "select",
+        opt: ["", "Piega da strada", "Flat bar", "Manubrio rialzato", "Da crono con appendici", "Altro"],
+        optEn: ["", "Road Drop Bar", "Flat Bar", "Riser Bar", "Aero TT Bars", "Other"]
+      },
+      { id: "uso", lab: "Uso prevalente", labEn: "Primary Use", pri: 1, t: "select",
+        opt: ["", "Allenamento e gare", "Granfondo e uscite lunghe", "Cicloturismo o viaggio", "Prevalentemente indoor", "Uso misto"],
+        optEn: ["", "Training & Racing", "Granfondo & Long Rides", "Touring & Bikepacking", "Mainly Indoor", "Mixed Use"]
+      },
+      { id: "obiettivo", lab: "Obiettivo del fit", labEn: "Fit Goal", pri: 1, t: "select",
+        opt: ["", "Comfort", "Potenza ed efficienza", "Aerodinamica", "Risolvere un fastidio specifico", "Controllo generale, niente fa male"],
+        optEn: ["", "Comfort", "Power & Efficiency", "Aerodynamics", "Resolve Specific Discomfort", "General Checkup (No Pain)"]
+      },
+      { id: "obiettivo_txt", lab: "Obiettivo in una frase", labEn: "Fit Goal Description", pri: 1, t: "text",
+        ph: "cosa vorresti ottenere, con parole tue",
+        phEn: "what you want to achieve, in your own words"
+      },
+      { id: "ore", lab: "Ore settimanali", labEn: "Weekly Hours", pri: 1, t: "text", ph: "es. 6-8 ore", phEn: "e.g. 6-8 hours" },
+      { id: "durata", lab: "Durata tipica dell'uscita", labEn: "Typical Ride Duration", pri: 1, t: "text", ph: "es. 2-3 ore", phEn: "e.g. 2-3 hours" },
+      { id: "indoor", lab: "Indoor o outdoor", labEn: "Indoor or Outdoor", pri: 1, t: "select",
+        opt: ["", "Solo outdoor", "Solo indoor", "Entrambi, uguale", "Entrambi, ma indoor va peggio", "Entrambi, ma outdoor va peggio"],
+        optEn: ["", "Outdoor Only", "Indoor Only", "Both Equally", "Both, Worse Indoor", "Both, Worse Outdoor"]
+      },
+      { id: "anni", lab: "Anni di pratica", labEn: "Years of Cycling", adv: 1, t: "text", ph: "es. 5 anni", phEn: "e.g. 5 years" }
     ]
   },
   {
-    id: "bici", title: "La bici", titleEn: "The Bicycle", note: "Senza metro",
+    id: "bici", title: "La bici", titleEn: "The Bicycle", note: "Senza metro", noteEn: "No tools needed",
     fields: [
-      { id: "marca", lab: "Marca e modello del telaio", labEn: "Frame Brand & Model", pri: 1, t: "text", ph: "es. Argon 18 Gallium" },
-      { id: "taglia", lab: "Taglia", labEn: "Frame Size", pri: 1, t: "text", ph: "es. M / 54" },
-      { id: "anno", lab: "Anno del modello", labEn: "Model Year", adv: 1, t: "text" },
-      { id: "stack", lab: "Stack", labEn: "Frame Stack", adv: 1, t: "number", u: "mm" },
-      { id: "reach_telaio", lab: "Reach", labEn: "Frame Reach", adv: 1, t: "number", u: "mm" },
+      { id: "marca", lab: "Marca e modello del telaio", labEn: "Frame Brand & Model", pri: 1, t: "text", ph: "es. Argon 18 Gallium", phEn: "e.g. Argon 18 Gallium" },
+      { id: "taglia", lab: "Taglia", labEn: "Frame Size", pri: 1, t: "text", ph: "es. M / 54", phEn: "e.g. M / 54" },
+      { id: "anno", lab: "Anno del modello", labEn: "Model Year", adv: 1, t: "text", ph: "es. 2023", phEn: "e.g. 2023" },
+      { id: "stack", lab: "Stack", labEn: "Frame Stack", adv: 1, t: "number", u: "mm",
+        help: `<p>Distanza verticale dal movimento centrale al centro superiore del tubo sterzo.</p>`,
+        helpEn: `<p>Vertical distance from bottom bracket center to top center of head tube.</p>`
+      },
+      { id: "reach_telaio", lab: "Reach", labEn: "Frame Reach", adv: 1, t: "number", u: "mm",
+        help: `<p>Distanza orizzontale dal movimento centrale al centro superiore del tubo sterzo.</p>`,
+        helpEn: `<p>Horizontal distance from bottom bracket center to top center of head tube.</p>`
+      },
       { id: "ang_piantone", lab: "Angolo del piantone", labEn: "Seat Tube Angle", adv: 1, t: "number", u: "°" },
-      { id: "reggisella", lab: "Reggisella: dritto o arretrato", labEn: "Seatpost: Straight / Setback", adv: 1, t: "select", opt: ["", "Dritto (offset 0)", "Arretrato", "Non so"] }
+      { id: "reggisella", lab: "Reggisella: dritto o arretrato", labEn: "Seatpost: Straight / Setback", adv: 1, t: "select",
+        opt: ["", "Dritto (offset 0)", "Arretrato", "Non so"],
+        optEn: ["", "Straight (Zero Offset)", "Setback", "Not sure"]
+      }
     ]
   },
   {
-    id: "componenti", title: "Componenti", titleEn: "Components", note: "Etichette",
+    id: "componenti", title: "Componenti", titleEn: "Components", note: "Etichette", noteEn: "Labels & specs",
     fields: [
-      { id: "sella_mod", lab: "Sella: marca e modello", labEn: "Saddle: Brand & Model", pri: 1, t: "text", ph: "es. Prologo Kappa Space" },
-      { id: "sella_larg", lab: "Sella: larghezza", labEn: "Saddle Width", pri: 1, t: "number", u: "mm" },
-      { id: "attacco_lun", lab: "Attacco: lunghezza", labEn: "Stem Length", pri: 1, t: "number", u: "mm" },
-      { id: "attacco_ang", lab: "Attacco: angolo e orientamento", labEn: "Stem Angle", pri: 1, t: "text", ph: "es. 6° / -6°" },
-      { id: "spessori", lab: "Spessori sotto l'attacco", labEn: "Spacers Under Stem", pri: 1, t: "text", ph: "es. 3 spessori, 23 mm" },
+      { id: "sella_mod", lab: "Sella: marca e modello", labEn: "Saddle: Brand & Model", pri: 1, t: "text", ph: "es. Prologo Kappa Space", phEn: "e.g. Prologo Kappa Space" },
+      { id: "sella_larg", lab: "Sella: larghezza", labEn: "Saddle Width", pri: 1, t: "number", u: "mm",
+        help: `<p>Larghezza massima della sella nel punto posteriore di appoggio.</p>`,
+        helpEn: `<p>Maximum width across the widest rear section of the saddle.</p>`
+      },
+      { id: "attacco_lun", lab: "Attacco: lunghezza", labEn: "Stem Length", pri: 1, t: "number", u: "mm",
+        help: `<p>Lunghezza centro-centro dell'attacco manubrio lungo il suo asse.</p>`,
+        helpEn: `<p>Center-to-center length of the stem along its axis.</p>`
+      },
+      { id: "attacco_ang", lab: "Attacco: angolo e orientamento", labEn: "Stem Angle", pri: 1, t: "text", ph: "es. 6° / -6°", phEn: "e.g. 6° / -6°" },
+      { id: "spessori", lab: "Spessori sotto l'attacco", labEn: "Spacers Under Stem", pri: 1, t: "text", ph: "es. 3 spessori, 23 mm", phEn: "e.g. 3 spacers, 23 mm" },
       { id: "manubrio_larg", lab: "Manubrio: larghezza", labEn: "Handlebar Width", pri: 1, t: "number", u: "mm" },
-      { id: "manubrio_std", lab: "Larghezza misurata come", labEn: "Bar Width Measured As", pri: 1, t: "select", opt: ["", "Centro-centro (c-c)", "Esterno-esterno (e-e)", "Dato produttore"] },
+      { id: "manubrio_std", lab: "Larghezza misurata come", labEn: "Bar Width Measured As", pri: 1, t: "select",
+        opt: ["", "Centro-centro (c-c)", "Esterno-esterno (e-e)", "Dato produttore"],
+        optEn: ["", "Center-to-Center (c-c)", "Outside-to-Outside (o-o)", "Manufacturer Spec"]
+      },
       { id: "pedivelle", lab: "Lunghezza pedivelle", labEn: "Crank Length", pri: 1, t: "number", u: "mm" },
-      { id: "fondello", lab: "Salopette o pantaloncini: marca e anni d'uso", labEn: "Bib Shorts: Brand & Age", pri: 1, t: "text" }
+      { id: "fondello", lab: "Salopette o pantaloncini: marca e anni d'uso", labEn: "Bib Shorts: Brand & Age", pri: 1, t: "text", ph: "es. Castelli, 2 anni", phEn: "e.g. Castelli, 2 years" }
     ]
   },
   {
-    id: "regolazioni", title: "Regolazioni attuali", titleEn: "Current Setup Dimensions", note: "Metro alla mano",
+    id: "regolazioni", title: "Regolazioni attuali", titleEn: "Current Setup Dimensions", note: "Metro alla mano", noteEn: "Tape measure needed",
     fields: [
-      { id: "h_sella", lab: "Altezza sella", labEn: "Saddle Height", pri: 1, t: "number", u: "mm", help: `<p>Dal movimento centrale al top sella.</p>` + D.sellaMis },
-      { id: "arretramento", lab: "Arretramento sella", labEn: "Saddle Setback", pri: 1, t: "number", u: "mm", help: `<p>Distanza orizzontale punta sella - mov centrale.</p>` + D.sellaMis },
-      { id: "incl_sella", lab: "Inclinazione sella", labEn: "Saddle Tilt Angle", pri: 1, t: "number", u: "°" },
-      { id: "reach_sm", lab: "Punta sella → centro manubrio", labEn: "Saddle Nose to Handlebar Reach", pri: 1, t: "number", u: "mm" },
-      { id: "drop_sm", lab: "Dislivello sella → manubrio", labEn: "Saddle-to-Bar Drop", pri: 1, t: "number", u: "mm" }
+      { id: "h_sella", lab: "Altezza sella", labEn: "Saddle Height", pri: 1, t: "number", u: "mm",
+        help: `<p>Dal movimento centrale al top sella.</p>` + D.sellaMis,
+        helpEn: `<p>From bottom bracket center to saddle top along the seat tube.</p>` + D.sellaMis
+      },
+      { id: "arretramento", lab: "Arretramento sella", labEn: "Saddle Setback", pri: 1, t: "number", u: "mm",
+        help: `<p>Distanza orizzontale punta sella - mov centrale.</p>` + D.sellaMis,
+        helpEn: `<p>Horizontal distance from saddle nose to bottom bracket vertical plumb line.</p>` + D.sellaMis
+      },
+      { id: "incl_sella", lab: "Inclinazione sella", labEn: "Saddle Tilt Angle", pri: 1, t: "number", u: "°",
+        help: `<p>Inclinazione del piano sella in gradi (valore negativo = punta verso il basso).</p>`,
+        helpEn: `<p>Saddle surface tilt in degrees (negative value = nose down).</p>`
+      },
+      { id: "reach_sm", lab: "Punta sella → centro manubrio", labEn: "Saddle Nose to Handlebar Reach", pri: 1, t: "number", u: "mm",
+        help: `<p>Distanza diretta dalla punta della sella al centro dell'attacco manubrio.</p>`,
+        helpEn: `<p>Direct distance from saddle nose tip to handlebar clamp center.</p>`
+      },
+      { id: "drop_sm", lab: "Dislivello sella → manubrio", labEn: "Saddle-to-Bar Drop", pri: 1, t: "number", u: "mm",
+        help: `<p>Differenza verticale di altezza da terra tra il top sella e la parte superiore del manubrio.</p>`,
+        helpEn: `<p>Vertical height difference between saddle top and the top of the handlebar.</p>`
+      }
     ]
   },
   {
-    id: "corpo", title: "Misure corporee", titleEn: "Rider Body Anthropometry", note: "Meglio in due",
+    id: "corpo", title: "Misure corporee", titleEn: "Rider Body Anthropometry", note: "Meglio in due", noteEn: "Better with partner",
     fields: [
       { id: "altezza", lab: "Altezza", labEn: "Rider Total Height", pri: 1, t: "number", u: "cm" },
       { id: "peso", lab: "Peso", labEn: "Rider Weight", adv: 1, t: "number", u: "kg" },
-      { id: "cavallo", lab: "Cavallo", labEn: "Inseam", pri: 1, t: "number", u: "mm" },
+      { id: "cavallo", lab: "Cavallo", labEn: "Inseam", pri: 1, t: "number", u: "mm",
+        help: `<p>Distanza dal pavimento al perineo a piedi scalzi, tirando un libro o livella contro il pube.</p>`,
+        helpEn: `<p>Barefoot floor-to-crotch distance, pulling a book or carpenter's level firmly against the pelvic bone.</p>`
+      },
       { id: "femore", lab: "Femore", labEn: "Thigh / Femur Length", adv: 1, t: "number", u: "mm" },
       { id: "tibia", lab: "Tibia", labEn: "Lower Leg / Tibia", adv: 1, t: "number", u: "mm" },
       { id: "busto", lab: "Busto", labEn: "Torso Length", adv: 1, t: "number", u: "mm" },
@@ -174,16 +228,25 @@ const SCHEMA = [
     ]
   },
   {
-    id: "ischi", title: "Ossa ischiatiche", titleEn: "Ischial Tuberosities (Sit Bones)", note: "Larghezza sella",
+    id: "ischi", title: "Ossa ischiatiche", titleEn: "Ischial Tuberosities (Sit Bones)", note: "Larghezza sella", noteEn: "Saddle width benchmark",
     fields: [
-      { id: "ischi_mm", lab: "Distanza tra le ossa ischiatiche", labEn: "Sit Bone Span (Center-to-Center)", pri: 1, t: "number", u: "mm", help: `<p>Misura tra i centri delle impronte.</p>` + D.ischi },
-      { id: "ischi_foto", lab: "Foto dell'impronta con righello accanto", labEn: "Impression Photo with Ruler", pri: 1, t: "select", opt: ["", "Sì", "No"] }
+      { id: "ischi_mm", lab: "Distanza tra le ossa ischiatiche", labEn: "Sit Bone Span (Center-to-Center)", pri: 1, t: "number", u: "mm",
+        help: `<p>Misura tra i centri delle impronte.</p>` + D.ischi,
+        helpEn: `<p>Measure center-to-center between the impression indentations.</p>` + D.ischi
+      },
+      { id: "ischi_foto", lab: "Foto dell'impronta con righello accanto", labEn: "Impression Photo with Ruler", pri: 1, t: "select",
+        opt: ["", "Sì", "No"],
+        optEn: ["", "Yes", "No"]
+      }
     ]
   },
   {
-    id: "mobilita", title: "Mobilità", titleEn: "Pelvic Mobility Test", note: "Test rapido",
+    id: "mobilita", title: "Mobilità", titleEn: "Pelvic Mobility Test", note: "Test rapido", noteEn: "Quick screening test",
     fields: [
-      { id: "basculamento", lab: "Basculamento del bacino", labEn: "Pelvic Anterior Tilt Rotation", pri: 1, t: "select", opt: ["", "Ruoto bene in avanti, la schiena bassa si inarca", "Ruoto poco, sento subito blocco", "Non riesco quasi per niente"] }
+      { id: "basculamento", lab: "Basculamento del bacino", labEn: "Pelvic Anterior Tilt Rotation", pri: 1, t: "select",
+        opt: ["", "Ruoto bene in avanti, la schiena bassa si inarca", "Ruoto poco, sento subito blocco", "Non riesco quasi per niente"],
+        optEn: ["", "Good forward rotation, lower back arches naturally", "Slight rotation, tight barrier felt early", "Barely rotates at all"]
+      }
     ]
   },
   {
@@ -192,19 +255,25 @@ const SCHEMA = [
     fields: [
       { id: "storia_inizio", lab: "Come è iniziato", labEn: "Onset & History", t: "textarea" },
       { id: "meglio_peggio", lab: "Cosa lo migliora o peggiora", labEn: "What eases or worsens it", t: "textarea" },
-      { id: "persistenza", lab: "Resta anche dopo essere sceso dalla bici?", labEn: "Persists after dismounting?", pri: 1, t: "select", opt: ["", "Nessun fastidio", "No, passa subito", "Sì, qualche minuto", "Sì, più di mezz'ora", "Sì, ore o giorni"] },
+      { id: "persistenza", lab: "Resta anche dopo essere sceso dalla bici?", labEn: "Persists after dismounting?", pri: 1, t: "select",
+        opt: ["", "Nessun fastidio", "No, passa subito", "Sì, qualche minuto", "Sì, più di mezz'ora", "Sì, ore o giorni"],
+        optEn: ["", "No discomfort", "No, fades immediately", "Yes, a few minutes", "Yes, over 30 minutes", "Yes, hours or days"]
+      },
       { id: "cambi", lab: "Cambiamenti recenti", labEn: "Recent Bike Changes", pri: 1, t: "textarea" }
     ]
   },
   {
     id: "media", title: "Foto e video", titleEn: "Photos & Videos Checklist",
     checklist: [
-      { id: "v1", pri: 1, t: "Video laterale, posizione più usata", tEn: "Side video, most used posture", s: "20-30s camera ad altezza anca" },
-      { id: "v2", pri: 1, t: "Video laterale, posizione più bassa", tEn: "Side video, low aero drops", s: "Presa bassa o appendici" },
-      { id: "v3", pri: 1, t: "Video posteriore", tEn: "Rear video (pelvic alignment)", s: "Allineamento bacino" }
+      { id: "v1", pri: 1, t: "Video laterale, posizione più usata", tEn: "Side video, most used posture", s: "20-30s camera ad altezza anca", sEn: "20-30s camera at hip level" },
+      { id: "v2", pri: 1, t: "Video laterale, posizione più bassa", tEn: "Side video, low aero drops", s: "Presa bassa o appendici", sEn: "In drops or aero extensions" },
+      { id: "v3", pri: 1, t: "Video posteriore", tEn: "Rear video (pelvic alignment)", s: "Allineamento bacino", sEn: "Pelvic alignment and hip rocking" }
     ],
     fields: [
-      { id: "supporto", lab: "Su cosa hai registrato i video", labEn: "Trainer / Rig Setup", pri: 1, t: "select", opt: ["", "Rullo interattivo o a rulli", "Rullo a resistenza fissa", "Cavalletto con ruota sollevata", "In strada", "Non ho ancora registrato"] }
+      { id: "supporto", lab: "Su cosa hai registrato i video", labEn: "Trainer / Rig Setup", pri: 1, t: "select",
+        opt: ["", "Rullo interattivo o a rulli", "Rullo a resistenza fissa", "Cavalletto con ruota sollevata", "In strada", "Non ho ancora registrato"],
+        optEn: ["", "Smart / Interactive Trainer or Rollers", "Classic Fluid/Mag Trainer", "Workstand with rear wheel elevated", "On the Road", "Not recorded yet"]
+      }
     ]
   },
   {
@@ -412,34 +481,51 @@ function fieldEl(f) {
   l1.appendChild(document.createTextNode(isEn && f.labEn ? f.labEn : f.lab));
   if (f.pri) { const b = document.createElement("span"); b.className = "pri"; b.textContent = I18N.t("badgeEssential"); l1.appendChild(b); }
   if (f.adv) { const b = document.createElement("span"); b.className = "adv"; b.textContent = I18N.t("badgeDetail"); l1.appendChild(b); }
-  if (f.help) {
+  if (f.help || f.helpEn) {
     const hb = document.createElement("button");
     hb.className = "helpbtn"; hb.type = "button"; hb.textContent = "?";
     hb.setAttribute("aria-expanded", "false");
-    hb.setAttribute("aria-label", "Spiegazione");
+    hb.setAttribute("aria-label", isEn ? "Help / Explanation" : "Spiegazione");
     l1.appendChild(hb); wrap._hb = hb;
   }
   lab.appendChild(l1);
-  if (f.how) { const h = document.createElement("div"); h.className = "f-how"; h.textContent = f.how; lab.appendChild(h); }
+  if (f.how || f.howEn) { const h = document.createElement("div"); h.className = "f-how"; h.textContent = (isEn && f.howEn) ? f.howEn : f.how; lab.appendChild(h); }
   top.appendChild(lab);
 
   const inw = document.createElement("div"); inw.className = "f-in";
   let input;
   if (f.t === "select") {
     input = document.createElement("select");
-    f.opt.forEach(o => { const op = document.createElement("option"); op.value = o; op.textContent = o || (isEn ? "Select" : "seleziona"); input.appendChild(op); });
+    const options = (isEn && f.optEn) ? f.optEn : f.opt;
+    options.forEach((o, oIdx) => {
+      const op = document.createElement("option");
+      op.value = f.opt ? f.opt[oIdx] : o;
+      op.textContent = o || (isEn ? "Select..." : "seleziona");
+      input.appendChild(op);
+    });
   } else if (f.t === "textarea") {
     input = document.createElement("textarea");
-    if (f.ph) input.placeholder = f.ph;
+    if (f.ph || f.phEn) input.placeholder = (isEn && f.phEn) ? f.phEn : f.ph;
   } else {
     input = document.createElement("input");
     input.type = f.t === "number" ? "number" : "text";
     if (f.t === "number") input.step = "any";
-    if (f.ph) input.placeholder = f.ph;
+    if (f.ph || f.phEn) input.placeholder = (isEn && f.phEn) ? f.phEn : f.ph;
   }
   input.id = "fld-" + f.id;
-  input.value = state.v[f.id] || "";
+  
+  if (f.t === "select") {
+    const curVal = state.v[f.id] || "";
+    let matchedIdx = f.opt ? f.opt.indexOf(curVal) : -1;
+    if (matchedIdx === -1 && f.optEn) matchedIdx = f.optEn.indexOf(curVal);
+    if (matchedIdx !== -1) {
+      input.selectedIndex = matchedIdx;
+    }
+  } else {
+    input.value = state.v[f.id] || "";
+  }
   if (input.value) input.classList.add("filled");
+
   input.addEventListener("input", () => {
     state.v[f.id] = input.value;
     input.classList.toggle("filled", !!input.value);
@@ -455,9 +541,9 @@ function fieldEl(f) {
   top.appendChild(inw);
   wrap.appendChild(top);
 
-  if (f.help) {
+  if (f.help || f.helpEn) {
     const h = document.createElement("div"); h.className = "help"; h.hidden = true;
-    h.innerHTML = f.help;
+    h.innerHTML = (isEn && f.helpEn) ? f.helpEn : f.help;
     wrap.appendChild(h);
     wrap._hb.addEventListener("click", () => {
       const open = h.hidden;
@@ -525,7 +611,7 @@ function chkEl(c) {
   const t = document.createElement("div"); t.className = "chk-t";
   t.appendChild(document.createTextNode(isEn && c.tEn ? c.tEn : c.t));
   if (c.pri) { const b = document.createElement("span"); b.className = "pri"; b.textContent = I18N.t("badgeEssential"); b.style.marginLeft = "7px"; t.appendChild(b); }
-  const s = document.createElement("div"); s.className = "chk-s"; s.textContent = c.s;
+  const s = document.createElement("div"); s.className = "chk-s"; s.textContent = (isEn && c.sEn ? c.sEn : c.s) || "";
   d.appendChild(t); d.appendChild(s);
   w.appendChild(i); w.appendChild(d);
   return w;
@@ -574,7 +660,7 @@ function renderForm() {
     const hd = document.createElement("div"); hd.className = "block-head";
     const n = document.createElement("span"); n.className = "num"; n.textContent = String(i + 1).padStart(2, "0");
     const h2 = document.createElement("h2"); h2.textContent = isEn && sec.titleEn ? sec.titleEn : sec.title;
-    const nt = document.createElement("span"); nt.className = "note"; nt.textContent = sec.note || "";
+    const nt = document.createElement("span"); nt.className = "note"; nt.textContent = (isEn && sec.noteEn ? sec.noteEn : sec.note) || "";
     hd.appendChild(n); hd.appendChild(h2); hd.appendChild(nt); s.appendChild(hd);
     if (sec.intro) { const it = document.createElement("div"); it.className = "block-intro"; it.textContent = isEn && sec.introEn ? sec.introEn : sec.intro; s.appendChild(it); }
     const b = document.createElement("div"); b.className = "block-body";
