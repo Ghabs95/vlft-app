@@ -360,7 +360,27 @@ const I18N = {
       statusStop: "⏹ Ferma",
       camWarningNonPerp: "Camera non perpendicolare",
       diagCritical: "Critici",
-      diagModerate: "Moderati"
+      diagModerate: "Moderati",
+
+      // Camera Permission Guide Modal & Native Capture
+      lblCamGuideTitle: "Permessi Fotocamera Necessari",
+      lblCamBlockedTitle: "Accesso Fotocamera Bloccato nel Browser",
+      lblCamBlockedDesc: "Per motivi di sicurezza, i browser web non consentono ai siti di mostrare nuovamente la richiesta permessi una volta negata. È necessario abilitarla nelle impostazioni del browser.",
+      lblCamHowToTitle: "Come sbloccare la fotocamera in 2 tocchi:",
+      lblCamGuideIosTitle: "🍎 Su iPhone / iPad (Safari):",
+      lblCamGuideIos1: "1. Tocca l'icona aA o le impostazioni a sinistra nella barra dell'URL.",
+      lblCamGuideIos2: "2. Seleziona Impostazioni sito web.",
+      lblCamGuideIos3: "3. Imposta Fotocamera su Consenti.",
+      lblCamGuideAndroidTitle: "🤖 Su Android (Chrome / Edge / Samsung):",
+      lblCamGuideAndroid1: "1. Tocca l'icona del lucchetto 🔒 o dei cursori a sinistra dell'URL.",
+      lblCamGuideAndroid2: "2. Tocca Autorizzazioni.",
+      lblCamGuideAndroid3: "3. Attiva l'interruttore Fotocamera su Consenti.",
+      lblCamGuideDesktopTitle: "💻 Su Computer (Chrome / Safari / Edge):",
+      lblCamGuideDesktopDesc: "Clicca sull'icona della fotocamera con la crocetta rossa o il lucchetto nella barra degli indirizzi e scegli Consenti sempre.",
+      btnCamGuideClose: "Chiudi",
+      btnCamGuideRetry: "🔄 Riprova Accesso Ora",
+      btnCamGuideNative: "📱 Scatta con Fotocamera",
+      btnNativePhotoCam: "📷 Scatta Subito"
     },
 
     en: {
@@ -686,7 +706,27 @@ const I18N = {
       statusStop: "⏹ Stop",
       camWarningNonPerp: "Camera not perpendicular",
       diagCritical: "Critical",
-      diagModerate: "Moderate"
+      diagModerate: "Moderate",
+
+      // Camera Permission Guide Modal & Native Capture
+      lblCamGuideTitle: "Camera Permissions Required",
+      lblCamBlockedTitle: "Camera Access Blocked in Browser",
+      lblCamBlockedDesc: "For security reasons, web browsers do not allow sites to prompt for camera permissions automatically once denied. You need to enable it in your browser settings.",
+      lblCamHowToTitle: "How to unlock the camera in 2 taps:",
+      lblCamGuideIosTitle: "🍎 On iPhone / iPad (Safari):",
+      lblCamGuideIos1: "1. Tap the aA or site settings icon on the left of the URL bar.",
+      lblCamGuideIos2: "2. Tap Website Settings.",
+      lblCamGuideIos3: "3. Set Camera to Allow.",
+      lblCamGuideAndroidTitle: "🤖 On Android (Chrome / Edge / Samsung):",
+      lblCamGuideAndroid1: "1. Tap the lock 🔒 or tune icon on the left of the URL.",
+      lblCamGuideAndroid2: "2. Tap Permissions.",
+      lblCamGuideAndroid3: "3. Toggle Camera to Allow.",
+      lblCamGuideDesktopTitle: "💻 On Computer (Chrome / Safari / Edge):",
+      lblCamGuideDesktopDesc: "Click the camera icon with the red cross or the lock icon in the address bar and select Always allow.",
+      btnCamGuideClose: "Close",
+      btnCamGuideRetry: "🔄 Retry Camera Access",
+      btnCamGuideNative: "📱 Snap with Phone Camera",
+      btnNativePhotoCam: "📷 Snap Photo"
     }
   }
 };

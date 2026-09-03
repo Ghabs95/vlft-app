@@ -249,25 +249,98 @@ function getCameraErrorMessage(error) {
   return I18N.t(errorKey);
 }
 
+let pendingCameraRetryFn = null;
+
+function showCameraPermissionGuide(onRetry, nativeFallbackInput) {
+  pendingCameraRetryFn = onRetry;
+  const modal = document.getElementById("modalCameraPermissionGuide");
+  if (modal) {
+    const btnNative = document.getElementById("btnCamGuideNative");
+    if (btnNative) {
+      if (nativeFallbackInput) {
+        btnNative.style.display = "inline-flex";
+        btnNative.onclick = () => {
+          modal.close();
+          nativeFallbackInput.click();
+        };
+      } else {
+        btnNative.style.display = "none";
+      }
+    }
+    modal.showModal();
+  } else {
+    alert(I18N.t("statusCameraPermissionDenied"));
+  }
+}
+
+function initCameraPermissionGuide() {
+  const modal = document.getElementById("modalCameraPermissionGuide");
+  const btnClose = document.getElementById("btnCloseCamGuide");
+  const btnCloseBottom = document.getElementById("btnCamGuideClose");
+  const btnRetry = document.getElementById("btnCamGuideRetry");
+
+  const closeGuide = () => { if (modal) modal.close(); };
+  btnClose?.addEventListener("click", closeGuide);
+  btnCloseBottom?.addEventListener("click", closeGuide);
+
+  btnRetry?.addEventListener("click", async () => {
+    if (modal) modal.close();
+    if (typeof pendingCameraRetryFn === "function") {
+      try {
+        await pendingCameraRetryFn();
+      } catch (e) {
+        console.warn("Camera retry failed:", e);
+      }
+    }
+  });
+}
+
+async function attachStreamToVideo(video, stream) {
+  if (!video || !stream) return;
+  video.muted = true;
+  video.playsInline = true;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+  video.setAttribute("autoplay", "");
+  video.srcObject = stream;
+  try {
+    await video.play();
+  } catch (e) {
+    console.warn("Video play error suppressed:", e);
+  }
+}
+
 async function requestCameraStream(facingMode, dimensions) {
   if (!window.isSecureContext) {
-    throw new Error("Camera access requires a secure context.");
+    throw new Error("Camera access requires a secure context (HTTPS).");
   }
   if (!navigator.mediaDevices?.getUserMedia) {
-    throw new Error("Camera API unavailable.");
+    throw new Error("Camera API unavailable in this browser.");
   }
 
   const preferredConstraints = {
     video: { ...dimensions, facingMode: { ideal: facingMode } },
     audio: false
   };
+
   try {
     return await navigator.mediaDevices.getUserMedia(preferredConstraints);
   } catch (error) {
-    if (error.name !== "OverconstrainedError" && error.name !== "NotFoundError") {
+    if (error.name === "NotAllowedError" || error.name === "SecurityError") {
       throw error;
     }
-    return navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    console.warn("Preferred camera constraints failed, attempting fallback...", error);
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: facingMode } },
+        audio: false
+      });
+    } catch (error2) {
+      if (error2.name === "NotAllowedError" || error2.name === "SecurityError") {
+        throw error2;
+      }
+      return await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    }
   }
 }
 
@@ -978,6 +1051,30 @@ function applyLanguage() {
   setTxt("btnProcessImport", "btnProcessImport");
   setTxt("btnImportLoadSample", "menuItemSample");
 
+  // Camera Permission Guide & Native Capture Buttons
+  setTxt("lblCamGuideTitle", "lblCamGuideTitle");
+  setTxt("lblCamBlockedTitle", "lblCamBlockedTitle");
+  setTxt("lblCamBlockedDesc", "lblCamBlockedDesc");
+  setTxt("lblCamHowToTitle", "lblCamHowToTitle");
+  setTxt("lblCamGuideIosTitle", "lblCamGuideIosTitle");
+  setTxt("lblCamGuideIos1", "lblCamGuideIos1");
+  setTxt("lblCamGuideIos2", "lblCamGuideIos2");
+  setTxt("lblCamGuideIos3", "lblCamGuideIos3");
+  setTxt("lblCamGuideAndroidTitle", "lblCamGuideAndroidTitle");
+  setTxt("lblCamGuideAndroid1", "lblCamGuideAndroid1");
+  setTxt("lblCamGuideAndroid2", "lblCamGuideAndroid2");
+  setTxt("lblCamGuideAndroid3", "lblCamGuideAndroid3");
+  setTxt("lblCamGuideDesktopTitle", "lblCamGuideDesktopTitle");
+  setTxt("lblCamGuideDesktopDesc", "lblCamGuideDesktopDesc");
+  setTxt("btnCamGuideClose", "btnCamGuideClose");
+  setTxt("btnCamGuideRetry", "btnCamGuideRetry");
+  setTxt("btnCamGuideNative", "btnCamGuideNative");
+
+  setTxt("btnNativePhotoCam", "btnNativePhotoCam");
+  setTxt("btnNativeBikePhotoCam", "btnNativePhotoCam");
+  setTxt("btnNativeSitBoneCam", "btnNativePhotoCam");
+  setTxt("btnNativeFootFlareCam", "btnNativePhotoCam");
+
   renderForm();
   renderGlossary();
   renderDiagnostics();
@@ -1367,11 +1464,10 @@ async function startWebcam() {
   const btnRec = document.getElementById("btnRecordVideo");
   try {
     webcamStream = await requestCameraStream("environment", { width: { ideal: 1280 }, height: { ideal: 720 } });
-    video.srcObject = webcamStream;
-    video.play();
-    video.onloadedmetadata = () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+    await attachStreamToVideo(video, webcamStream);
+    const setupCanvas = () => {
+      canvas.width = video.videoWidth || 1280;
+      canvas.height = video.videoHeight || 720;
       if (poseEngine) {
         poseEngine.setLiveCameraActive(true);
         poseEngine.startLoop();
@@ -1379,9 +1475,15 @@ async function startWebcam() {
       }
       if (btnRec) btnRec.style.display = "inline-block";
     };
+    video.onloadedmetadata = setupCanvas;
+    if (video.videoWidth > 0) setupCanvas();
     return true;
   } catch (err) {
-    alert(getCameraErrorMessage(err));
+    if (err.name === "NotAllowedError" || err.name === "SecurityError") {
+      showCameraPermissionGuide(startWebcam);
+    } else {
+      alert(getCameraErrorMessage(err));
+    }
     return false;
   }
 }
@@ -1645,10 +1747,7 @@ async function startPhotoCamera() {
 
   try {
     photoCamStream = await requestCameraStream("user", { width: { ideal: 1280 }, height: { ideal: 960 } });
-    if (video) {
-      video.srcObject = photoCamStream;
-      video.play();
-    }
+    await attachStreamToVideo(video, photoCamStream);
     if (container) container.style.display = "block";
 
     if (countdownOverlay && countdownNum) {
@@ -1672,7 +1771,12 @@ async function startPhotoCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(getCameraErrorMessage(err));
+    if (err.name === "NotAllowedError" || err.name === "SecurityError") {
+      const nativeInput = document.getElementById("photoNativeCamInput");
+      showCameraPermissionGuide(startPhotoCamera, nativeInput);
+    } else {
+      alert(getCameraErrorMessage(err));
+    }
   }
 }
 
@@ -1827,6 +1931,24 @@ function initPhotoWizardEvents() {
     });
   }
 
+  const btnNativeCam = document.getElementById("btnNativePhotoCam");
+  const nativeCamInput = document.getElementById("photoNativeCamInput");
+  if (btnNativeCam && nativeCamInput) {
+    btnNativeCam.addEventListener("click", () => nativeCamInput.click());
+    nativeCamInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processPhotoForAnthropometry(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
   btnStartCam?.addEventListener("click", () => startPhotoCamera());
   btnSnap?.addEventListener("click", () => capturePhotoSnapshot());
   btnCancelCam?.addEventListener("click", () => stopPhotoCam());
@@ -1921,8 +2043,7 @@ async function startBikePhotoCamera() {
   try {
     const stream = await requestCameraStream("environment", { width: { ideal: 1920 }, height: { ideal: 1080 } });
     bikePhotoCamStream = stream;
-    video.srcObject = stream;
-    await video.play();
+    await attachStreamToVideo(video, stream);
     container.style.display = "block";
 
     let count = 5;
@@ -1942,7 +2063,12 @@ async function startBikePhotoCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(getCameraErrorMessage(err));
+    if (err.name === "NotAllowedError" || err.name === "SecurityError") {
+      const nativeInput = document.getElementById("bikePhotoNativeCamInput");
+      showCameraPermissionGuide(startBikePhotoCamera, nativeInput);
+    } else {
+      alert(getCameraErrorMessage(err));
+    }
   }
 }
 
@@ -2025,6 +2151,24 @@ function initBikePhotoWizardEvents() {
   if (btnUpload && fileInput) {
     btnUpload.addEventListener("click", () => fileInput.click());
     fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processBikePhoto(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  const btnNativeCam = document.getElementById("btnNativeBikePhotoCam");
+  const nativeCamInput = document.getElementById("bikePhotoNativeCamInput");
+  if (btnNativeCam && nativeCamInput) {
+    btnNativeCam.addEventListener("click", () => nativeCamInput.click());
+    nativeCamInput.addEventListener("change", (e) => {
       if (e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -2125,8 +2269,7 @@ async function startSitBoneCamera() {
   try {
     const stream = await requestCameraStream("environment", { width: { ideal: 1920 }, height: { ideal: 1080 } });
     sitBoneCamStream = stream;
-    video.srcObject = stream;
-    await video.play();
+    await attachStreamToVideo(video, stream);
     container.style.display = "block";
 
     let count = 5;
@@ -2146,7 +2289,12 @@ async function startSitBoneCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(getCameraErrorMessage(err));
+    if (err.name === "NotAllowedError" || err.name === "SecurityError") {
+      const nativeInput = document.getElementById("sitBoneNativeCamInput");
+      showCameraPermissionGuide(startSitBoneCamera, nativeInput);
+    } else {
+      alert(getCameraErrorMessage(err));
+    }
   }
 }
 
@@ -2238,6 +2386,24 @@ function initSitBoneWizardEvents() {
     });
   }
 
+  const btnNativeCam = document.getElementById("btnNativeSitBoneCam");
+  const nativeCamInput = document.getElementById("sitBoneNativeCamInput");
+  if (btnNativeCam && nativeCamInput) {
+    btnNativeCam.addEventListener("click", () => nativeCamInput.click());
+    nativeCamInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processSitBonePhoto(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
   btnStartCam?.addEventListener("click", () => startSitBoneCamera());
   btnSnap?.addEventListener("click", () => captureSitBoneSnapshot());
   btnCancelCam?.addEventListener("click", () => stopSitBoneCamera());
@@ -2316,8 +2482,7 @@ async function startFootFlareCamera() {
   try {
     const stream = await requestCameraStream("environment", { width: { ideal: 1920 }, height: { ideal: 1080 } });
     footCamStream = stream;
-    video.srcObject = stream;
-    await video.play();
+    await attachStreamToVideo(video, stream);
     container.style.display = "block";
 
     let count = 5;
@@ -2337,7 +2502,12 @@ async function startFootFlareCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(getCameraErrorMessage(err));
+    if (err.name === "NotAllowedError" || err.name === "SecurityError") {
+      const nativeInput = document.getElementById("footFlareNativeCamInput");
+      showCameraPermissionGuide(startFootFlareCamera, nativeInput);
+    } else {
+      alert(getCameraErrorMessage(err));
+    }
   }
 }
 
@@ -2411,6 +2581,24 @@ function initFootFlareWizardEvents() {
   if (btnUpload && fileInput) {
     btnUpload.addEventListener("click", () => fileInput.click());
     fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processFootFlarePhoto(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  const btnNativeCam = document.getElementById("btnNativeFootFlareCam");
+  const nativeCamInput = document.getElementById("footFlareNativeCamInput");
+  if (btnNativeCam && nativeCamInput) {
+    btnNativeCam.addEventListener("click", () => nativeCamInput.click());
+    nativeCamInput.addEventListener("change", (e) => {
       if (e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -3195,6 +3383,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initBikePhotoWizardEvents();
   initSitBoneWizardEvents();
   initFootFlareWizardEvents();
+  initCameraPermissionGuide();
 
   setTimeout(() => {
     if (poseEngine) {

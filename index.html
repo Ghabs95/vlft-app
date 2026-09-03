@@ -697,10 +697,12 @@
         </div>
 
         <!-- Input Actions (Upload or Camera Snapshot) -->
-        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:18px; flex-wrap:wrap;">
           <input type="file" id="photoFileInput" accept="image/*" style="display:none">
-          <button class="btn btn-solid" id="btnUploadPhotoFile" style="padding:10px 20px; font-size:12px;">Carica Foto</button>
-          <button class="btn btn-accent" id="btnStartPhotoCam" style="padding:10px 20px; font-size:12px;">Scatta con Timer (5s)</button>
+          <input type="file" id="photoNativeCamInput" accept="image/*" capture="user" style="display:none">
+          <button class="btn btn-solid" id="btnUploadPhotoFile" style="padding:10px 18px; font-size:12px;">Carica Foto</button>
+          <button class="btn btn-solid" id="btnNativePhotoCam" style="padding:10px 18px; font-size:12px; background:var(--surface-2); border-color:var(--card-border-bright);">📷 Scatta Subito</button>
+          <button class="btn btn-accent" id="btnStartPhotoCam" style="padding:10px 18px; font-size:12px;">⏱ Timer Live (5s)</button>
         </div>
 
         <!-- Live Camera Viewfinder (for taking snapshot) -->
@@ -840,10 +842,12 @@
         </div>
 
         <!-- Action buttons to Upload or Snap -->
-        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
           <input type="file" id="bikePhotoFileInput" accept="image/*" style="display:none">
-          <button class="btn btn-solid" id="btnUploadBikePhotoFile" style="padding:9px 18px; font-size:12px;">Carica Foto Bici</button>
-          <button class="btn btn-accent" id="btnStartBikePhotoCam" style="padding:9px 18px; font-size:12px;">Scatta con Timer (5s)</button>
+          <input type="file" id="bikePhotoNativeCamInput" accept="image/*" capture="environment" style="display:none">
+          <button class="btn btn-solid" id="btnUploadBikePhotoFile" style="padding:9px 16px; font-size:12px;">Carica Foto Bici</button>
+          <button class="btn btn-solid" id="btnNativeBikePhotoCam" style="padding:9px 16px; font-size:12px; background:var(--surface-2); border-color:var(--card-border-bright);">📷 Scatta Subito</button>
+          <button class="btn btn-accent" id="btnStartBikePhotoCam" style="padding:9px 16px; font-size:12px;">⏱ Timer Live (5s)</button>
         </div>
 
         <!-- Live Camera Viewfinder -->
@@ -952,10 +956,12 @@
             <li id="lblSitBoneInst3">Usa i mirini con lente 3x per allineare la larghezza della carta e i centri delle due cavità.</li>
           </ul>
         </div>
-        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
           <input type="file" id="sitBoneFileInput" accept="image/*" style="display:none">
-          <button class="btn btn-solid" id="btnUploadSitBoneFile" style="padding:9px 18px; font-size:12px;">Carica Foto Impronta</button>
-          <button class="btn btn-accent" id="btnStartSitBoneCam" style="padding:9px 18px; font-size:12px;">Scatta con Timer (5s)</button>
+          <input type="file" id="sitBoneNativeCamInput" accept="image/*" capture="environment" style="display:none">
+          <button class="btn btn-solid" id="btnUploadSitBoneFile" style="padding:9px 16px; font-size:12px;">Carica Foto Impronta</button>
+          <button class="btn btn-solid" id="btnNativeSitBoneCam" style="padding:9px 16px; font-size:12px; background:var(--surface-2); border-color:var(--card-border-bright);">📷 Scatta Subito</button>
+          <button class="btn btn-accent" id="btnStartSitBoneCam" style="padding:9px 16px; font-size:12px;">⏱ Timer Live (5s)</button>
         </div>
         <div id="sitBoneCamContainer" style="display:none; position:relative; width:100%; max-width:500px; margin:0 auto 16px; border-radius:var(--r); overflow:hidden; background:#000; border:1px solid var(--card-border);">
           <video id="sitBoneCamVideo" playsinline muted style="width:100%; height:auto; display:block;"></video>
@@ -1020,10 +1026,12 @@
             <li id="lblFootFlareInst3">Trascina i mirini con lente 3x sul centro del tallone e sul secondo dito di ciascun piede per calcolare l'angolo di rotazione naturale.</li>
           </ul>
         </div>
-        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
           <input type="file" id="footFlareFileInput" accept="image/*" style="display:none">
-          <button class="btn btn-solid" id="btnUploadFootFlareFile" style="padding:9px 18px; font-size:12px;">Carica Foto Piedi</button>
-          <button class="btn btn-accent" id="btnStartFootFlareCam" style="padding:9px 18px; font-size:12px;">Scatta con Timer (5s)</button>
+          <input type="file" id="footFlareNativeCamInput" accept="image/*" capture="environment" style="display:none">
+          <button class="btn btn-solid" id="btnUploadFootFlareFile" style="padding:9px 16px; font-size:12px;">Carica Foto Piedi</button>
+          <button class="btn btn-solid" id="btnNativeFootFlareCam" style="padding:9px 16px; font-size:12px; background:var(--surface-2); border-color:var(--card-border-bright);">📷 Scatta Subito</button>
+          <button class="btn btn-accent" id="btnStartFootFlareCam" style="padding:9px 16px; font-size:12px;">⏱ Timer Live (5s)</button>
         </div>
         <div id="footFlareCamContainer" style="display:none; position:relative; width:100%; max-width:500px; margin:0 auto 16px; border-radius:var(--r); overflow:hidden; background:#000; border:1px solid var(--card-border);">
           <video id="footFlareCamVideo" playsinline muted style="width:100%; height:auto; display:block;"></video>
@@ -1070,6 +1078,62 @@
     <div class="modal-footer">
       <button class="btn btn-outline" id="btnCancelFootFlareWizard">Annulla</button>
       <button class="btn btn-action-green" id="btnApplyFootFlareMeasurements" style="display:none;">Applica alla Scheda Dati</button>
+    </div>
+  </dialog>
+
+  <!-- ===================== CAMERA PERMISSION GUIDE MODAL ===================== -->
+  <dialog class="app-modal" id="modalCameraPermissionGuide" style="max-width:540px; width:95vw;">
+    <div class="modal-header">
+      <h3 id="lblCamGuideTitle">Permessi Fotocamera Necessari</h3>
+      <button class="helpbtn" id="btnCloseCamGuide">✕</button>
+    </div>
+    <div class="modal-body" style="font-size:13px; line-height:1.6;">
+      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; padding:12px; border-radius:var(--r); background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25);">
+        <span style="font-size:24px; line-height:1;">🚫</span>
+        <div>
+          <div style="font-weight:700; color:#EF4444;" id="lblCamBlockedTitle">Accesso Fotocamera Bloccato nel Browser</div>
+          <div style="font-size:12px; color:var(--ink-2); margin-top:3px;" id="lblCamBlockedDesc">Per motivi di sicurezza, i browser web non consentono ai siti di mostrare nuovamente la richiesta permessi una volta negata. È necessario abilitarla nelle impostazioni del browser.</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-weight:700; margin-bottom:8px; font-family:var(--mono); color:var(--cyan); font-size:11px; text-transform:uppercase; letter-spacing:0.04em;" id="lblCamHowToTitle">Come sbloccare la fotocamera in 2 tocchi:</div>
+        
+        <!-- iOS Safari -->
+        <div class="cam-guide-card" style="margin-bottom:8px; padding:10px 12px; border-radius:var(--r); background:var(--surface); border:1px solid var(--card-border);">
+          <div style="font-weight:600; color:var(--ink); font-size:12px; margin-bottom:4px;" id="lblCamGuideIosTitle">🍎 Su iPhone / iPad (Safari):</div>
+          <div style="font-size:12px; color:var(--ink-2); line-height:1.5;">
+            <span id="lblCamGuideIos1">1. Tocca l'icona <b>aA</b> o le impostazioni a sinistra nella barra dell'URL.</span><br>
+            <span id="lblCamGuideIos2">2. Seleziona <b>Impostazioni sito web</b>.</span><br>
+            <span id="lblCamGuideIos3">3. Imposta <b>Fotocamera</b> su <b style="color:#10B981;">Consenti</b>.</span>
+          </div>
+        </div>
+
+        <!-- Android Chrome -->
+        <div class="cam-guide-card" style="margin-bottom:8px; padding:10px 12px; border-radius:var(--r); background:var(--surface); border:1px solid var(--card-border);">
+          <div style="font-weight:600; color:var(--ink); font-size:12px; margin-bottom:4px;" id="lblCamGuideAndroidTitle">🤖 Su Android (Chrome / Edge / Samsung):</div>
+          <div style="font-size:12px; color:var(--ink-2); line-height:1.5;">
+            <span id="lblCamGuideAndroid1">1. Tocca l'icona del <b>lucchetto 🔒</b> o dei cursori a sinistra dell'URL.</span><br>
+            <span id="lblCamGuideAndroid2">2. Tocca <b>Autorizzazioni</b>.</span><br>
+            <span id="lblCamGuideAndroid3">3. Attiva l'interruttore <b>Fotocamera</b> su <b style="color:#10B981;">Consenti</b>.</span>
+          </div>
+        </div>
+
+        <!-- Mac / PC -->
+        <div class="cam-guide-card" style="padding:10px 12px; border-radius:var(--r); background:var(--surface); border:1px solid var(--card-border);">
+          <div style="font-weight:600; color:var(--ink); font-size:12px; margin-bottom:4px;" id="lblCamGuideDesktopTitle">💻 Su Computer (Chrome / Safari / Edge):</div>
+          <div style="font-size:12px; color:var(--ink-2); line-height:1.5;" id="lblCamGuideDesktopDesc">
+            Clicca sull'icona della fotocamera con la crocetta rossa o il lucchetto nella barra degli indirizzi e scegli <b style="color:#10B981;">Consenti sempre</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-outline" id="btnCamGuideClose">Chiudi</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-solid" id="btnCamGuideNative" style="display:none; background:var(--surface-2); border-color:var(--card-border-bright);">📱 Scatta con Fotocamera</button>
+        <button class="btn btn-solid" id="btnCamGuideRetry" style="background:#10B981; border-color:#10B981; color:#fff;">🔄 Riprova Accesso Ora</button>
+      </div>
     </div>
   </dialog>
 
