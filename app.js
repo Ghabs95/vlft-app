@@ -2903,12 +2903,11 @@ function renderProfileDropdown() {
             if (isActive) {
               const loaded = ProfileManager.loadActiveState();
               state = Object.assign(getFreshBlankState(), loaded);
-              renderForm();
-              updateDiagnostics();
-              updateStaticCalculator();
+              refreshUiAfterProfileChange();
+            } else {
+              updateActiveProfileBadge();
+              renderProfileDropdown();
             }
-            updateActiveProfileBadge();
-            renderProfileDropdown();
             setStatusBadge(I18N.t("statusProfileDeleted"));
           }
         }
@@ -2919,7 +2918,8 @@ function renderProfileDropdown() {
     item.appendChild(actions);
 
     // Switch to profile on click
-    item.addEventListener("click", () => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
       if (p.id === active.id) {
         closeProfileDropdown();
         return;
@@ -2929,17 +2929,28 @@ function renderProfileDropdown() {
       const loaded = ProfileManager.loadActiveState();
       state = Object.assign(getFreshBlankState(), loaded);
 
-      renderForm();
-      updateDiagnostics();
-      updateStaticCalculator();
-      updateActiveProfileBadge();
-      renderProfileDropdown();
+      refreshUiAfterProfileChange();
       closeProfileDropdown();
       setStatusBadge(I18N.t("statusProfileSwitched"));
     });
 
     container.appendChild(item);
   });
+}
+
+function refreshUiAfterProfileChange() {
+  renderForm();
+  if (typeof renderDiagnostics === "function") {
+    try { renderDiagnostics(); } catch (e) { console.error(e); }
+  }
+  if (typeof updateStaticCalculator === "function") {
+    try { updateStaticCalculator(); } catch (e) { console.error(e); }
+  }
+  if (typeof updateCockpitSimulation === "function") {
+    try { updateCockpitSimulation(); } catch (e) { console.error(e); }
+  }
+  updateActiveProfileBadge();
+  renderProfileDropdown();
 }
 
 function openProfileDropdown() {
@@ -2986,7 +2997,8 @@ function initProfileManagerModule() {
   });
 
   // + Nuova Scheda / Bici
-  document.getElementById("btnNewProfile")?.addEventListener("click", () => {
+  document.getElementById("btnNewProfile")?.addEventListener("click", (e) => {
+    e.stopPropagation();
     const defaultName = `Bici ${ProfileManager.listProfiles().length + 1}`;
     const name = prompt(I18N.t("promptNewProfile"), defaultName);
     if (name === null) return;
@@ -2995,25 +3007,20 @@ function initProfileManagerModule() {
     ProfileManager.createProfile(name);
     state = Object.assign(getFreshBlankState(), ProfileManager.loadActiveState());
 
-    renderForm();
-    updateDiagnostics();
-    updateStaticCalculator();
-    updateActiveProfileBadge();
+    refreshUiAfterProfileChange();
     closeProfileDropdown();
     setStatusBadge(I18N.t("statusProfileCreated"));
   });
 
   // Duplica Scheda Attuale
-  document.getElementById("btnDuplicateProfile")?.addEventListener("click", () => {
+  document.getElementById("btnDuplicateProfile")?.addEventListener("click", (e) => {
+    e.stopPropagation();
     saveToLocalStorage();
     const active = ProfileManager.getActiveProfile();
     ProfileManager.duplicateActiveProfile(`${active.name} (Copia)`);
     state = Object.assign(getFreshBlankState(), ProfileManager.loadActiveState());
 
-    renderForm();
-    updateDiagnostics();
-    updateStaticCalculator();
-    updateActiveProfileBadge();
+    refreshUiAfterProfileChange();
     closeProfileDropdown();
     setStatusBadge(I18N.t("statusProfileDuplicated"));
   });
