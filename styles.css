@@ -790,6 +790,109 @@ td:nth-child(n+2) {
   color: #FCA5A5;
 }
 
+/* Profile List & Switcher */
+.profile-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 2px 0;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-size: 12px;
+  color: var(--ink);
+  gap: 8px;
+  border: 1px solid transparent;
+}
+
+.profile-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.profile-item.is-active {
+  background: rgba(0, 212, 255, 0.12);
+  border-color: rgba(0, 212, 255, 0.35);
+}
+
+[data-theme="light"] .profile-item:hover {
+  background: #F1F5F9;
+}
+
+[data-theme="light"] .profile-item.is-active {
+  background: rgba(2, 132, 199, 0.1);
+  border-color: rgba(2, 132, 199, 0.35);
+}
+
+.profile-item-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-item-name {
+  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink);
+}
+
+.profile-item-sub {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.profile-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.profile-action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+}
+
+.profile-action-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+}
+
+.profile-action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+[data-theme="light"] .profile-action-btn:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+
 .menu-divider {
   height: 1px;
   background: var(--line);

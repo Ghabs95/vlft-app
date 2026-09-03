@@ -61,6 +61,35 @@
             <button id="langEN" aria-pressed="false" style="padding:5px 8px;">EN</button>
           </div>
 
+          <!-- Profile Switcher Dropdown (Client-Only Multi-Bike) -->
+          <div class="menu-dropdown-wrap" id="profileDropdownWrap">
+            <button class="btn-menu btn-profile" id="btnToggleProfile" aria-expanded="false" aria-haspopup="true" title="Gestisci schede e bici">
+              <span class="menu-icon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/>
+                  <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l3-3 3 3"/><path d="M12 17.5V14l4-3 2.5 6.5"/>
+                </svg>
+              </span>
+              <span id="activeProfileBadge" style="max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Bici Principale</span>
+              <span class="caret">▾</span>
+            </button>
+            <div class="menu-dropdown-panel profile-dropdown-panel" id="profileDropdownPanel" hidden style="min-width:270px;">
+              <div class="menu-group-title" id="txtProfilesGroupTitle">Le mie Bici & Schede</div>
+              <div class="profile-items-list" id="profileItemsList">
+                <!-- Dynamically injected -->
+              </div>
+              <div class="menu-divider"></div>
+              <button class="menu-item" id="btnNewProfile">
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                <span id="txtBtnNewProfile">Nuova Scheda / Bici</span>
+              </button>
+              <button class="menu-item" id="btnDuplicateProfile">
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+                <span id="txtBtnDuplicateProfile">Duplica Scheda Attuale</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Joint Actions & File Menu Dropdown -->
           <div class="menu-dropdown-wrap" id="menuDropdownWrap">
             <button class="btn-menu" id="btnToggleMenu" aria-expanded="false" aria-haspopup="true" title="Menu azioni e file">
@@ -1051,6 +1080,7 @@
   <script src="bike-measure-engine.js"></script>
   <script src="sitbone-measure-engine.js"></script>
   <script src="foot-measure-engine.js"></script>
+  <script src="profile-manager.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

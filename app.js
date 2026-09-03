@@ -216,14 +216,20 @@ const SCHEMA = [
 
 // ===================== STATE & STORAGE =====================
 const STORAGE_KEY = "bikefit:pro:v3";
-let state = {
-  mode: "rapido",
-  v: {},
-  chk: {},
-  sx: {},
-  log: [["", "", "", "", ""]],
-  videoAngles: null
-};
+
+function getFreshBlankState() {
+  return {
+    version: 3,
+    mode: "rapido",
+    v: {},
+    chk: {},
+    sx: {},
+    log: [["", "", "", "", ""]],
+    videoAngles: null
+  };
+}
+
+let state = getFreshBlankState();
 
 let saveTimer = null;
 let poseEngine = null;
@@ -233,8 +239,13 @@ let dualVideoSync = { syncOffset: 0, isSynced: false };
 
 function saveToLocalStorage() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (typeof ProfileManager !== "undefined") {
+      ProfileManager.saveActiveState(state);
+    } else {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
     setStatusBadge(I18N.t("statusSaved"));
+    updateActiveProfileBadge();
   } catch (e) {
     setStatusBadge(I18N.t("statusSaveError"));
   }
@@ -242,15 +253,29 @@ function saveToLocalStorage() {
 
 function queueSave() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => saveToLocalStorage(), 400);
+  saveTimer = setTimeout(() => {
+    saveToLocalStorage();
+    if (typeof ProfileManager !== "undefined") {
+      ProfileManager.updateActiveMetaFromState(state);
+      updateActiveProfileBadge();
+    }
+  }, 400);
 }
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      state = Object.assign(state, parsed);
+    if (typeof ProfileManager !== "undefined") {
+      ProfileManager.init();
+      const loaded = ProfileManager.loadActiveState();
+      if (loaded) {
+        state = Object.assign(getFreshBlankState(), loaded);
+      }
+    } else {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        state = Object.assign(state, parsed);
+      }
     }
   } catch (e) {
     console.warn("Storage load error:", e);
@@ -660,6 +685,10 @@ function applyLanguage() {
   setTxt("txtKicker", "kicker");
   setTxt("txtBrandTitle", "brandTitle");
   setTxt("txtMenuLabel", "menuActions");
+  setTxt("txtProfilesGroupTitle", "txtProfilesGroupTitle");
+  setTxt("txtBtnNewProfile", "txtBtnNewProfile");
+  setTxt("txtBtnDuplicateProfile", "txtBtnDuplicateProfile");
+  updateActiveProfileBadge();
   setTxt("txtMenuSecData", "menuSecData");
   setTxt("txtMenuItemSample", "menuItemSample");
   setTxt("txtMenuItemImport", "menuItemImport");
@@ -2762,13 +2791,14 @@ function initImportExport() {
   const btnReset = document.getElementById("btnReset");
   if (btnReset) {
     btnReset.addEventListener("click", () => {
-      if (confirm(I18N.currentLang === "en" ? "Reset all form fields?" : "Vuoi davvero azzerare tutti i campi della scheda?")) {
-        state = { mode: "rapido", v: {}, chk: {}, sx: {}, log: [["", "", "", "", ""]], videoAngles: null };
-        localStorage.removeItem(STORAGE_KEY);
+      if (confirm(I18N.currentLang === "en" ? "Reset all form fields of this profile?" : "Vuoi davvero azzerare tutti i campi di questa scheda?")) {
+        state = getFreshBlankState();
+        saveToLocalStorage();
         renderForm();
         updateStaticCalculator();
         renderDiagnostics();
-        setStatusBadge("Reset complete");
+        updateActiveProfileBadge();
+        setStatusBadge(I18N.t("btnReset"));
       }
     });
   }
@@ -2781,6 +2811,212 @@ function downloadBlob(content, filename, mimeType) {
   a.download = filename;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+}
+
+// ===================== CLIENT-ONLY PROFILE & MULTI-BIKE UI =====================
+function updateActiveProfileBadge() {
+  if (typeof ProfileManager === "undefined") return;
+  const active = ProfileManager.getActiveProfile();
+  const el = document.getElementById("activeProfileBadge");
+  if (el && active) {
+    el.textContent = active.name || active.bikeModel || "Bici";
+    el.title = `${active.name} (${active.bikeModel || "N/D"})`;
+  }
+}
+
+function renderProfileDropdown() {
+  if (typeof ProfileManager === "undefined") return;
+  const container = document.getElementById("profileItemsList");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const profiles = ProfileManager.listProfiles();
+  const active = ProfileManager.getActiveProfile();
+
+  profiles.forEach(p => {
+    const isActive = p.id === active.id;
+    const item = document.createElement("div");
+    item.className = "profile-item" + (isActive ? " is-active" : "");
+    item.setAttribute("role", "button");
+    item.setAttribute("tabindex", "0");
+
+    const meta = document.createElement("div");
+    meta.className = "profile-item-meta";
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "profile-item-name";
+    
+    const bullet = document.createElement("span");
+    bullet.style.marginRight = "6px";
+    if (isActive) {
+      bullet.style.color = "var(--cyan)";
+      bullet.textContent = "●";
+    } else {
+      bullet.style.color = "var(--muted)";
+      bullet.style.opacity = "0.5";
+      bullet.textContent = "○";
+    }
+    nameEl.appendChild(bullet);
+
+    const nameText = document.createTextNode(p.name);
+    nameEl.appendChild(nameText);
+    meta.appendChild(nameEl);
+
+    if (p.bikeModel && p.bikeModel !== p.name) {
+      const subEl = document.createElement("div");
+      subEl.className = "profile-item-sub";
+      subEl.textContent = p.bikeModel;
+      meta.appendChild(subEl);
+    }
+    item.appendChild(meta);
+
+    const actions = document.createElement("div");
+    actions.className = "profile-item-actions";
+
+    // Rename button
+    const btnRename = document.createElement("button");
+    btnRename.className = "profile-action-btn";
+    btnRename.title = I18N.t("promptRenameProfile");
+    btnRename.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
+    btnRename.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const newName = prompt(I18N.t("promptRenameProfile"), p.name);
+      if (newName && newName.trim()) {
+        ProfileManager.renameProfile(p.id, newName.trim());
+        updateActiveProfileBadge();
+        renderProfileDropdown();
+      }
+    });
+    actions.appendChild(btnRename);
+
+    // Delete button (if more than 1 profile)
+    if (profiles.length > 1) {
+      const btnDel = document.createElement("button");
+      btnDel.className = "profile-action-btn delete";
+      btnDel.title = I18N.t("confirmDeleteProfile");
+      btnDel.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+      btnDel.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (confirm(I18N.t("confirmDeleteProfile"))) {
+          const res = ProfileManager.deleteProfile(p.id);
+          if (res.success) {
+            if (isActive) {
+              const loaded = ProfileManager.loadActiveState();
+              state = Object.assign(getFreshBlankState(), loaded);
+              renderForm();
+              updateDiagnostics();
+              updateStaticCalculator();
+            }
+            updateActiveProfileBadge();
+            renderProfileDropdown();
+            setStatusBadge(I18N.t("statusProfileDeleted"));
+          }
+        }
+      });
+      actions.appendChild(btnDel);
+    }
+
+    item.appendChild(actions);
+
+    // Switch to profile on click
+    item.addEventListener("click", () => {
+      if (p.id === active.id) {
+        closeProfileDropdown();
+        return;
+      }
+      saveToLocalStorage();
+      ProfileManager.switchProfile(p.id);
+      const loaded = ProfileManager.loadActiveState();
+      state = Object.assign(getFreshBlankState(), loaded);
+
+      renderForm();
+      updateDiagnostics();
+      updateStaticCalculator();
+      updateActiveProfileBadge();
+      renderProfileDropdown();
+      closeProfileDropdown();
+      setStatusBadge(I18N.t("statusProfileSwitched"));
+    });
+
+    container.appendChild(item);
+  });
+}
+
+function openProfileDropdown() {
+  const panel = document.getElementById("profileDropdownPanel");
+  const btn = document.getElementById("btnToggleProfile");
+  if (!panel || !btn) return;
+  document.getElementById("menuDropdownPanel")?.setAttribute("hidden", "");
+  document.getElementById("btnToggleMenu")?.setAttribute("aria-expanded", "false");
+
+  renderProfileDropdown();
+  panel.removeAttribute("hidden");
+  btn.setAttribute("aria-expanded", "true");
+}
+
+function closeProfileDropdown() {
+  const panel = document.getElementById("profileDropdownPanel");
+  const btn = document.getElementById("btnToggleProfile");
+  if (!panel || !btn) return;
+  panel.setAttribute("hidden", "");
+  btn.setAttribute("aria-expanded", "false");
+}
+
+function initProfileManagerModule() {
+  if (typeof ProfileManager === "undefined") return;
+  ProfileManager.init();
+  updateActiveProfileBadge();
+
+  const toggleBtn = document.getElementById("btnToggleProfile");
+
+  toggleBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isExpanded = toggleBtn.getAttribute("aria-expanded") === "true";
+    if (isExpanded) {
+      closeProfileDropdown();
+    } else {
+      openProfileDropdown();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!document.getElementById("profileDropdownWrap")?.contains(e.target)) {
+      closeProfileDropdown();
+    }
+  });
+
+  // + Nuova Scheda / Bici
+  document.getElementById("btnNewProfile")?.addEventListener("click", () => {
+    const defaultName = `Bici ${ProfileManager.listProfiles().length + 1}`;
+    const name = prompt(I18N.t("promptNewProfile"), defaultName);
+    if (name === null) return;
+
+    saveToLocalStorage();
+    ProfileManager.createProfile(name);
+    state = Object.assign(getFreshBlankState(), ProfileManager.loadActiveState());
+
+    renderForm();
+    updateDiagnostics();
+    updateStaticCalculator();
+    updateActiveProfileBadge();
+    closeProfileDropdown();
+    setStatusBadge(I18N.t("statusProfileCreated"));
+  });
+
+  // Duplica Scheda Attuale
+  document.getElementById("btnDuplicateProfile")?.addEventListener("click", () => {
+    saveToLocalStorage();
+    const active = ProfileManager.getActiveProfile();
+    ProfileManager.duplicateActiveProfile(`${active.name} (Copia)`);
+    state = Object.assign(getFreshBlankState(), ProfileManager.loadActiveState());
+
+    renderForm();
+    updateDiagnostics();
+    updateStaticCalculator();
+    updateActiveProfileBadge();
+    closeProfileDropdown();
+    setStatusBadge(I18N.t("statusProfileDuplicated"));
+  });
 }
 
 // ===================== TAB ROUTER =====================
@@ -2848,6 +3084,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (typeof WasmBikeFit !== 'undefined') {
     await WasmBikeFit.init();
   }
+  initProfileManagerModule();
   loadState();
   initTabs();
   applyLanguage();
