@@ -6,9 +6,19 @@
  */
 
 // ===================== SVG DIAGRAMS =====================
-const D = {};
+const D = {
+  bici(lang = (typeof I18N !== 'undefined' ? I18N.currentLang : "it")) {
+    const isEn = lang === "en";
+    const sella = isEn ? "SADDLE" : "SELLA";
+    const carrelli = isEn ? "RAILS" : "CARRELLI";
+    const reggisella = isEn ? "SEATPOST" : "REGGISELLA";
+    const piantone = isEn ? "SEAT TUBE" : "PIANTONE";
+    const attacco = isEn ? "STEM" : "ATTACCO";
+    const manubrio = isEn ? "HANDLEBAR" : "MANUBRIO";
+    const bb = isEn ? "BOTTOM BRACKET (BB)" : "MOVIMENTO CENTRALE";
+    const pedivella = isEn ? "CRANK" : "PEDIVELLA";
 
-D.bici = `<svg viewBox="0 0 480 230" xmlns="http://www.w3.org/2000/svg">
+    return `<svg viewBox="0 0 480 230" xmlns="http://www.w3.org/2000/svg">
   <circle class="ghost" cx="108" cy="168" r="44" stroke="#9CA3AF" fill="none" stroke-width="1"/>
   <circle class="ghost" cx="372" cy="168" r="44" stroke="#9CA3AF" fill="none" stroke-width="1"/>
   <path class="part" d="M108 168 L196 168 L262 78 L318 78 L372 168" stroke="#111827" stroke-width="1.5" fill="none"/>
@@ -22,26 +32,36 @@ D.bici = `<svg viewBox="0 0 480 230" xmlns="http://www.w3.org/2000/svg">
   <path class="part" d="M352 58 L352 74 L344 84" stroke="#111827" stroke-width="1.5" fill="none"/>
   <circle class="part" cx="196" cy="168" r="7" stroke="#111827" stroke-width="1.5" fill="#E5E7EB"/>
   <path class="part" d="M196 168 L214 196" stroke="#111827" stroke-width="2" fill="none"/>
-  <text x="215" y="42" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">SELLA / SADDLE</text>
-  <text x="188" y="46" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="end">CARRELLI / RAILS</text>
+  <text x="215" y="42" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${sella}</text>
+  <text x="188" y="46" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="end">${carrelli}</text>
   <path d="M186 44 L222 50" stroke="#0284C7" stroke-width="1" fill="none"/>
-  <text x="252" y="52" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="middle">REGGISELLA / SEATPOST</text>
+  <text x="252" y="52" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="middle">${reggisella}</text>
   <path d="M252 56 L244 70" stroke="#0284C7" stroke-width="1" fill="none"/>
-  <text x="216" y="120" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="end">PIANTONE / SEAT TUBE</text>
+  <text x="216" y="120" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="end">${piantone}</text>
   <path d="M218 116 L228 108" stroke="#0284C7" stroke-width="1" fill="none"/>
-  <text x="374" y="44" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">ATTACCO / STEM</text>
+  <text x="374" y="44" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${attacco}</text>
   <path d="M372 48 L338 56" stroke="#0284C7" stroke-width="1" fill="none"/>
-  <text x="366" y="100" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">MANUBRIO / HANDLEBAR</text>
+  <text x="366" y="100" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${manubrio}</text>
   <path d="M364 96 L352 84" stroke="#0284C7" stroke-width="1" fill="none"/>
-  <text x="150" y="200" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="middle">MOVIMENTO CENTRALE / BB</text>
+  <text x="150" y="200" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700" text-anchor="middle">${bb}</text>
   <path d="M172 194 L192 176" stroke="#0284C7" stroke-width="1" fill="none"/>
-  <text x="238" y="212" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">PEDIVELLA / CRANK</text>
+  <text x="238" y="212" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${pedivella}</text>
   <path d="M236 208 L216 198" stroke="#0284C7" stroke-width="1" fill="none"/>
 </svg>`;
+  },
 
-D.sellaMis = `<svg viewBox="0 0 470 240" xmlns="http://www.w3.org/2000/svg">
+  sellaMis(lang = (typeof I18N !== 'undefined' ? I18N.currentLang : "it")) {
+    const isEn = lang === "en";
+    const bbTxt = isEn ? "BOTTOM BRACKET (BB)" : "MOVIMENTO CENTRALE";
+    const topSellaTxt = isEn ? "saddle top" : "top sella";
+    const aTitle = isEn ? "A = SADDLE HEIGHT" : "A = ALTEZZA SELLA";
+    const aSub = isEn ? "BB center → saddle top" : "Centro mov. centrale → top sella";
+    const bTitle = isEn ? "B = SADDLE SETBACK" : "B = ARRETRAMENTO SELLA";
+    const bSub = isEn ? "BB vertical plumb line → saddle nose" : "Filo a piombo mov. centrale → punta sella";
+
+    return `<svg viewBox="0 0 470 240" xmlns="http://www.w3.org/2000/svg">
   <circle cx="150" cy="196" r="9" stroke="#111827" stroke-width="2" fill="#E5E7EB"/>
-  <text x="150" y="222" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">MOV. CENTRALE / BB</text>
+  <text x="150" y="222" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${bbTxt}</text>
   <path d="M150 196 L226 52" stroke="#111827" stroke-width="2" fill="none"/>
   <path d="M226 52 L226 40" stroke="#111827" stroke-width="2" fill="none"/>
   <path d="M196 36 L262 36" stroke="#111827" stroke-width="5" fill="none"/>
@@ -54,43 +74,88 @@ D.sellaMis = `<svg viewBox="0 0 470 240" xmlns="http://www.w3.org/2000/svg">
   <path d="M158 190 L232 50" stroke="#0284C7" stroke-width="1" fill="none"/>
   <text x="212" y="130" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">A</text>
   <path d="M196 36 L400 36" stroke="#9CA3AF" stroke-dasharray="3 3" fill="none"/>
-  <text x="300" y="30" font-family="monospace" font-size="9" fill="#0284C7">top sella / saddle top</text>
-  <text x="30" y="60" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">A = ALTEZZA SELLA / SADDLE HEIGHT</text>
-  <text x="30" y="74" font-family="sans-serif" font-size="8.5" fill="#4B5563">BB center → saddle top</text>
-  <text x="30" y="108" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">B = ARRETRAMENTO / SETBACK</text>
-  <text x="30" y="122" font-family="sans-serif" font-size="8.5" fill="#4B5563">BB vertical plumb → saddle nose</text>
+  <text x="300" y="30" font-family="monospace" font-size="9" fill="#0284C7">${topSellaTxt}</text>
+  <text x="30" y="60" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${aTitle}</text>
+  <text x="30" y="74" font-family="sans-serif" font-size="8.5" fill="#4B5563">${aSub}</text>
+  <text x="30" y="108" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${bTitle}</text>
+  <text x="30" y="122" font-family="sans-serif" font-size="8.5" fill="#4B5563">${bSub}</text>
 </svg>`;
+  },
 
-D.carrelli = `<svg viewBox="0 0 470 220" xmlns="http://www.w3.org/2000/svg">
-  <text x="20" y="20" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">SELLA VISTA DA SOTTO / SADDLE BOTTOM</text>
+  carrelli(lang = (typeof I18N !== 'undefined' ? I18N.currentLang : "it")) {
+    const isEn = lang === "en";
+    const title = isEn ? "SADDLE UNDERSIDE VIEW" : "SELLA VISTA DA SOTTO";
+    const clamp = isEn ? "CLAMP" : "MORSETTO";
+    const rails = isEn ? "RAILS" : "CARRELLI";
+    const marks = isEn ? "marks" : "tacche";
+    const dim = isEn ? "dimension" : "misura";
+
+    return `<svg viewBox="0 0 470 220" xmlns="http://www.w3.org/2000/svg">
+  <text x="20" y="20" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${title}</text>
   <path d="M60 60 Q150 44 250 52 L400 52 Q416 60 400 68 L250 68 Q150 76 60 60 Z" fill="#F3F4F6" stroke="#111827" stroke-width="1.5"/>
   <path d="M110 100 L390 100" stroke="#111827" stroke-width="3"/>
   <path d="M110 140 L390 140" stroke="#111827" stroke-width="3"/>
   <path d="M110 100 Q92 120 110 140" stroke="#111827" stroke-width="3" fill="none"/>
   <rect x="226" y="88" width="46" height="64" rx="3" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
-  <text x="249" y="170" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">MORSETTO / CLAMP</text>
-  <text x="330" y="94" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">CARRELLI (rails)</text>
+  <text x="249" y="170" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${clamp}</text>
+  <text x="330" y="94" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${rails}</text>
   <path d="M330 97 L350 100" stroke="#0284C7" stroke-width="1" fill="none"/>
   <path d="M300 96 L300 104" stroke="#E5B111" stroke-width="2"/>
   <path d="M320 96 L320 104" stroke="#E5B111" stroke-width="2"/>
   <path d="M340 96 L340 104" stroke="#E5B111" stroke-width="2"/>
-  <text x="320" y="124" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6B7280">tacche / marks</text>
+  <text x="320" y="124" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6B7280">${marks}</text>
   <path d="M400 200 L226 200" stroke="#0284C7" stroke-width="1" fill="none"/>
   <path d="M400 196 L400 204" stroke="#0284C7" stroke-width="1" fill="none"/>
   <path d="M226 196 L226 204" stroke="#0284C7" stroke-width="1" fill="none"/>
-  <text x="313" y="196" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">misura / dimension</text>
+  <text x="313" y="196" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${dim}</text>
 </svg>`;
+  },
 
-D.ischi = `<svg viewBox="0 0 470 180" xmlns="http://www.w3.org/2000/svg">
+  ischi(lang = (typeof I18N !== 'undefined' ? I18N.currentLang : "it")) {
+    const isEn = lang === "en";
+    const board = isEn ? "CORRUGATED CARDBOARD" : "CARTONE ONDULATO";
+    const c2c = isEn ? "CENTER-TO-CENTER SPAN" : "DISTANZA CENTRO-CENTRO";
+    const sub = isEn ? "center-to-center impression distance" : "da centro a centro impronta";
+
+    return `<svg viewBox="0 0 470 180" xmlns="http://www.w3.org/2000/svg">
   <rect x="60" y="24" width="350" height="130" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
-  <text x="70" y="42" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">CARTONE / CARDBOARD</text>
+  <text x="70" y="42" font-family="monospace" font-size="9" fill="#0284C7" font-weight="700">${board}</text>
   <ellipse cx="185" cy="96" rx="22" ry="30" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
   <ellipse cx="285" cy="96" rx="22" ry="30" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
   <circle cx="185" cy="96" r="3" fill="#EF4444"/><circle cx="285" cy="96" r="3" fill="#EF4444"/>
   <path d="M185 96 L285 96" stroke="#EF4444" stroke-width="1.5"/>
-  <text x="235" y="86" text-anchor="middle" font-family="monospace" font-size="9" fill="#EF4444" font-weight="700">CENTER-TO-CENTER</text>
-  <text x="235" y="146" text-anchor="middle" font-family="sans-serif" font-size="8.5" fill="#6B7280">da centro a centro impronta</text>
+  <text x="235" y="86" text-anchor="middle" font-family="monospace" font-size="9" fill="#EF4444" font-weight="700">${c2c}</text>
+  <text x="235" y="146" text-anchor="middle" font-family="sans-serif" font-size="8.5" fill="#6B7280">${sub}</text>
 </svg>`;
+  },
+
+  attacco(lang = (typeof I18N !== 'undefined' ? I18N.currentLang : "it")) {
+    const isEn = lang === "en";
+    const steerer = isEn ? "FORK STEERER" : "CANNOTTO FORCELLA";
+    const stem = isEn ? "STEM LENGTH (C-C)" : "LUNGHEZZA ATTACCO (C-C)";
+    const bar = isEn ? "HANDLEBAR CLAMP" : "MORSETTO MANUBRIO";
+    const angle = isEn ? "ANGLE (e.g. ±6°)" : "ANGOLO (es. ±6°)";
+    return `<svg viewBox="0 0 470 180" xmlns="http://www.w3.org/2000/svg">
+      <rect x="50" y="30" width="30" height="120" fill="#E5E7EB" stroke="#111827" stroke-width="1.5" rx="3"/>
+      <text x="65" y="165" font-family="monospace" font-size="8" fill="#0284C7" font-weight="700" text-anchor="middle">${steerer}</text>
+      <path d="M65 80 L280 60" stroke="#0284C7" stroke-width="20" stroke-linecap="round"/>
+      <circle cx="280" cy="60" r="16" fill="#E0F2FE" stroke="#0284C7" stroke-width="2"/>
+      <text x="280" y="95" font-family="monospace" font-size="8" fill="#0284C7" font-weight="700" text-anchor="middle">${bar}</text>
+      <path d="M65 40 L280 20" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <path d="M65 35 L65 45" stroke="#EF4444" stroke-width="1.5"/>
+      <path d="M280 15 L280 25" stroke="#EF4444" stroke-width="1.5"/>
+      <text x="172" y="22" font-family="monospace" font-size="9" fill="#EF4444" font-weight="700" text-anchor="middle">${stem}</text>
+      <text x="172" y="110" font-family="monospace" font-size="8.5" fill="#4B5563" text-anchor="middle">${angle}</text>
+    </svg>`;
+  }
+};
+
+// Ensure backwards compatibility with direct string coercion
+Object.keys(D).forEach(k => {
+  if (typeof D[k] === "function") {
+    D[k].toString = function() { return D[k](typeof I18N !== 'undefined' ? I18N.currentLang : "it"); };
+  }
+});
 
 // ===================== SCHEMA =====================
 const ZONE = [
@@ -191,12 +256,12 @@ const SCHEMA = [
     id: "regolazioni", title: "Regolazioni attuali", titleEn: "Current Setup Dimensions", note: "Metro alla mano", noteEn: "Tape measure needed",
     fields: [
       { id: "h_sella", lab: "Altezza sella", labEn: "Saddle Height", pri: 1, t: "number", u: "mm",
-        help: `<p>Dal movimento centrale al top sella.</p>` + D.sellaMis,
-        helpEn: `<p>From bottom bracket center to saddle top along the seat tube.</p>` + D.sellaMis
+        help: (lang = "it") => `<p>Dal movimento centrale al top sella.</p>` + D.sellaMis(lang),
+        helpEn: (lang = "en") => `<p>From bottom bracket center to saddle top along the seat tube.</p>` + D.sellaMis(lang)
       },
       { id: "arretramento", lab: "Arretramento sella", labEn: "Saddle Setback", pri: 1, t: "number", u: "mm",
-        help: `<p>Distanza orizzontale punta sella - mov centrale.</p>` + D.sellaMis,
-        helpEn: `<p>Horizontal distance from saddle nose to bottom bracket vertical plumb line.</p>` + D.sellaMis
+        help: (lang = "it") => `<p>Distanza orizzontale punta sella - mov centrale.</p>` + D.sellaMis(lang),
+        helpEn: (lang = "en") => `<p>Horizontal distance from saddle nose to bottom bracket vertical plumb line.</p>` + D.sellaMis(lang)
       },
       { id: "incl_sella", lab: "Inclinazione sella", labEn: "Saddle Tilt Angle", pri: 1, t: "number", u: "°",
         help: `<p>Inclinazione del piano sella in gradi (valore negativo = punta verso il basso).</p>`,
@@ -231,8 +296,8 @@ const SCHEMA = [
     id: "ischi", title: "Ossa ischiatiche", titleEn: "Ischial Tuberosities (Sit Bones)", note: "Larghezza sella", noteEn: "Saddle width benchmark",
     fields: [
       { id: "ischi_mm", lab: "Distanza tra le ossa ischiatiche", labEn: "Sit Bone Span (Center-to-Center)", pri: 1, t: "number", u: "mm",
-        help: `<p>Misura tra i centri delle impronte.</p>` + D.ischi,
-        helpEn: `<p>Measure center-to-center between the impression indentations.</p>` + D.ischi
+        help: (lang = "it") => `<p>Misura tra i centri delle impronte.</p>` + D.ischi(lang),
+        helpEn: (lang = "en") => `<p>Measure center-to-center between the impression indentations.</p>` + D.ischi(lang)
       },
       { id: "ischi_foto", lab: "Foto dell'impronta con righello accanto", labEn: "Impression Photo with Ruler", pri: 1, t: "select",
         opt: ["", "Sì", "No"],
@@ -543,7 +608,8 @@ function fieldEl(f) {
 
   if (f.help || f.helpEn) {
     const h = document.createElement("div"); h.className = "help"; h.hidden = true;
-    h.innerHTML = (isEn && f.helpEn) ? f.helpEn : f.help;
+    const rawHelp = (isEn && f.helpEn) ? f.helpEn : f.help;
+    h.innerHTML = typeof rawHelp === "function" ? rawHelp(isEn ? "en" : "it") : (rawHelp || "");
     wrap.appendChild(h);
     wrap._hb.addEventListener("click", () => {
       const open = h.hidden;
@@ -3398,22 +3464,23 @@ function renderGlossary() {
   if (!root) return;
   root.innerHTML = "";
   const isEn = I18N.currentLang === "en";
+  const lang = isEn ? "en" : "it";
 
   const items = isEn ? [
-    ["Stem (pipetta)", `<p>The component connecting the handlebar to the fork steerer tube. Labeled with length (mm) and angle (°).</p>` + (D.attacco || "")],
-    ["Saddle Rails (carrelli)", `<p>The two parallel metal rails underneath the saddle, clamped by the seatpost.</p>` + (D.carrelli || "")],
+    ["Stem (pipetta)", `<p>The component connecting the handlebar to the fork steerer tube. Labeled with length (mm) and angle (°).</p>` + D.attacco(lang)],
+    ["Saddle Rails (carrelli)", `<p>The two parallel metal rails underneath the saddle, clamped by the seatpost.</p>` + D.carrelli(lang)],
     ["Bottom Bracket (movimento centrale)", `<p>The central axle inside the frame around which the cranks rotate.</p>`],
-    ["Seat Tube & Seatpost", `<p>The seat tube is the frame tube; the seatpost slides inside it to hold the saddle.</p>` + (D.bici || "")],
+    ["Seat Tube & Seatpost", `<p>The seat tube is the frame tube; the seatpost slides inside it to hold the saddle.</p>` + D.bici(lang)],
     ["Frame Stack & Reach", `<p>Stack = vertical height from bottom bracket to top of head tube. Reach = horizontal distance.</p>`],
-    ["Sit Bones (Ischial Tuberosities)", `<p>The two bony protrusions at the base of the pelvis that bear body weight.</p>` + (D.ischi || "")],
+    ["Sit Bones (Ischial Tuberosities)", `<p>The two bony protrusions at the base of the pelvis that bear body weight.</p>` + D.ischi(lang)],
     ["Bottom Dead Center (BDC - 6 o'clock)", `<p>The lowest point of the pedal stroke. Essential frame for measuring knee extension angle (target 140°-145°).</p>`]
   ] : [
-    ["Attacco (pipetta, stem)", `<p>Il pezzo che collega il manubrio al cannotto della forcella.</p>` + (D.attacco || "")],
-    ["Carrelli (rails)", `<p>Le due barrette metalliche parallele sotto la sella, strette dal morsetto del reggisella.</p>` + (D.carrelli || "")],
+    ["Attacco (pipetta, stem)", `<p>Il pezzo che collega il manubrio al cannotto della forcella.</p>` + D.attacco(lang)],
+    ["Carrelli (rails)", `<p>Le due barrette metalliche parallele sotto la sella, strette dal morsetto del reggisella.</p>` + D.carrelli(lang)],
     ["Movimento centrale", `<p>L'asse su cui girano le pedivelle, dentro la scatola del telaio.</p>`],
-    ["Piantone e reggisella", `<p>Il piantone è il tubo del telaio; il reggisella è il tubo che porta la sella.</p>` + (D.bici || "")],
+    ["Piantone e reggisella", `<p>Il piantone è il tubo del telaio; il reggisella è il tubo che porta la sella.</p>` + D.bici(lang)],
     ["Stack e reach del telaio", `<p>Stack = altezza verticale da mov centrale a tubo sterzo. Reach = distanza orizzontale.</p>`],
-    ["Ossa ischiatiche", `<p>Le due sporgenze ossee alla base del bacino su cui scaricare il peso.</p>` + (D.ischi || "")],
+    ["Ossa ischiatiche", `<p>Le due sporgenze ossee alla base del bacino su cui scaricare il peso.</p>` + D.ischi(lang)],
     ["Punto morto inferiore (BDC)", `<p>Il punto più basso della pedalata. È l'istante fondamentale in cui si misura l'estensione del ginocchio (target 140°-145°).</p>`]
   ];
 
