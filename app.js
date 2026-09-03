@@ -452,6 +452,19 @@ function renderForm() {
       sec.checklist.forEach(c => cw.appendChild(chkEl(c)));
       b.appendChild(cw);
     }
+    if (sec.id === "corpo") {
+      const pBtnCard = document.createElement("div");
+      pBtnCard.className = "photo-wizard-btn-card";
+      pBtnCard.innerHTML = `
+        <div class="photo-wizard-btn-text">
+          <h4>${I18N.t("photoWizardTitle")}</h4>
+          <p>${I18N.t("photoWizardSub")}</p>
+        </div>
+        <button type="button" class="btn btn-solid" id="btnOpenPhotoWizard" style="font-weight:750;">${I18N.t("photoWizardBtn")}</button>
+      `;
+      b.appendChild(pBtnCard);
+      pBtnCard.querySelector("#btnOpenPhotoWizard")?.addEventListener("click", () => openPhotoWizard());
+    }
     (sec.fields || []).forEach(f => b.appendChild(fieldEl(f)));
     if (sec.log) b.appendChild(logEl());
     s.appendChild(b);
@@ -512,6 +525,81 @@ function updateProgress() {
   if (label) label.textContent = done + " / " + tot + " " + I18N.t("tapeCompiled") + " (" + pct + "%)";
 }
 
+// ===================== THEME MANAGER (System / Light / Dark) =====================
+const THEME_MANAGER = {
+  theme: "system", // "system" | "light" | "dark"
+  mediaQuery: window.matchMedia("(prefers-color-scheme: dark)"),
+
+  init() {
+    try {
+      const saved = localStorage.getItem("vlft_theme");
+      if (saved === "light" || saved === "dark" || saved === "system") {
+        this.theme = saved;
+      } else {
+        // First arrival from landing or external link: check ?theme=
+        const urlParam = new URLSearchParams(window.location.search).get("theme");
+        if (urlParam === "light" || urlParam === "dark" || urlParam === "system") {
+          this.theme = urlParam;
+          try { localStorage.setItem("vlft_theme", urlParam); } catch (e) {}
+        } else {
+          this.theme = "system";
+        }
+      }
+    } catch (e) {
+      this.theme = "system";
+    }
+
+    this.apply();
+    this.mediaQuery.addEventListener("change", () => {
+      if (this.theme === "system") {
+        this.apply();
+      }
+    });
+
+    document.getElementById("themeSystem")?.addEventListener("click", () => this.setTheme("system"));
+    document.getElementById("themeLight")?.addEventListener("click", () => this.setTheme("light"));
+    document.getElementById("themeDark")?.addEventListener("click", () => this.setTheme("dark"));
+  },
+
+  setTheme(theme) {
+    if (theme !== "system" && theme !== "light" && theme !== "dark") return;
+    this.theme = theme;
+    try {
+      localStorage.setItem("vlft_theme", theme);
+    } catch (e) {}
+    this.apply();
+  },
+
+  apply() {
+    const isDark = this.theme === "dark" || (this.theme === "system" && this.mediaQuery.matches);
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+
+    const btnSys = document.getElementById("themeSystem");
+    const btnLight = document.getElementById("themeLight");
+    const btnDark = document.getElementById("themeDark");
+
+    if (btnSys && btnLight && btnDark) {
+      btnSys.setAttribute("aria-pressed", String(this.theme === "system"));
+      btnLight.setAttribute("aria-pressed", String(this.theme === "light"));
+      btnDark.setAttribute("aria-pressed", String(this.theme === "dark"));
+
+      btnSys.title = I18N.t("themeSystem") || "System theme";
+      btnLight.title = I18N.t("themeLight") || "Light theme";
+      btnDark.title = I18N.t("themeDark") || "Dark theme";
+    }
+
+    if (typeof drawTicks === "function") {
+      drawTicks();
+    }
+    if (typeof updateCockpitSim === "function") {
+      updateCockpitSim();
+    }
+    if (typeof renderDiagnostics === "function" && document.getElementById("tab-diagnostics")?.classList.contains("active")) {
+      renderDiagnostics();
+    }
+  }
+};
+
 // ===================== I18N UI TEXT BINDINGS =====================
 function applyLanguage() {
   const isEn = I18N.currentLang === "en";
@@ -519,6 +607,15 @@ function applyLanguage() {
 
   document.getElementById("langIT")?.setAttribute("aria-pressed", String(!isEn));
   document.getElementById("langEN")?.setAttribute("aria-pressed", String(isEn));
+
+  const btnSys = document.getElementById("themeSystem");
+  const btnLight = document.getElementById("themeLight");
+  const btnDark = document.getElementById("themeDark");
+  if (btnSys && btnLight && btnDark) {
+    btnSys.title = I18N.t("themeSystem");
+    btnLight.title = I18N.t("themeLight");
+    btnDark.title = I18N.t("themeDark");
+  }
 
   const setTxt = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = I18N.t(key); };
   setTxt("txtKicker", "kicker");
@@ -550,11 +647,48 @@ function applyLanguage() {
 
   setTxt("btnUploadVideo", "btnUploadVideo");
   setTxt("btnPlayDemo", "btnPlayDemo");
+  setTxt("btnRecordVideo", "btnRecordVideo");
+  setTxt("btnDownloadClip", "btnDownloadRecordedVideo");
+  setTxt("lblCamModeTxt", "camModeLabel");
   setTxt("lblViewModeTxt", "lblViewMode");
   setTxt("lblSideTxt", "lblSide");
   setTxt("btnSeekBDC", "btnSeekBDC");
   setTxt("btnCaptureSnapshot", "btnSnapshot");
   setTxt("btnSaveAnglesToForm", "btnSaveAngles");
+  setTxt("countdownLabel", "countdownGetReady");
+
+  const camModeSelect = document.getElementById("camModeSelect");
+  if (camModeSelect && camModeSelect.options.length >= 2) {
+    camModeSelect.options[0].text = I18N.t("camModeRiderOnBike");
+    camModeSelect.options[1].text = I18N.t("camModeBikeOnly");
+  }
+
+  // Photo modal translations
+  setTxt("photoModalTitle", "photoWizardTitle");
+  setTxt("photoModalSub", "photoWizardSub");
+  setTxt("lblPhotoHeightPrompt", "photoHeightPrompt");
+  setTxt("lblPhotoHeightHelp", "photoHeightHelp");
+  setTxt("lblPhotoInstTitle", "photoInstructionsTitle");
+  setTxt("lblPhotoPrivacy", "photoPrivacyNote");
+  setTxt("btnUploadPhotoFile", "btnUploadPhoto");
+  setTxt("btnStartPhotoCam", "btnStartPhotoCam");
+  setTxt("lblPhotoProcessing", "photoProcessing");
+  setTxt("lblPhotoDetectedTitle", "photoDetectedTitle");
+  setTxt("lblPhotoResCavallo", "photoInseamLbl");
+  setTxt("lblPhotoResFemore", "photoFemurLbl");
+  setTxt("lblPhotoResTibia", "photoTibiaLbl");
+  setTxt("lblPhotoResBusto", "photoTorsoLbl");
+  setTxt("lblPhotoResBraccio", "photoArmLbl");
+  setTxt("lblPhotoSitBonesNote", "photoSitBonesNote");
+  setTxt("btnApplyPhotoMeasurements", "btnApplyPhotoMeasurements");
+
+  const pInst1 = document.getElementById("lblPhotoInst1");
+  if (pInst1) pInst1.innerHTML = I18N.t("photoInstruction1");
+  const pInst2 = document.getElementById("lblPhotoInst2");
+  if (pInst2) pInst2.innerHTML = I18N.t("photoInstruction2");
+  const pInst3 = document.getElementById("lblPhotoInst3");
+  if (pInst3) pInst3.innerHTML = I18N.t("photoInstruction3");
+
   const tipEl = document.getElementById("videoTipText");
   if (tipEl) tipEl.innerHTML = I18N.t("videoTip");
 
@@ -724,12 +858,12 @@ function renderDiagnostics() {
         d.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
             <span style="font-size:11px; font-family:var(--mono); text-transform:uppercase; font-weight:700; color:var(--muted);">${iss.area}</span>
-            <span class="pri" style="background:${iss.priority === 'alta' ? 'var(--danger-soft)' : 'var(--warn-soft)'}; color:${iss.priority === 'alta' ? 'var(--danger)' : '#854D0E'};">${iss.priority.toUpperCase()}</span>
+            <span class="pri" style="background:${iss.priority === 'alta' ? 'var(--danger-soft)' : 'var(--warn-soft)'}; color:${iss.priority === 'alta' ? '#F87171' : '#FBBF24'}; border-color:${iss.priority === 'alta' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'};">${iss.priority.toUpperCase()}</span>
           </div>
-          <div style="font-weight:650; font-size:14px; margin-bottom:4px; color:var(--ink);">${iss.title}</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--ink);">${iss.title}</div>
           <p style="font-size:12.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.45;">${iss.details}</p>
-          <div style="font-size:12.5px; background:rgba(255,255,255,0.7); padding:8px 10px; border-radius:4px; border:1px solid rgba(0,0,0,0.06);">
-            <b>💡 ${I18N.t("diagAction")}</b> ${iss.recommendation}
+          <div class="diag-rec-box">
+            <b>${I18N.t("diagAction")}</b> ${iss.recommendation}
           </div>
         `;
         issuesContainer.appendChild(d);
@@ -791,6 +925,52 @@ function initVideoModule() {
   const btnStepFwd = document.getElementById("btnStepForward");
   const btnStepBwd = document.getElementById("btnStepBackward");
   const btnSeekBDC = document.getElementById("btnSeekBDC");
+  const btnRec = document.getElementById("btnRecordVideo");
+  const btnStopRec = document.getElementById("btnStopRecImmediate");
+  const btnDl = document.getElementById("btnDownloadClip");
+  const camModeSelect = document.getElementById("camModeSelect");
+
+  if (camModeSelect) {
+    camModeSelect.addEventListener("change", (e) => {
+      if (poseEngine) poseEngine.setCameraMode(e.target.value);
+    });
+  }
+
+  if (btnRec) {
+    btnRec.addEventListener("click", () => {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        stopVideoRecording();
+      } else {
+        startVideoRecording();
+      }
+    });
+  }
+
+  if (btnStopRec) {
+    btnStopRec.addEventListener("click", () => {
+      stopVideoRecording();
+    });
+  }
+
+  if (btnDl) {
+    btnDl.addEventListener("click", () => {
+      downloadRecordedClip();
+    });
+  }
+
+  if (poseEngine) {
+    poseEngine.onDiagnosticsChange = (diag) => {
+      const warnBar = document.getElementById("camWarningBar");
+      const warnTxt = document.getElementById("camWarningText");
+      if (!warnBar || !warnTxt) return;
+      if (diag.warningText && diag.warningKey !== "camStatusReadyToRecord") {
+        warnTxt.textContent = diag.warningText;
+        warnBar.style.display = "flex";
+      } else {
+        warnBar.style.display = "none";
+      }
+    };
+  }
 
   if (btnUpload && fileInput) {
     btnUpload.addEventListener("click", () => fileInput.click());
@@ -970,6 +1150,7 @@ function formatTime(secs) {
 async function startWebcam() {
   const video = document.getElementById("videoPlayer");
   const canvas = document.getElementById("poseCanvas");
+  const btnRec = document.getElementById("btnRecordVideo");
   try {
     webcamStream = await navigator.mediaDevices.getUserMedia({
       video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "environment" },
@@ -980,8 +1161,12 @@ async function startWebcam() {
     video.onloadedmetadata = () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      poseEngine.startLoop();
-      poseEngine.setBannerText("LIVE CAM");
+      if (poseEngine) {
+        poseEngine.setLiveCameraActive(true);
+        poseEngine.startLoop();
+        poseEngine.setBannerText("LIVE CAM");
+      }
+      if (btnRec) btnRec.style.display = "inline-block";
     };
   } catch (err) {
     alert("Camera access error. Please check browser permissions.");
@@ -995,6 +1180,440 @@ function stopWebcam() {
     const video = document.getElementById("videoPlayer");
     if (video) video.srcObject = null;
   }
+  if (poseEngine) {
+    poseEngine.setLiveCameraActive(false);
+  }
+  const btnRec = document.getElementById("btnRecordVideo");
+  if (btnRec) btnRec.style.display = "none";
+  const recBadge = document.getElementById("recBadge");
+  if (recBadge) recBadge.style.display = "none";
+  const warnBar = document.getElementById("camWarningBar");
+  if (warnBar) warnBar.style.display = "none";
+}
+
+// ===================== IN-APP VIDEO RECORDING & AUDIO SYNTH =====================
+let mediaRecorder = null;
+let recordedChunks = [];
+let recCountdownTimer = null;
+let recDurationTimer = null;
+let recSecondsElapsed = 0;
+let lastRecordedBlobUrl = null;
+let audioCtx = null;
+
+function playSynthBeep(freq = 440, durationMs = 120) {
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + durationMs / 1000);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + durationMs / 1000);
+  } catch (e) {}
+}
+
+function startVideoRecording() {
+  if (!webcamStream) {
+    startWebcam();
+    return;
+  }
+
+  const overlay = document.getElementById("countdownOverlay");
+  const numEl = document.getElementById("countdownNumber");
+  const labelEl = document.getElementById("countdownLabel");
+  const btnRec = document.getElementById("btnRecordVideo");
+
+  if (overlay && numEl) {
+    overlay.style.display = "flex";
+    let countdown = 5;
+    numEl.textContent = countdown;
+    if (labelEl) labelEl.textContent = I18N.t("countdownGetReady");
+    playSynthBeep(440, 150);
+
+    clearInterval(recCountdownTimer);
+    recCountdownTimer = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        numEl.textContent = countdown;
+        playSynthBeep(440, 150);
+      } else {
+        clearInterval(recCountdownTimer);
+        overlay.style.display = "none";
+        playSynthBeep(880, 300);
+        beginMediaRecording();
+      }
+    }, 1000);
+  } else {
+    beginMediaRecording();
+  }
+}
+
+function beginMediaRecording() {
+  if (!webcamStream) return;
+  recordedChunks = [];
+
+  let options = { mimeType: 'video/webm;codecs=vp9' };
+  if (!window.MediaRecorder || !MediaRecorder.isTypeSupported(options.mimeType)) {
+    options = { mimeType: 'video/webm' };
+    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      options = { mimeType: 'video/mp4' };
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        options = {};
+      }
+    }
+  }
+
+  try {
+    mediaRecorder = new MediaRecorder(webcamStream, options);
+  } catch (e) {
+    mediaRecorder = new MediaRecorder(webcamStream);
+  }
+
+  mediaRecorder.ondataavailable = (e) => {
+    if (e.data && e.data.size > 0) {
+      recordedChunks.push(e.data);
+    }
+  };
+
+  mediaRecorder.onstop = () => {
+    handleRecordingComplete();
+  };
+
+  mediaRecorder.start(100);
+
+  const recBadge = document.getElementById("recBadge");
+  const recTimerTxt = document.getElementById("recTimerText");
+  const btnRec = document.getElementById("btnRecordVideo");
+  if (btnRec) btnRec.textContent = I18N.t("btnStopRecording");
+  if (recBadge) recBadge.style.display = "flex";
+
+  recSecondsElapsed = 0;
+  if (recTimerTxt) recTimerTxt.textContent = `REC 00:00 / 00:20`;
+
+  clearInterval(recDurationTimer);
+  recDurationTimer = setInterval(() => {
+    recSecondsElapsed++;
+    const s = String(recSecondsElapsed).padStart(2, '0');
+    if (recTimerTxt) recTimerTxt.textContent = `REC 00:${s} / 00:20`;
+
+    if (recSecondsElapsed >= 20) {
+      stopVideoRecording();
+    }
+  }, 1000);
+}
+
+function stopVideoRecording() {
+  clearInterval(recDurationTimer);
+  clearInterval(recCountdownTimer);
+  const overlay = document.getElementById("countdownOverlay");
+  if (overlay) overlay.style.display = "none";
+
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+
+  const recBadge = document.getElementById("recBadge");
+  if (recBadge) recBadge.style.display = "none";
+  const btnRec = document.getElementById("btnRecordVideo");
+  if (btnRec) btnRec.textContent = I18N.t("btnRecordVideo");
+}
+
+function handleRecordingComplete() {
+  if (recordedChunks.length === 0) return;
+  const mime = (mediaRecorder && mediaRecorder.mimeType) || 'video/webm';
+  const blob = new Blob(recordedChunks, { type: mime });
+  if (lastRecordedBlobUrl) {
+    URL.revokeObjectURL(lastRecordedBlobUrl);
+  }
+  lastRecordedBlobUrl = URL.createObjectURL(blob);
+
+  // Stop live webcam now that recording is finished
+  stopWebcam();
+  const btnCam = document.getElementById("btnToggleCamera");
+  if (btnCam) btnCam.textContent = I18N.t("btnToggleCamOn");
+
+  const video = document.getElementById("videoPlayer");
+  const canvas = document.getElementById("poseCanvas");
+  if (video) {
+    video.src = lastRecordedBlobUrl;
+    video.load();
+    video.onloadeddata = () => {
+      canvas.width = video.videoWidth || 800;
+      canvas.height = video.videoHeight || 600;
+      poseEngine.startLoop();
+      poseEngine.setBannerText("RECORDED FIT");
+      video.play();
+    };
+  }
+
+  const btnDl = document.getElementById("btnDownloadClip");
+  if (btnDl) btnDl.style.display = "inline-block";
+
+  setStatusBadge(I18N.t("videoRecordingSaved"));
+}
+
+function downloadRecordedClip() {
+  if (!lastRecordedBlobUrl) return;
+  const a = document.createElement("a");
+  a.href = lastRecordedBlobUrl;
+  a.download = `velofit-recording-${Date.now()}.webm`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function initDeviceOrientation() {
+  const handleOrientation = (e) => {
+    if (poseEngine) {
+      poseEngine.updateDeviceOrientation(e.beta, e.gamma, e.alpha);
+    }
+  };
+
+  if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // Permission requestable on iOS
+    } else {
+      window.addEventListener('deviceorientation', handleOrientation, true);
+    }
+  }
+}
+
+// ===================== PHOTO ANTHROPOMETRY WIZARD =====================
+let photoCamStream = null;
+let photoCamCountdownTimer = null;
+let lastPhotoAnalysisResult = null;
+let currentPhotoImage = null;
+
+function openPhotoWizard() {
+  const modal = document.getElementById("modalPhotoMeasure");
+  if (!modal) return;
+
+  const heightInput = document.getElementById("photoKnownHeightInput");
+  if (heightInput) {
+    heightInput.value = state.v.altezza || 178;
+  }
+
+  resetPhotoWizardUI();
+  modal.showModal();
+}
+
+function closePhotoWizard() {
+  stopPhotoCam();
+  const modal = document.getElementById("modalPhotoMeasure");
+  if (modal) modal.close();
+}
+
+function resetPhotoWizardUI() {
+  stopPhotoCam();
+  document.getElementById("photoStep1Box")?.style.setProperty("display", "block");
+  document.getElementById("photoCamContainer")?.style.setProperty("display", "none");
+  document.getElementById("photoProcessingIndicator")?.style.setProperty("display", "none");
+  document.getElementById("photoResultsContainer")?.style.setProperty("display", "none");
+  document.getElementById("photoErrorMsg")?.style.setProperty("display", "none");
+  document.getElementById("btnApplyPhotoMeasurements")?.style.setProperty("display", "none");
+  lastPhotoAnalysisResult = null;
+  currentPhotoImage = null;
+}
+
+async function startPhotoCamera() {
+  const container = document.getElementById("photoCamContainer");
+  const video = document.getElementById("photoCamVideo");
+  const countdownOverlay = document.getElementById("photoCamCountdown");
+  const countdownNum = document.getElementById("photoCountdownNum");
+
+  try {
+    photoCamStream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" },
+      audio: false
+    });
+    if (video) {
+      video.srcObject = photoCamStream;
+      video.play();
+    }
+    if (container) container.style.display = "block";
+
+    if (countdownOverlay && countdownNum) {
+      countdownOverlay.style.display = "flex";
+      let count = 5;
+      countdownNum.textContent = count;
+      playSynthBeep(440, 150);
+
+      clearInterval(photoCamCountdownTimer);
+      photoCamCountdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownNum.textContent = count;
+          playSynthBeep(440, 150);
+        } else {
+          clearInterval(photoCamCountdownTimer);
+          countdownOverlay.style.display = "none";
+          playSynthBeep(880, 300);
+          capturePhotoSnapshot();
+        }
+      }, 1000);
+    }
+  } catch (err) {
+    alert("Camera permission denied or camera not available.");
+  }
+}
+
+function stopPhotoCam() {
+  clearInterval(photoCamCountdownTimer);
+  if (photoCamStream) {
+    photoCamStream.getTracks().forEach(t => t.stop());
+    photoCamStream = null;
+    const video = document.getElementById("photoCamVideo");
+    if (video) video.srcObject = null;
+  }
+  const container = document.getElementById("photoCamContainer");
+  if (container) container.style.display = "none";
+}
+
+function capturePhotoSnapshot() {
+  const video = document.getElementById("photoCamVideo");
+  if (!video) return;
+
+  const snapCanvas = document.createElement("canvas");
+  snapCanvas.width = video.videoWidth || 800;
+  snapCanvas.height = video.videoHeight || 1000;
+  const sCtx = snapCanvas.getContext("2d");
+  sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+
+  stopPhotoCam();
+
+  const img = new Image();
+  img.src = snapCanvas.toDataURL("image/jpeg", 0.95);
+  img.onload = () => {
+    processPhotoForAnthropometry(img);
+  };
+}
+
+async function processPhotoForAnthropometry(imageElement) {
+  currentPhotoImage = imageElement;
+  const step1 = document.getElementById("photoStep1Box");
+  const spinner = document.getElementById("photoProcessingIndicator");
+  const errBox = document.getElementById("photoErrorMsg");
+  const resultsContainer = document.getElementById("photoResultsContainer");
+  const btnApply = document.getElementById("btnApplyPhotoMeasurements");
+
+  if (step1) step1.style.display = "none";
+  if (errBox) errBox.style.display = "none";
+  if (spinner) spinner.style.display = "block";
+
+  const heightInput = document.getElementById("photoKnownHeightInput");
+  const knownHeight = parseFloat(heightInput?.value) || 178;
+
+  try {
+    const result = await poseEngine.analyzePhotoMeasurements(imageElement, knownHeight);
+    lastPhotoAnalysisResult = result;
+
+    if (spinner) spinner.style.display = "none";
+    if (resultsContainer) resultsContainer.style.display = "block";
+    if (btnApply) btnApply.style.display = "inline-block";
+
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    setVal("photoResCavallo", result.measurements.cavallo);
+    setVal("photoResFemore", result.measurements.femore);
+    setVal("photoResTibia", result.measurements.tibia);
+    setVal("photoResBusto", result.measurements.busto);
+    setVal("photoResBraccio", result.measurements.braccio);
+
+    const reviewCanvas = document.getElementById("photoReviewCanvas");
+    if (reviewCanvas) {
+      poseEngine.renderPhotoAnalysis(reviewCanvas, imageElement, result);
+    }
+  } catch (err) {
+    if (spinner) spinner.style.display = "none";
+    if (step1) step1.style.display = "block";
+    if (errBox) {
+      errBox.style.display = "block";
+      errBox.textContent = err.message === "photoErrorNoPerson"
+        ? I18N.t("photoErrorNoPerson")
+        : `Errore durante l'analisi: ${err.message}`;
+    }
+  }
+}
+
+function applyPhotoMeasurementsToFitSheet() {
+  const heightInput = document.getElementById("photoKnownHeightInput");
+  const knownHeight = parseFloat(heightInput?.value) || 178;
+
+  const cavallo = parseFloat(document.getElementById("photoResCavallo")?.value) || (lastPhotoAnalysisResult?.measurements.cavallo);
+  const femore = parseFloat(document.getElementById("photoResFemore")?.value) || (lastPhotoAnalysisResult?.measurements.femore);
+  const tibia = parseFloat(document.getElementById("photoResTibia")?.value) || (lastPhotoAnalysisResult?.measurements.tibia);
+  const busto = parseFloat(document.getElementById("photoResBusto")?.value) || (lastPhotoAnalysisResult?.measurements.busto);
+  const braccio = parseFloat(document.getElementById("photoResBraccio")?.value) || (lastPhotoAnalysisResult?.measurements.braccio);
+
+  // Update state values
+  state.v.altezza = String(Math.round(knownHeight));
+  if (cavallo) state.v.cavallo = String(Math.round(cavallo));
+  if (femore) state.v.femore = String(Math.round(femore));
+  if (tibia) state.v.tibia = String(Math.round(tibia));
+  if (busto) state.v.busto = String(Math.round(busto));
+  if (braccio) state.v.braccio = String(Math.round(braccio));
+
+  const today = new Date().toLocaleDateString(I18N.currentLang === "en" ? "en-US" : "it-IT");
+  state.log.push([
+    today,
+    "Rilevamento Misure da Foto (AI)",
+    "-",
+    `Cavallo ${cavallo}mm, Femore ${femore}mm, Tibia ${tibia}mm, Busto ${busto}mm, Braccio ${braccio}mm`,
+    "Photo anthropometry"
+  ]);
+
+  queueSave();
+  renderForm();
+  updateStaticCalculator();
+  closePhotoWizard();
+
+  setStatusBadge(I18N.t("photoAppliedToast"));
+  alert("✅ " + I18N.t("photoAppliedToast"));
+}
+
+function initPhotoWizardEvents() {
+  const btnClose = document.getElementById("btnClosePhotoWizard");
+  const btnCancel = document.getElementById("btnCancelPhotoWizard");
+  const btnUpload = document.getElementById("btnUploadPhotoFile");
+  const fileInput = document.getElementById("photoFileInput");
+  const btnStartCam = document.getElementById("btnStartPhotoCam");
+  const btnSnap = document.getElementById("btnTriggerPhotoSnap");
+  const btnCancelCam = document.getElementById("btnCancelPhotoCam");
+  const btnRetake = document.getElementById("btnRetakePhoto");
+  const btnApply = document.getElementById("btnApplyPhotoMeasurements");
+
+  btnClose?.addEventListener("click", closePhotoWizard);
+  btnCancel?.addEventListener("click", closePhotoWizard);
+
+  if (btnUpload && fileInput) {
+    btnUpload.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processPhotoForAnthropometry(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  btnStartCam?.addEventListener("click", () => startPhotoCamera());
+  btnSnap?.addEventListener("click", () => capturePhotoSnapshot());
+  btnCancelCam?.addEventListener("click", () => stopPhotoCam());
+  btnRetake?.addEventListener("click", () => resetPhotoWizardUI());
+  btnApply?.addEventListener("click", () => applyPhotoMeasurementsToFitSheet());
 }
 
 function startDemoLoop() {
@@ -1473,20 +2092,20 @@ function renderGlossary() {
   const isEn = I18N.currentLang === "en";
 
   const items = isEn ? [
-    ["Stem (pipetta)", `<p>The component connecting the handlebar to the fork steerer tube. Labeled with length (mm) and angle (°).</p>` + D.attacco],
-    ["Saddle Rails (carrelli)", `<p>The two parallel metal rails underneath the saddle, clamped by the seatpost.</p>` + D.carrelli],
+    ["Stem (pipetta)", `<p>The component connecting the handlebar to the fork steerer tube. Labeled with length (mm) and angle (°).</p>` + (D.attacco || "")],
+    ["Saddle Rails (carrelli)", `<p>The two parallel metal rails underneath the saddle, clamped by the seatpost.</p>` + (D.carrelli || "")],
     ["Bottom Bracket (movimento centrale)", `<p>The central axle inside the frame around which the cranks rotate.</p>`],
-    ["Seat Tube & Seatpost", `<p>The seat tube is the frame tube; the seatpost slides inside it to hold the saddle.</p>` + D.bici],
+    ["Seat Tube & Seatpost", `<p>The seat tube is the frame tube; the seatpost slides inside it to hold the saddle.</p>` + (D.bici || "")],
     ["Frame Stack & Reach", `<p>Stack = vertical height from bottom bracket to top of head tube. Reach = horizontal distance.</p>`],
-    ["Sit Bones (Ischial Tuberosities)", `<p>The two bony protrusions at the base of the pelvis that bear body weight.</p>` + D.ischi],
+    ["Sit Bones (Ischial Tuberosities)", `<p>The two bony protrusions at the base of the pelvis that bear body weight.</p>` + (D.ischi || "")],
     ["Bottom Dead Center (BDC - 6 o'clock)", `<p>The lowest point of the pedal stroke. Essential frame for measuring knee extension angle (target 140°-145°).</p>`]
   ] : [
-    ["Attacco (pipetta, stem)", `<p>Il pezzo che collega il manubrio al cannotto della forcella.</p>` + D.attacco],
-    ["Carrelli (rails)", `<p>Le due barrette metalliche parallele sotto la sella, strette dal morsetto del reggisella.</p>` + D.carrelli],
+    ["Attacco (pipetta, stem)", `<p>Il pezzo che collega il manubrio al cannotto della forcella.</p>` + (D.attacco || "")],
+    ["Carrelli (rails)", `<p>Le due barrette metalliche parallele sotto la sella, strette dal morsetto del reggisella.</p>` + (D.carrelli || "")],
     ["Movimento centrale", `<p>L'asse su cui girano le pedivelle, dentro la scatola del telaio.</p>`],
-    ["Piantone e reggisella", `<p>Il piantone è il tubo del telaio; il reggisella è il tubo che porta la sella.</p>` + D.bici],
+    ["Piantone e reggisella", `<p>Il piantone è il tubo del telaio; il reggisella è il tubo che porta la sella.</p>` + (D.bici || "")],
     ["Stack e reach del telaio", `<p>Stack = altezza verticale da mov centrale a tubo sterzo. Reach = distanza orizzontale.</p>`],
-    ["Ossa ischiatiche", `<p>Le due sporgenze ossee alla base del bacino su cui scaricare il peso.</p>` + D.ischi],
+    ["Ossa ischiatiche", `<p>Le due sporgenze ossee alla base del bacino su cui scaricare il peso.</p>` + (D.ischi || "")],
     ["Punto morto inferiore (BDC)", `<p>Il punto più basso della pedalata. È l'istante fondamentale in cui si misura l'estensione del ginocchio (target 140°-145°).</p>`]
   ];
 
@@ -1501,6 +2120,7 @@ function renderGlossary() {
 // ===================== INIT =====================
 document.addEventListener("DOMContentLoaded", async () => {
   I18N.init();
+  THEME_MANAGER.init();
   if (typeof WasmBikeFit !== 'undefined') {
     await WasmBikeFit.init();
   }
@@ -1535,6 +2155,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   initDualVideoModule();
   initDiagnosticsModule();
   initImportExport();
+  initDeviceOrientation();
+  initPhotoWizardEvents();
 
   setTimeout(() => {
     if (poseEngine) {

@@ -20,7 +20,14 @@
     <div class="masthead-in">
       <div class="masthead-top">
         <div class="brand">
-          <div class="brand-logo">🚴</div>
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18.5" cy="17.5" r="3.5"/>
+              <circle cx="5.5" cy="17.5" r="3.5"/>
+              <circle cx="15" cy="5" r="1"/>
+              <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+            </svg>
+          </div>
           <div class="brand-titles">
             <div class="kicker" id="txtKicker">Studio Biomeccanico & Posizionamento Bici</div>
             <h1 id="txtBrandTitle">VELOFIT STUDIO</h1>
@@ -29,10 +36,29 @@
 
         <div style="display:flex; gap:8px; align-items:center;">
           
+          <!-- Theme Switcher (System / Light / Dark) -->
+          <div class="seg theme-seg" role="group" aria-label="Tema / Theme" style="margin-right:2px;">
+            <button id="themeSystem" class="theme-btn" title="Tema di sistema" aria-pressed="true" style="padding:5px 8px; display:inline-flex; align-items:center;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              </svg>
+            </button>
+            <button id="themeLight" class="theme-btn" title="Tema chiaro" aria-pressed="false" style="padding:5px 8px; display:inline-flex; align-items:center;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+            </button>
+            <button id="themeDark" class="theme-btn" title="Tema scuro" aria-pressed="false" style="padding:5px 8px; display:inline-flex; align-items:center;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </button>
+          </div>
+
           <!-- Language Toggle Switcher -->
           <div class="seg" role="group" aria-label="Lingua / Language" style="margin-right:2px;">
-            <button id="langIT" aria-pressed="true" style="padding:5px 8px;">🇮🇹 IT</button>
-            <button id="langEN" aria-pressed="false" style="padding:5px 8px;">🇬🇧 EN</button>
+            <button id="langIT" aria-pressed="true" style="padding:5px 8px;">IT</button>
+            <button id="langEN" aria-pressed="false" style="padding:5px 8px;">EN</button>
           </div>
 
           <!-- Joint Actions & File Menu Dropdown -->
@@ -43,27 +69,27 @@
             <div class="menu-dropdown-panel" id="menuDropdownPanel" hidden>
               <div class="menu-group-title" id="txtMenuSecData">Dati & Esempi</div>
               <button class="menu-item" id="btnLoadSample">
-                <span class="menu-icon">⚡</span> <span id="txtMenuItemSample">Carica Esempio Argon 18</span>
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> <span id="txtMenuItemSample">Carica Esempio Argon 18</span>
               </button>
               <button class="menu-item" id="btnOpenImport">
-                <span class="menu-icon">📂</span> <span id="txtMenuItemImport">Importa File (.md / .json)</span>
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span> <span id="txtMenuItemImport">Importa File (.md / .json)</span>
               </button>
               
               <div class="menu-divider"></div>
               <div class="menu-group-title" id="txtMenuSecExport">Esportazione & Condivisione</div>
               <button class="menu-item" id="btnExportMd">
-                <span class="menu-icon">💾</span> <span id="txtMenuItemExportMd">Esporta Dossier (.md)</span>
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> <span id="txtMenuItemExportMd">Esporta Dossier (.md)</span>
               </button>
               <button class="menu-item" id="btnExportJson">
-                <span class="menu-icon">📦</span> <span id="txtMenuItemExportJson">Esporta Dati (.json)</span>
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span> <span id="txtMenuItemExportJson">Esporta Dati (.json)</span>
               </button>
               <button class="menu-item" id="btnCopyMd">
-                <span class="menu-icon">📋</span> <span id="txtMenuItemCopy">Copia Markdown negli Appunti</span>
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span> <span id="txtMenuItemCopy">Copia Markdown negli Appunti</span>
               </button>
 
               <div class="menu-divider"></div>
               <button class="menu-item menu-item-danger" id="btnReset">
-                <span class="menu-icon">🔄</span> <span id="txtMenuItemReset">Azzera Scheda Dati</span>
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span> <span id="txtMenuItemReset">Azzera Scheda Dati</span>
               </button>
             </div>
           </div>
@@ -72,12 +98,12 @@
 
       <!-- Navigation Tabs -->
       <nav class="nav-tabs" role="tablist">
-        <button class="nav-tab active" data-tab="tab-form" role="tab" id="tabNavForm">📋 Scheda Dati</button>
-        <button class="nav-tab" data-tab="tab-video" role="tab" id="tabNavVideo">🎥 Video & Angoli (Pose & Cadenza)</button>
-        <button class="nav-tab" data-tab="tab-diagnostics" role="tab" id="tabNavDiag">🩺 Diagnosi & Proposte</button>
-        <button class="nav-tab" data-tab="tab-calculator" role="tab" id="tabNavCalc">📐 Calcolatori & Simulatore Cockpit</button>
-        <button class="nav-tab" data-tab="tab-comparison" role="tab" id="tabNavComp">⚖️ Confronto Sincronizzato</button>
-        <button class="nav-tab" data-tab="tab-glossary" role="tab" id="tabNavGloss">📖 Glossario</button>
+        <button class="nav-tab active" data-tab="tab-form" role="tab" id="tabNavForm">Scheda Dati</button>
+        <button class="nav-tab" data-tab="tab-video" role="tab" id="tabNavVideo">Video & Angoli</button>
+        <button class="nav-tab" data-tab="tab-diagnostics" role="tab" id="tabNavDiag">Diagnosi & Proposte</button>
+        <button class="nav-tab" data-tab="tab-calculator" role="tab" id="tabNavCalc">Calcolatori & Cockpit</button>
+        <button class="nav-tab" data-tab="tab-comparison" role="tab" id="tabNavComp">Confronto Video</button>
+        <button class="nav-tab" data-tab="tab-glossary" role="tab" id="tabNavGloss">Glossario</button>
       </nav>
     </div>
   </header>
@@ -128,38 +154,38 @@
         <div class="video-top-toolbar">
           <div class="video-source-group">
             <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/mov" style="display:none">
-            <button class="btn btn-solid" id="btnUploadVideo">📁 Carica Video</button>
-            <button class="btn btn-accent" id="btnToggleCamera">📷 Avvia Fotocamera</button>
-            <button class="btn btn-solid" id="btnRecordVideo" style="display:none; background:#DC2626; color:#fff; font-weight:600;">🔴 Registra Video (20s)</button>
-            <button class="btn btn-outline" id="btnDownloadClip" style="display:none;">💾 Scarica Clip</button>
-            <button class="btn" id="btnPlayDemo">🚴 Demo Ciclista</button>
+            <button class="btn btn-solid" id="btnUploadVideo">Carica Video</button>
+            <button class="btn btn-accent" id="btnToggleCamera">Avvia Fotocamera</button>
+            <button class="btn btn-danger" id="btnRecordVideo" style="display:none; font-weight:700;">Registra Video (20s)</button>
+            <button class="btn btn-outline" id="btnDownloadClip" style="display:none;">Scarica Clip</button>
+            <button class="btn" id="btnPlayDemo">Demo Ciclista</button>
           </div>
 
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;"><span id="lblCamModeTxt">Modalità Camera:</span>
-              <select id="camModeSelect" style="width:auto; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
-                <option value="rider" selected>🚴 Ciclista in Sella</option>
-                <option value="bike">🚲 Setup Bici (Vuota)</option>
+            <label style="font-size:12px; font-family:var(--mono); color:var(--muted);"><span id="lblCamModeTxt">Modalità Camera:</span>
+              <select id="camModeSelect" style="width:auto; padding:4px 8px; font-size:12px;">
+                <option value="rider" selected>Ciclista in Sella</option>
+                <option value="bike">Setup Bici (Vuota)</option>
               </select>
             </label>
 
-            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;"><span id="lblViewModeTxt">Inquadratura:</span>
-              <select id="viewModeSelect" style="width:auto; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
+            <label style="font-size:12px; font-family:var(--mono); color:var(--muted);"><span id="lblViewModeTxt">Inquadratura:</span>
+              <select id="viewModeSelect" style="width:auto; padding:4px 8px; font-size:12px;">
                 <option value="lateral" selected>Laterale (Angoli & Cadenza)</option>
                 <option value="frontal">Frontale (Traiettoria Ginocchio)</option>
               </select>
             </label>
 
-            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;"><span id="lblSideTxt">Lato:</span>
-              <select id="sideSelect" style="width:auto; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
+            <label style="font-size:12px; font-family:var(--mono); color:var(--muted);"><span id="lblSideTxt">Lato:</span>
+              <select id="sideSelect" style="width:auto; padding:4px 8px; font-size:12px;">
                 <option value="auto">Auto Detect</option>
                 <option value="right" selected>Lato Destro</option>
                 <option value="left">Lato Sinistro</option>
               </select>
             </label>
 
-            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;">Banner:
-              <input type="text" id="bannerTextInput" value="LIVE FIT" style="width:85px; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
+            <label style="font-size:12px; font-family:var(--mono); color:var(--muted);">Banner:
+              <input type="text" id="bannerTextInput" value="LIVE FIT" style="width:85px; padding:4px 8px; font-size:12px;">
             </label>
           </div>
         </div>
@@ -308,10 +334,10 @@
         </div>
 
         <div style="display:flex; gap:10px; align-items:center;">
-          <span class="pri" id="diagHighCount" style="background:var(--danger-soft); color:var(--danger); font-size:11px; padding:4px 8px;">0 Critici</span>
-          <span class="adv" id="diagMedCount" style="background:var(--warn-soft); color:#854D0E; font-size:11px; padding:4px 8px;">0 Moderati</span>
-          <button class="btn btn-tape btn-sm" id="btnCopyActionPlan">📋 Copia Piano</button>
-          <button class="btn btn-solid btn-sm" id="btnApplyPlanToLog">📝 Inserisci nel Registro</button>
+          <span class="pri" id="diagHighCount" style="background:var(--danger-soft); color:#F87171; border-color:rgba(239,68,68,0.3); font-size:11px; padding:4px 8px;">0 Critici</span>
+          <span class="adv" id="diagMedCount" style="background:var(--warn-soft); color:#FBBF24; border-color:rgba(245,158,11,0.3); font-size:11px; padding:4px 8px;">0 Moderati</span>
+          <button class="btn btn-tape btn-sm" id="btnCopyActionPlan">Copia Piano</button>
+          <button class="btn btn-solid btn-sm" id="btnApplyPlanToLog">Inserisci nel Registro</button>
         </div>
       </div>
 
@@ -535,9 +561,9 @@
 
           </div>
 
-          <div class="video-controls-bar" style="background:#0F172A; padding:12px; border-radius:6px; margin-bottom:16px;">
-            <button class="btn btn-solid" id="btnDualPlayPause">▶ Play Sincronizzato</button>
-            <button class="btn btn-tape" id="btnDualSyncBDC" title="Aggancia la fase di pedalata al punto corrente">🔗 Sincronizza Fase al BDC</button>
+          <div class="video-controls-bar">
+            <button class="btn btn-solid" id="btnDualPlayPause">Play Sincronizzato</button>
+            <button class="btn btn-tape" id="btnDualSyncBDC" title="Aggancia la fase di pedalata al punto corrente">Sincronizza Fase al BDC</button>
             <input type="range" class="scrubber" id="dualScrubber" min="0" max="100" value="0" step="0.1">
           </div>
 
@@ -580,10 +606,9 @@
         <label style="font-size:12px; font-weight:600; font-family:var(--mono); color:var(--ink-2); display:block; margin-bottom:4px;" id="importPasteLabel">Oppure incolla qui il testo Markdown o JSON:</label>
         <textarea id="importTextArea" placeholder="# Scheda di rilevamento... oppure { ... }" style="min-height:100px; font-size:12px;"></textarea>
       </div>
-
     </div>
     <div class="modal-footer">
-      <button class="btn btn-tape" onclick="document.getElementById('btnLoadSample').click()" id="btnImportLoadSample">⚡ Carica Esempio Argon 18</button>
+      <button class="btn btn-tape" onclick="document.getElementById('btnLoadSample').click()" id="btnImportLoadSample">Carica Esempio Argon 18</button>
       <button class="btn btn-solid" id="btnProcessImport">Importa Dati</button>
     </div>
   </dialog>
@@ -601,114 +626,114 @@
 
       <!-- Step 1: Known Height & Setup Guidelines -->
       <div class="photo-wizard-step" id="photoStep1Box">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px; padding:14px; margin-bottom:14px;">
+        <div class="photo-height-card">
           <div>
             <label style="font-size:13px; font-weight:700; font-family:var(--mono); color:var(--ink); display:block; margin-bottom:4px;" id="lblPhotoHeightPrompt">Tua altezza reale (cm):</label>
-            <span style="font-size:11px; color:var(--muted);" id="lblPhotoHeightHelp">Necessaria come ancora metrica per convertire i pixel in millimetri reali.</span>
+            <span style="font-size:11.5px; color:var(--muted);" id="lblPhotoHeightHelp">Necessaria come ancora metrica per convertire i pixel in millimetri reali.</span>
           </div>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="photoKnownHeightInput" placeholder="es. 178" min="120" max="230" style="width:110px; font-size:16px; font-weight:700; font-family:var(--mono); padding:6px 10px; border:2px solid var(--accent); border-radius:6px;">
-            <span style="font-size:13px; font-weight:700; font-family:var(--mono); color:var(--ink-2);">cm</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="number" id="photoKnownHeightInput" placeholder="es. 178" min="120" max="230" style="width:115px; font-size:16px; font-weight:750; font-family:var(--mono); padding:6px 10px; border:1.5px solid var(--cyan); border-radius:6px;">
+            <span style="font-size:13px; font-weight:750; font-family:var(--mono); color:var(--ink-2);">cm</span>
           </div>
         </div>
 
         <!-- Instructions Box -->
-        <div style="background:#F1F5F9; border-left:4px solid var(--accent); border-radius:4px; padding:12px 14px; margin-bottom:16px;">
-          <div style="font-size:12px; font-weight:700; color:var(--ink); margin-bottom:6px;" id="lblPhotoInstTitle">Come posizionarsi per una misurazione accurata:</div>
-          <ul style="font-size:11px; color:var(--ink-2); line-height:1.6; margin:0; padding-left:18px;">
-            <li id="lblPhotoInst1"><b>Posa ad A:</b> in piedi, schiena dritta, gambe leggermente divaricate (~20 cm), braccia staccate dal corpo (~30°).</li>
-            <li id="lblPhotoInst2"><b>Abbigliamento:</b> completo da ciclismo aderente (salopette + maglia/intimo tecnico) o intimo, a tua preferenza.</li>
-            <li id="lblPhotoInst3"><b>Fotocamera:</b> posizionata ad altezza ombelico (~90-100 cm da terra), a 2.5 - 3 metri, inquadratura intera dalla testa ai piedi.</li>
-            <li style="color:#059669; font-weight:600;" id="lblPhotoPrivacy">🔒 <b>Privacy garantita:</b> elaborazione 100% in locale nel browser. Nessuna foto viene inviata a server esterni.</li>
+        <div style="background:rgba(0, 212, 255, 0.05); border:1px solid rgba(0, 212, 255, 0.2); border-left:4px solid var(--cyan); border-radius:var(--r-sm); padding:14px 16px; margin-bottom:18px;">
+          <div style="font-size:12px; font-weight:700; font-family:var(--mono); color:var(--cyan); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;" id="lblPhotoInstTitle">Come posizionarsi per una misurazione accurata:</div>
+          <ul style="font-size:12px; color:var(--ink-2); line-height:1.6; margin:0; padding-left:18px;">
+            <li id="lblPhotoInst1"><b style="color:var(--ink);">Posa ad A:</b> in piedi, schiena dritta, gambe leggermente divaricate (~20 cm), braccia staccate dal corpo (~30°).</li>
+            <li id="lblPhotoInst2"><b style="color:var(--ink);">Abbigliamento:</b> completo da ciclismo aderente (salopette + maglia/intimo tecnico) o intimo, a tua preferenza.</li>
+            <li id="lblPhotoInst3"><b style="color:var(--ink);">Fotocamera:</b> posizionata ad altezza ombelico (~90-100 cm da terra), a 2.5 - 3 metri, inquadratura intera dalla testa ai piedi.</li>
+            <li style="color:#059669; font-weight:600; margin-top:4px;" id="lblPhotoPrivacy"><b>Privacy garantita:</b> elaborazione 100% in locale nel browser. Nessuna foto viene inviata a server esterni.</li>
           </ul>
         </div>
 
         <!-- Input Actions (Upload or Camera Snapshot) -->
-        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px;">
+        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; flex-wrap:wrap;">
           <input type="file" id="photoFileInput" accept="image/*" style="display:none">
-          <button class="btn btn-solid" id="btnUploadPhotoFile" style="padding:10px 18px; font-size:13px;">📁 Carica Foto</button>
-          <button class="btn btn-accent" id="btnStartPhotoCam" style="padding:10px 18px; font-size:13px;">📷 Scatta con Timer (5s)</button>
+          <button class="btn btn-solid" id="btnUploadPhotoFile" style="padding:10px 20px; font-size:12px;">Carica Foto</button>
+          <button class="btn btn-accent" id="btnStartPhotoCam" style="padding:10px 20px; font-size:12px;">Scatta con Timer (5s)</button>
         </div>
 
         <!-- Live Camera Viewfinder (for taking snapshot) -->
-        <div id="photoCamContainer" style="display:none; position:relative; width:100%; max-width:480px; margin:0 auto 16px; border-radius:8px; overflow:hidden; background:#000;">
+        <div id="photoCamContainer" style="display:none; position:relative; width:100%; max-width:480px; margin:0 auto 18px; border-radius:var(--r); overflow:hidden; background:#000; border:1px solid var(--card-border);">
           <video id="photoCamVideo" playsinline muted style="width:100%; height:auto; display:block;"></video>
           <div class="countdown-overlay" id="photoCamCountdown" style="display:none;">
             <div class="countdown-number" id="photoCountdownNum">5</div>
           </div>
-          <div style="position:absolute; bottom:12px; left:0; right:0; text-align:center;">
-            <button class="btn btn-solid" id="btnTriggerPhotoSnap" style="background:#DC2626; color:#fff; font-weight:700;">📸 Scatta Ora</button>
-            <button class="btn btn-outline" id="btnCancelPhotoCam" style="margin-left:8px; background:#1E293B; color:#fff;">Annulla</button>
+          <div style="position:absolute; bottom:14px; left:0; right:0; text-align:center;">
+            <button class="btn btn-solid" id="btnTriggerPhotoSnap" style="background:#EF4444; border-color:#EF4444; color:#fff; font-weight:750;">Scatta Ora</button>
+            <button class="btn btn-outline" id="btnCancelPhotoCam" style="margin-left:8px; background:#0E1522; color:#fff;">Annulla</button>
           </div>
         </div>
       </div>
 
       <!-- Processing Spinner / Status -->
-      <div id="photoProcessingIndicator" style="display:none; text-align:center; padding:30px 10px;">
-        <div class="spinner" style="display:inline-block; width:36px; height:36px; border:3px solid #E2E8F0; border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-        <p style="margin-top:12px; font-size:13px; font-family:var(--mono); color:var(--ink-2);" id="lblPhotoProcessing">Analisi MediaPipe dei punti corporei in corso...</p>
+      <div id="photoProcessingIndicator" style="display:none; text-align:center; padding:32px 10px;">
+        <div class="spinner" style="display:inline-block; width:36px; height:36px; border:3px solid var(--card-border); border-top-color:var(--cyan); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+        <p style="margin-top:14px; font-size:13px; font-family:var(--mono); color:var(--cyan);" id="lblPhotoProcessing">Analisi MediaPipe dei punti corporei in corso...</p>
       </div>
 
       <!-- Error Message -->
-      <div id="photoErrorMsg" style="display:none; background:#FEF2F2; border:1px solid #F87171; border-radius:6px; padding:12px; margin-bottom:14px; color:#991B1B; font-size:12px;"></div>
+      <div id="photoErrorMsg" style="display:none; background:rgba(239, 68, 68, 0.12); border:1px solid #EF4444; border-radius:var(--r-sm); padding:14px; margin-bottom:16px; color:#FCA5A5; font-size:12.5px;"></div>
 
       <!-- Step 2: Review Canvas & Metric Extraction -->
       <div id="photoResultsContainer" style="display:none;">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:start;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; align-items:start;">
           <!-- Left: Canvas with Skeletons & Segment Overlays -->
-          <div style="background:#0F172A; border-radius:6px; overflow:hidden; border:1px solid #334155; text-align:center;">
+          <div style="background:#06090F; border-radius:var(--r-sm); overflow:hidden; border:1px solid var(--card-border); text-align:center;">
             <canvas id="photoReviewCanvas" width="600" height="750" style="width:100%; height:auto; max-height:420px; object-fit:contain; display:block;"></canvas>
           </div>
 
           <!-- Right: Detected Segment Summary & Form -->
           <div style="display:flex; flex-direction:column; gap:10px;">
-            <h4 style="font-size:13px; font-weight:700; font-family:var(--mono); color:var(--ink); margin:0 0 4px;" id="lblPhotoDetectedTitle">Misure Rilevate:</h4>
+            <h4 style="font-size:12.5px; font-weight:750; font-family:var(--mono); text-transform:uppercase; letter-spacing:0.06em; color:var(--cyan); margin:0 0 4px;" id="lblPhotoDetectedTitle">Misure Rilevate:</h4>
 
-            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
-              <span style="font-size:12px; font-weight:600; color:#10B981;" id="lblPhotoResCavallo">Cavallo (Inseam):</span>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <input type="number" id="photoResCavallo" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#090E17; border:1px solid var(--card-border); border-radius:var(--r-sm);">
+              <span style="font-size:12px; font-weight:650; color:#34D399;" id="lblPhotoResCavallo">Cavallo (Inseam):</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="number" id="photoResCavallo" style="width:90px; font-family:var(--mono); font-weight:750; text-align:right; padding:5px 8px; background:#05080E; border:1px solid var(--line-strong); color:#FFFFFF;">
                 <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
               </div>
             </div>
 
-            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
-              <span style="font-size:12px; font-weight:600; color:#0284C7;" id="lblPhotoResFemore">Femore (Thigh):</span>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <input type="number" id="photoResFemore" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#090E17; border:1px solid var(--card-border); border-radius:var(--r-sm);">
+              <span style="font-size:12px; font-weight:650; color:#38BDF8;" id="lblPhotoResFemore">Femore (Thigh):</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="number" id="photoResFemore" style="width:90px; font-family:var(--mono); font-weight:750; text-align:right; padding:5px 8px; background:#05080E; border:1px solid var(--line-strong); color:#FFFFFF;">
                 <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
               </div>
             </div>
 
-            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
-              <span style="font-size:12px; font-weight:600; color:#2563EB;" id="lblPhotoResTibia">Tibia (Lower leg):</span>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <input type="number" id="photoResTibia" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#090E17; border:1px solid var(--card-border); border-radius:var(--r-sm);">
+              <span style="font-size:12px; font-weight:650; color:#60A5FA;" id="lblPhotoResTibia">Tibia (Lower leg):</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="number" id="photoResTibia" style="width:90px; font-family:var(--mono); font-weight:750; text-align:right; padding:5px 8px; background:#05080E; border:1px solid var(--line-strong); color:#FFFFFF;">
                 <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
               </div>
             </div>
 
-            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
-              <span style="font-size:12px; font-weight:600; color:#D97706;" id="lblPhotoResBusto">Busto (Torso):</span>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <input type="number" id="photoResBusto" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#090E17; border:1px solid var(--card-border); border-radius:var(--r-sm);">
+              <span style="font-size:12px; font-weight:650; color:#FBBF24;" id="lblPhotoResBusto">Busto (Torso):</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="number" id="photoResBusto" style="width:90px; font-family:var(--mono); font-weight:750; text-align:right; padding:5px 8px; background:#05080E; border:1px solid var(--line-strong); color:#FFFFFF;">
                 <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
               </div>
             </div>
 
-            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
-              <span style="font-size:12px; font-weight:600; color:#DB2777;" id="lblPhotoResBraccio">Braccio (Arm):</span>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <input type="number" id="photoResBraccio" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#090E17; border:1px solid var(--card-border); border-radius:var(--r-sm);">
+              <span style="font-size:12px; font-weight:650; color:#F472B6;" id="lblPhotoResBraccio">Braccio (Arm):</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="number" id="photoResBraccio" style="width:90px; font-family:var(--mono); font-weight:750; text-align:right; padding:5px 8px; background:#05080E; border:1px solid var(--line-strong); color:#FFFFFF;">
                 <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
               </div>
             </div>
 
-            <div style="font-size:11px; color:var(--muted); line-height:1.4; margin-top:4px; font-style:italic;" id="lblPhotoSitBonesNote">
+            <div style="font-size:11.5px; color:var(--muted); line-height:1.45; margin-top:4px; font-style:italic;" id="lblPhotoSitBonesNote">
               Nota: La larghezza delle ossa ischiatiche non è visibile da foto e va rilevata tramite l'impronta su cartone.
             </div>
 
-            <button class="btn btn-outline" id="btnRetakePhoto" style="margin-top:8px; font-size:12px;">🔄 Carica o Scatta un'altra foto</button>
+            <button class="btn btn-outline" id="btnRetakePhoto" style="margin-top:8px; font-size:11.5px;">Carica o Scatta un'altra foto</button>
           </div>
         </div>
       </div>
@@ -716,7 +741,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" id="btnCancelPhotoWizard">Annulla</button>
-      <button class="btn btn-solid" id="btnApplyPhotoMeasurements" style="display:none; background:#10B981; color:#fff; font-weight:600;">✅ Applica alla Scheda Dati</button>
+      <button class="btn btn-solid" id="btnApplyPhotoMeasurements" style="display:none; background:#10B981; border-color:#10B981; color:#040914; font-weight:750;">Applica alla Scheda Dati</button>
     </div>
   </dialog>
 

@@ -196,39 +196,56 @@ const BikeGeometry = {
     const reachLabel = deltaClampReach >= 0 ? `+${deltaClampReach} mm` : `${deltaClampReach} mm`;
     const stackLabel = deltaClampStack >= 0 ? `+${deltaClampStack} mm (più alto)` : `${deltaClampStack} mm (più basso)`;
 
-    return `<svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="background:#0F172A; border-radius:6px;">
+    const isLight = (typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'light');
+    const svgBg = isLight ? '#F8FAFC' : '#0F172A';
+    const svgBorder = isLight ? 'border: 1px solid #CBD5E1;' : '';
+    const gridStroke = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
+    const headTubeStroke = isLight ? '#94A3B8' : '#475569';
+    const headTubeText = isLight ? '#64748B' : '#94A3B8';
+    const ghostColor = isLight ? '#94A3B8' : '#64748B';
+    const ghostCircleFill = isLight ? '#CBD5E1' : '#475569';
+    const ghostText = isLight ? '#64748B' : '#94A3B8';
+    const propColor = isLight ? '#0284C7' : '#00D4FF';
+    const propCircleStroke = isLight ? '#0F172A' : '#FFFFFF';
+    const cardFill = isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(15, 23, 42, 0.88)';
+    const cardStroke = isLight ? '#CBD5E1' : '#334155';
+    const cardTitle = isLight ? '#475569' : '#94A3B8';
+    const reachColor = isLight ? (deltaClampReach >= 0 ? '#0284C7' : '#D97706') : (deltaClampReach >= 0 ? '#38BDF8' : '#F59E0B');
+    const stackColor = isLight ? (deltaClampStack >= 0 ? '#059669' : '#DC2626') : (deltaClampStack >= 0 ? '#34D399' : '#F87171');
+
+    return `<svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="background:${svgBg}; ${svgBorder} border-radius:6px;">
       <!-- Grid Lines -->
       <defs>
         <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="${gridStroke}" stroke-width="1"/>
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#grid)" />
 
       <!-- Head Tube Reference (Grey) -->
-      <path d="M ${o.x - 30} ${o.y + 70} L ${o.x} ${o.y}" stroke="#475569" stroke-width="12" stroke-linecap="round"/>
-      <text x="${o.x - 45}" y="${o.y + 40}" fill="#94A3B8" font-family="monospace" font-size="10">TUBO STERZO</text>
+      <path d="M ${o.x - 30} ${o.y + 70} L ${o.x} ${o.y}" stroke="${headTubeStroke}" stroke-width="12" stroke-linecap="round"/>
+      <text x="${o.x - 45}" y="${o.y + 40}" fill="${headTubeText}" font-family="monospace" font-size="10">TUBO STERZO</text>
 
       <!-- ================= CURRENT SETUP (Ghost Grey) ================= -->
       <!-- Current Spacers -->
-      <line x1="${o.x}" y1="${o.y}" x2="${curSteererTop.x}" y2="${curSteererTop.y}" stroke="#64748B" stroke-width="8" stroke-linecap="butt"/>
+      <line x1="${o.x}" y1="${o.y}" x2="${curSteererTop.x}" y2="${curSteererTop.y}" stroke="${ghostColor}" stroke-width="8" stroke-linecap="butt"/>
       <!-- Current Stem -->
-      <line x1="${curSteererTop.x}" y1="${curSteererTop.y}" x2="${curClamp.x}" y2="${curClamp.y}" stroke="#64748B" stroke-width="6" stroke-linecap="round"/>
+      <line x1="${curSteererTop.x}" y1="${curSteererTop.y}" x2="${curClamp.x}" y2="${curClamp.y}" stroke="${ghostColor}" stroke-width="6" stroke-linecap="round"/>
       <!-- Current Handlebar / Hoods -->
-      <path d="M ${curClamp.x} ${curClamp.y} Q ${curClamp.x + 20} ${curClamp.y - 15} ${curHoods.x} ${curHoods.y}" fill="none" stroke="#64748B" stroke-width="3" stroke-dasharray="3 3"/>
-      <circle cx="${curClamp.x}" cy="${curClamp.y}" r="6" fill="#475569" stroke="#64748B" stroke-width="2"/>
-      <text x="${curClamp.x - 10}" y="${curClamp.y - 12}" fill="#94A3B8" font-family="monospace" font-size="9" text-anchor="end">ATTUALE</text>
+      <path d="M ${curClamp.x} ${curClamp.y} Q ${curClamp.x + 20} ${curClamp.y - 15} ${curHoods.x} ${curHoods.y}" fill="none" stroke="${ghostColor}" stroke-width="3" stroke-dasharray="3 3"/>
+      <circle cx="${curClamp.x}" cy="${curClamp.y}" r="6" fill="${ghostCircleFill}" stroke="${ghostColor}" stroke-width="2"/>
+      <text x="${curClamp.x - 10}" y="${curClamp.y - 12}" fill="${ghostText}" font-family="monospace" font-size="9" text-anchor="end">ATTUALE</text>
 
       <!-- ================= PROPOSED SETUP (Bright Cyan / Yellow) ================= -->
       <!-- Proposed Spacers -->
       <line x1="${o.x}" y1="${o.y}" x2="${propSteererTop.x}" y2="${propSteererTop.y}" stroke="#F59E0B" stroke-width="8" stroke-linecap="butt"/>
       <!-- Proposed Stem -->
-      <line x1="${propSteererTop.x}" y1="${propSteererTop.y}" x2="${propClamp.x}" y2="${propClamp.y}" stroke="#00D4FF" stroke-width="6" stroke-linecap="round"/>
+      <line x1="${propSteererTop.x}" y1="${propSteererTop.y}" x2="${propClamp.x}" y2="${propClamp.y}" stroke="${propColor}" stroke-width="6" stroke-linecap="round"/>
       <!-- Proposed Handlebar / Hoods -->
-      <path d="M ${propClamp.x} ${propClamp.y} Q ${propClamp.x + 20} ${propClamp.y - 15} ${propHoods.x} ${propHoods.y}" fill="none" stroke="#00D4FF" stroke-width="3.5"/>
-      <circle cx="${propClamp.x}" cy="${propClamp.y}" r="7" fill="#00D4FF" stroke="#FFFFFF" stroke-width="2"/>
+      <path d="M ${propClamp.x} ${propClamp.y} Q ${propClamp.x + 20} ${propClamp.y - 15} ${propHoods.x} ${propHoods.y}" fill="none" stroke="${propColor}" stroke-width="3.5"/>
+      <circle cx="${propClamp.x}" cy="${propClamp.y}" r="7" fill="${propColor}" stroke="${propCircleStroke}" stroke-width="2"/>
       <circle cx="${propHoods.x}" cy="${propHoods.y}" r="4" fill="#F59E0B"/>
-      <text x="${propClamp.x + 12}" y="${propClamp.y - 12}" fill="#00D4FF" font-family="monospace" font-weight="bold" font-size="10">PROPOSTO</text>
+      <text x="${propClamp.x + 12}" y="${propClamp.y - 12}" fill="${propColor}" font-family="monospace" font-weight="bold" font-size="10">PROPOSTO</text>
 
       <!-- Delta Vectors & Dimension Lines -->
       <g stroke="#F59E0B" stroke-width="1.2" stroke-dasharray="2 2">
@@ -239,10 +256,10 @@ const BikeGeometry = {
       </g>
 
       <!-- Delta Summary Overlay Card -->
-      <rect x="20" y="20" width="220" height="74" rx="5" fill="rgba(15, 23, 42, 0.88)" stroke="#334155" stroke-width="1"/>
-      <text x="32" y="40" fill="#94A3B8" font-family="monospace" font-size="10" font-weight="bold">VARIAZIONE COCKPIT:</text>
-      <text x="32" y="58" fill="${deltaClampReach >= 0 ? '#38BDF8' : '#F59E0B'}" font-family="monospace" font-size="12" font-weight="bold">Δ Reach: ${reachLabel}</text>
-      <text x="32" y="76" fill="${deltaClampStack >= 0 ? '#34D399' : '#F87171'}" font-family="monospace" font-size="12" font-weight="bold">Δ Stack / Drop: ${stackLabel}</text>
+      <rect x="20" y="20" width="220" height="74" rx="5" fill="${cardFill}" stroke="${cardStroke}" stroke-width="1"/>
+      <text x="32" y="40" fill="${cardTitle}" font-family="monospace" font-size="10" font-weight="bold">VARIAZIONE COCKPIT:</text>
+      <text x="32" y="58" fill="${reachColor}" font-family="monospace" font-size="12" font-weight="bold">Δ Reach: ${reachLabel}</text>
+      <text x="32" y="76" fill="${stackColor}" font-family="monospace" font-size="12" font-weight="bold">Δ Stack / Drop: ${stackLabel}</text>
     </svg>`;
   }
 };
