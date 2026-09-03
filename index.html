@@ -80,6 +80,12 @@
               <button class="menu-item" id="btnMenuBikePhoto">
                 <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l3-3 3 3"/><path d="M12 17.5V14l4-3 2.5 6.5"/></svg></span> <span id="txtMenuItemBikePhoto">Misura Bici da Foto</span>
               </button>
+              <button class="menu-item" id="btnMenuSitBonePhoto">
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> <span id="txtMenuItemSitBone">Impronta Ossa Ischiatiche</span>
+              </button>
+              <button class="menu-item" id="btnMenuFootFlarePhoto">
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 8.3 3 7c.03-1.3.8-2 2-2 1.5 0 2 1.5 2 2.5V16"/><path d="M20 16v-2.38C20 11.5 21.03 8.3 21 7c-.03-1.3-.8-2-2-2-1.5 0-2 1.5-2 2.5V16"/></svg></span> <span id="txtMenuItemFootFlare">Rotazione Piede & Tacchette</span>
+              </button>
               
               <div class="menu-divider"></div>
               <div class="menu-group-title" id="txtMenuSecExport">Esportazione & Condivisione</div>
@@ -737,6 +743,17 @@
               </div>
             </div>
 
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#090E17; border:1px solid var(--card-border); border-left:3px solid #8B5CF6; border-radius:var(--r-sm);">
+              <div>
+                <span style="font-size:12px; font-weight:650; color:#A78BFA;" id="lblPhotoResSpalle">Larghezza Spalle:</span>
+                <div style="font-size:10px; color:var(--muted);" id="lblPhotoResManubrioHint">Manubrio consigliato: <b id="photoRecManubrioVal" style="color:#A78BFA;">420</b> mm</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="number" id="photoResSpalle" style="width:90px; font-family:var(--mono); font-weight:750; text-align:right; padding:5px 8px; background:#05080E; border:1px solid var(--line-strong); color:#FFFFFF;">
+                <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
+              </div>
+            </div>
+
             <div style="font-size:11.5px; color:var(--muted); line-height:1.45; margin-top:4px; font-style:italic;" id="lblPhotoSitBonesNote">
               Nota: La larghezza delle ossa ischiatiche non è visibile da foto e va rilevata tramite l'impronta su cartone.
             </div>
@@ -849,6 +866,26 @@
               <span class="bike-metric-tile-val"><span id="bikeValWb">0</span><span class="bike-metric-tile-unit">mm</span></span>
             </div>
 
+            <div class="bike-metric-tile" style="border-left:3px solid #A855F7;">
+              <span class="bike-metric-tile-label" id="lblBikeMetricStack">Frame Stack:</span>
+              <span class="bike-metric-tile-val"><span id="bikeValStack">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
+            <div class="bike-metric-tile" style="border-left:3px solid #A855F7;">
+              <span class="bike-metric-tile-label" id="lblBikeMetricFReach">Frame Reach:</span>
+              <span class="bike-metric-tile-val"><span id="bikeValFReach">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
+            <div class="bike-metric-tile" style="border-left:3px solid #A855F7;">
+              <span class="bike-metric-tile-label" id="lblBikeMetricRatio">Stack / Reach:</span>
+              <span class="bike-metric-tile-val"><span id="bikeValSRRatio">1.45</span></span>
+            </div>
+
+            <div class="bike-metric-tile" style="border-left:3px solid #A855F7;">
+              <span class="bike-metric-tile-label" id="lblBikeMetricSpacers">Spessori Stimati:</span>
+              <span class="bike-metric-tile-val"><span id="bikeValSpacers">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
             <button class="btn btn-outline" id="btnRetakeBikePhoto" style="margin-top:6px; font-size:11.5px; width:100%;">Carica un'altra foto</button>
           </div>
 
@@ -862,6 +899,146 @@
     </div>
   </dialog>
 
+  <!-- ===================== SIT-BONE CARDBOARD IMPRESSION MODAL ===================== -->
+  <dialog class="app-modal" id="modalSitBoneMeasure" style="max-width:980px; width:95vw;">
+    <div class="modal-header">
+      <div>
+        <h3 id="sitBoneModalTitle">Analizzatore Impronta Ossa Ischiatiche (Lente 3x)</h3>
+        <p style="font-size:12px; color:var(--muted); margin:2px 0 0;" id="sitBoneModalSub">Calibrazione metrica tramite carta di credito (85.6mm) per calcolare la larghezza sella ideale</p>
+      </div>
+      <button class="helpbtn" id="btnCloseSitBoneWizard">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:82vh; overflow-y:auto;">
+      <div id="sitBoneStep1Box">
+        <div style="background:rgba(255, 255, 255, 0.02); border:1px solid var(--card-border); border-left:4px solid var(--amber); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; font-family:var(--mono); color:var(--amber); margin-bottom:5px; text-transform:uppercase;" id="lblSitBoneInstTitle">Istruzioni Test del Cartone:</div>
+          <ul style="font-size:11.5px; color:var(--ink-2); line-height:1.55; margin:0; padding-left:18px;">
+            <li id="lblSitBoneInst1">Siediti su un pezzo di cartone ondulato su una sedia rigida, solleva i piedi per 10 secondi per imprimere bene le due ossa ischiatiche.</li>
+            <li id="lblSitBoneInst2">Poggia una carta plastificata (carta di credito, patente, bancomat: standard ISO 85.6 mm) sul cartone accanto alle impronte e scatta una foto dall'alto perpendicolare.</li>
+            <li id="lblSitBoneInst3">Usa i mirini con lente 3x per allineare la larghezza della carta e i centri delle due cavità.</li>
+          </ul>
+        </div>
+        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+          <input type="file" id="sitBoneFileInput" accept="image/*" style="display:none">
+          <button class="btn btn-solid" id="btnUploadSitBoneFile" style="padding:9px 18px; font-size:12px;">Carica Foto Impronta</button>
+          <button class="btn btn-accent" id="btnStartSitBoneCam" style="padding:9px 18px; font-size:12px;">Scatta con Timer (5s)</button>
+        </div>
+        <div id="sitBoneCamContainer" style="display:none; position:relative; width:100%; max-width:500px; margin:0 auto 16px; border-radius:var(--r); overflow:hidden; background:#000; border:1px solid var(--card-border);">
+          <video id="sitBoneCamVideo" playsinline muted style="width:100%; height:auto; display:block;"></video>
+          <div id="sitBoneCountdown" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:900; font-family:var(--mono); color:var(--amber);">5</div>
+          <div style="position:absolute; bottom:12px; left:0; right:0; display:flex; justify-content:center; gap:8px;">
+            <button class="btn btn-solid" id="btnTriggerSitBoneSnap">📸 Scatta Ora</button>
+            <button class="btn btn-outline" id="btnCancelSitBoneCam">Annulla</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="sitBoneStageContainer" style="display:none;">
+        <div class="bike-photo-split">
+          <div class="bike-canvas-stage-wrap">
+            <canvas id="sitBoneCanvas"></canvas>
+          </div>
+          <div class="bike-telemetry-sidebar">
+            <div style="font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; color:var(--amber); text-transform:uppercase;">ANALISI OSSA ISCHIATICHE</div>
+            <div class="bike-metric-tile" style="border-left:3px solid #10B981;">
+              <span class="bike-metric-tile-label" id="lblSitBoneDist">Distanza Ischiale:</span>
+              <span class="bike-metric-tile-val"><span id="sitBoneDistVal">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblSitBoneRoad">Sella Strada (+20mm):</span>
+              <span class="bike-metric-tile-val"><span id="sitBoneRoadVal">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblSitBoneEndurance">Sella Gravel (+25mm):</span>
+              <span class="bike-metric-tile-val"><span id="sitBoneEnduranceVal">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblSitBoneMtb">Sella MTB/Tour (+30mm):</span>
+              <span class="bike-metric-tile-val"><span id="sitBoneMtbVal">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+            <button class="btn btn-outline" id="btnRetakeSitBone" style="margin-top:6px; font-size:11.5px; width:100%;">Carica un'altra foto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="btnCancelSitBoneWizard">Annulla</button>
+      <button class="btn btn-solid" id="btnApplySitBoneMeasurements" style="display:none; background:#10B981; border-color:#10B981; color:#040914; font-weight:750;">Applica alla Scheda Dati</button>
+    </div>
+  </dialog>
+
+  <!-- ===================== FOOT ROTATION & CLEAT FLOAT MODAL ===================== -->
+  <dialog class="app-modal" id="modalFootFlareMeasure" style="max-width:980px; width:95vw;">
+    <div class="modal-header">
+      <div>
+        <h3 id="footFlareModalTitle">Analisi Rotazione Piede & Float Tacchette (Lente 3x)</h3>
+        <p style="font-size:12px; color:var(--muted); margin:2px 0 0;" id="footFlareModalSub">Misura la torsione tibiale a riposo e consiglia float e allineamento rotazionale delle tacchette</p>
+      </div>
+      <button class="helpbtn" id="btnCloseFootFlareWizard">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:82vh; overflow-y:auto;">
+      <div id="footFlareStep1Box">
+        <div style="background:rgba(255, 255, 255, 0.02); border:1px solid var(--card-border); border-left:4px solid var(--cyan); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; font-family:var(--mono); color:var(--cyan); margin-bottom:5px; text-transform:uppercase;" id="lblFootFlareInstTitle">Istruzioni Ripresa Piedi nel Vuoto:</div>
+          <ul style="font-size:11.5px; color:var(--ink-2); line-height:1.55; margin:0; padding-left:18px;">
+            <li id="lblFootFlareInst1">Siediti sul bordo di un tavolo alto lasciando penzolare liberamente i piedi nel vuoto, rilassando completamente caviglie e muscoli della gamba.</li>
+            <li id="lblFootFlareInst2">Scatta una foto dall'alto perpendicolare inquadrando entrambi i piedi.</li>
+            <li id="lblFootFlareInst3">Trascina i mirini con lente 3x sul centro del tallone e sul secondo dito di ciascun piede per calcolare l'angolo di rotazione naturale.</li>
+          </ul>
+        </div>
+        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+          <input type="file" id="footFlareFileInput" accept="image/*" style="display:none">
+          <button class="btn btn-solid" id="btnUploadFootFlareFile" style="padding:9px 18px; font-size:12px;">Carica Foto Piedi</button>
+          <button class="btn btn-accent" id="btnStartFootFlareCam" style="padding:9px 18px; font-size:12px;">Scatta con Timer (5s)</button>
+        </div>
+        <div id="footFlareCamContainer" style="display:none; position:relative; width:100%; max-width:500px; margin:0 auto 16px; border-radius:var(--r); overflow:hidden; background:#000; border:1px solid var(--card-border);">
+          <video id="footFlareCamVideo" playsinline muted style="width:100%; height:auto; display:block;"></video>
+          <div id="footFlareCountdown" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:900; font-family:var(--mono); color:var(--amber);">5</div>
+          <div style="position:absolute; bottom:12px; left:0; right:0; display:flex; justify-content:center; gap:8px;">
+            <button class="btn btn-solid" id="btnTriggerFootFlareSnap">📸 Scatta Ora</button>
+            <button class="btn btn-outline" id="btnCancelFootFlareCam">Annulla</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="footFlareStageContainer" style="display:none;">
+        <div class="bike-photo-split">
+          <div class="bike-canvas-stage-wrap">
+            <canvas id="footFlareCanvas"></canvas>
+          </div>
+          <div class="bike-telemetry-sidebar">
+            <div style="font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; color:var(--cyan); text-transform:uppercase;">ROTAZIONE NATURALE PIEDI</div>
+            <div class="bike-metric-tile" style="border-left:3px solid #38BDF8;">
+              <span class="bike-metric-tile-label" id="lblFootAngleL">Piede Sinistro (Sx):</span>
+              <span class="bike-metric-tile-val"><span id="footValAngleL">0.0</span><span class="bike-metric-tile-unit">°</span></span>
+            </div>
+            <div class="bike-metric-tile" style="border-left:3px solid #EC4899;">
+              <span class="bike-metric-tile-label" id="lblFootAngleR">Piede Destro (Dx):</span>
+              <span class="bike-metric-tile-val"><span id="footValAngleR">0.0</span><span class="bike-metric-tile-unit">°</span></span>
+            </div>
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblFootAsym">Asimmetria:</span>
+              <span class="bike-metric-tile-val"><span id="footValAsym">0.0</span><span class="bike-metric-tile-unit">°</span></span>
+            </div>
+            <div class="bike-metric-tile" style="flex-direction:column; align-items:flex-start; gap:4px;">
+              <span class="bike-metric-tile-label" id="lblFootRecFloat">Float Consigliato:</span>
+              <span style="font-size:12.5px; font-weight:750; color:#FFFFFF;" id="footValRecFloat">-</span>
+            </div>
+            <div class="bike-metric-tile" style="flex-direction:column; align-items:flex-start; gap:4px;">
+              <span class="bike-metric-tile-label">Shimano SPD-SL / Look:</span>
+              <span style="font-size:11px; color:var(--ink-2);" id="footValRecBrands">-</span>
+            </div>
+            <button class="btn btn-outline" id="btnRetakeFootFlare" style="margin-top:6px; font-size:11.5px; width:100%;">Carica un'altra foto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="btnCancelFootFlareWizard">Annulla</button>
+      <button class="btn btn-solid" id="btnApplyFootFlareMeasurements" style="display:none; background:#10B981; border-color:#10B981; color:#040914; font-weight:750;">Applica alla Scheda Dati</button>
+    </div>
+  </dialog>
+
   <!-- App Scripts & WASM Binary Bridge -->
   <script src="wasm-bundle.js"></script>
   <script src="wasm-loader.js"></script>
@@ -872,6 +1049,8 @@
   <script src="diagnostic-engine.js"></script>
   <script src="pose-engine.js"></script>
   <script src="bike-measure-engine.js"></script>
+  <script src="sitbone-measure-engine.js"></script>
+  <script src="foot-measure-engine.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

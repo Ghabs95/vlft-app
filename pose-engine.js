@@ -1388,6 +1388,14 @@ class BikeFitPoseEngine {
         const rArm = dist2d(rSh, rElb) + dist2d(rElb, rWri);
         const braccioMm = Math.round(((lArm + rArm) / 2) * scaleMmPerPx);
 
+        // Biacromial Shoulder Width (Larghezza Spalle): acromion-to-acromion
+        const spalleMm = Math.round(dist2d(lSh, rSh) * scaleMmPerPx);
+        let recManubrioMm = 420;
+        if (spalleMm < 390) recManubrioMm = 380;
+        else if (spalleMm < 410) recManubrioMm = 400;
+        else if (spalleMm < 430) recManubrioMm = 420;
+        else recManubrioMm = 440;
+
         resolve({
           ok: true,
           scaleMmPerPx,
@@ -1397,7 +1405,9 @@ class BikeFitPoseEngine {
             femore: femoreMm,
             tibia: tibiaMm,
             busto: bustoMm,
-            braccio: braccioMm
+            braccio: braccioMm,
+            spalle: spalleMm,
+            manubrioConsigliato: recManubrioMm
           },
           points: {
             headTop: { x: midSh.x, y: headTopY * h },
@@ -1504,6 +1514,11 @@ class BikeFitPoseEngine {
     // 5. Arm - Magenta
     drawSegment(pts.rSh, pts.rElb, "#EC4899", "");
     drawSegment(pts.rElb, pts.rWri, "#EC4899", `Braccio: ${m.braccio} mm`);
+
+    // 6. Shoulders (Larghezza Spalle) - Purple
+    if (pts.lSh && pts.rSh && m.spalle) {
+      drawSegment(pts.lSh, pts.rSh, "#8B5CF6", `Spalle: ${m.spalle} mm (Manubrio: ${m.manubrioConsigliato} mm)`);
+    }
   }
 
   captureSnapshotPNG() {

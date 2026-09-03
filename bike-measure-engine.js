@@ -32,6 +32,7 @@ class BikeMeasureEngine {
       bbCenter: { x: 0, y: 0, label: "Mov. Centrale (BB)", labelEn: "BB Center (0,0)", color: "#F59E0B" },
       saddleNose: { x: 0, y: 0, label: "Punta Sella", labelEn: "Saddle Nose", color: "#10B981" },
       saddleTop: { x: 0, y: 0, label: "Top Sella (Centro)", labelEn: "Saddle Top", color: "#10B981" },
+      headTubeTop: { x: 0, y: 0, label: "Top Tubo Sterzo", labelEn: "Head Tube Top", color: "#A855F7" },
       handlebar: { x: 0, y: 0, label: "Centro Manubrio", labelEn: "Handlebar Clamp", color: "#EC4899" }
     };
 
@@ -54,7 +55,11 @@ class BikeMeasureEngine {
       saddleToBarDropMm: 0,
       saddleToBarReachMm: 0,
       saddleTiltDeg: 0,
-      seatTubeAngleDeg: 73.5
+      seatTubeAngleDeg: 73.5,
+      frameStackMm: 0,
+      frameReachMm: 0,
+      stackToReachRatio: "1.45",
+      spacerStackMm: 0
     };
 
     this.onMeasurementsChanged = null;
@@ -138,6 +143,9 @@ class BikeMeasureEngine {
     this.pins.saddleTop.x = Math.round(iw * 0.36);
     this.pins.saddleTop.y = Math.round(ih * 0.31);
 
+    this.pins.headTubeTop.x = Math.round(iw * 0.67);
+    this.pins.headTubeTop.y = Math.round(ih * 0.42);
+
     this.pins.handlebar.x = Math.round(iw * 0.72);
     this.pins.handlebar.y = Math.round(ih * 0.37);
   }
@@ -184,6 +192,7 @@ class BikeMeasureEngine {
     const bbL = toLevelCoord(this.pins.bbCenter); // (0, 0)
     const sTopL = toLevelCoord(this.pins.saddleTop);
     const sNoseL = toLevelCoord(this.pins.saddleNose);
+    const htL = toLevelCoord(this.pins.headTubeTop);
     const barL = toLevelCoord(this.pins.handlebar);
 
     // 4. Saddle Height (Hs): direct Euclidean distance from BB center to Saddle Top
@@ -211,6 +220,19 @@ class BikeMeasureEngine {
     const dySaddle = sNoseL.y - sTopL.y;
     const tiltRad = Math.atan2(dySaddle, dxSaddle);
     this.measurements.saddleTiltDeg = Math.round((tiltRad * 180 / Math.PI) * 10) / 10;
+
+    // 9. Frame Stack & Reach
+    const fStack = htL.y - bbL.y;
+    const fReach = htL.x - bbL.x;
+    this.measurements.frameStackMm = Math.round(Math.max(0, fStack));
+    this.measurements.frameReachMm = Math.round(Math.max(0, fReach));
+    this.measurements.stackToReachRatio = (this.measurements.frameReachMm > 0)
+      ? (this.measurements.frameStackMm / this.measurements.frameReachMm).toFixed(2)
+      : "1.45";
+
+    // 10. Estimated Spacers (vertical rise from head tube top to handlebar minus stem stack)
+    const vertSpacer = barL.y - htL.y;
+    this.measurements.spacerStackMm = Math.round(Math.max(0, vertSpacer - 15));
 
     if (this.onMeasurementsChanged) {
       this.onMeasurementsChanged(this.measurements);
@@ -297,6 +319,31 @@ class BikeMeasureEngine {
     ctx.beginPath();
     ctx.moveTo(sSTop.x, sSTop.y);
     ctx.lineTo(saddleHorizProj.x, saddleHorizProj.y);
+    ctx.lineTo(sBar.x, sBar.y);
+    ctx.stroke();
+
+    // 5. Draw Frame Stack & Reach lines (BB to Head Tube Top)
+    const sHT = toScreen(this.pins.headTubeTop);
+    const dxHT = sHT.x - sBB.x;
+    const dyHT = sHT.y - sBB.y;
+    const vDistHT = dxHT * uVx + dyHT * uVy;
+    const bbStackPt = { x: sBB.x + uVx * vDistHT, y: sBB.y + uVy * vDistHT };
+
+    ctx.strokeStyle = "rgba(168, 85, 247, 0.7)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(sBB.x, sBB.y);
+    ctx.lineTo(bbStackPt.x, bbStackPt.y);
+    ctx.lineTo(sHT.x, sHT.y);
+    ctx.stroke();
+
+    // Line from Head Tube Top to Handlebar clamp (Spacers + Stem)
+    ctx.setLineDash([]);
+    ctx.strokeStyle = "#A855F7";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(sHT.x, sHT.y);
     ctx.lineTo(sBar.x, sBar.y);
     ctx.stroke();
 

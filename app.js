@@ -478,6 +478,32 @@ function renderForm() {
       b.appendChild(bBtnCard);
       bBtnCard.querySelector("#btnOpenBikePhotoWizard")?.addEventListener("click", () => openBikePhotoWizard());
     }
+    if (sec.id === "ischi") {
+      const sBtnCard = document.createElement("div");
+      sBtnCard.className = "bike-wizard-btn-card";
+      sBtnCard.innerHTML = `
+        <div class="bike-wizard-btn-text">
+          <h4>${I18N.t("sitBoneModalTitle")}</h4>
+          <p>${I18N.t("sitBoneModalSub")}</p>
+        </div>
+        <button type="button" class="btn btn-solid" id="btnOpenSitBoneWizard" style="font-weight:750; background:var(--green); color:#040914;">${I18N.t("btnSitBoneWizard")}</button>
+      `;
+      b.appendChild(sBtnCard);
+      sBtnCard.querySelector("#btnOpenSitBoneWizard")?.addEventListener("click", () => openSitBoneWizard());
+    }
+    if (sec.id === "scarpe") {
+      const fBtnCard = document.createElement("div");
+      fBtnCard.className = "bike-wizard-btn-card";
+      fBtnCard.innerHTML = `
+        <div class="bike-wizard-btn-text">
+          <h4>${I18N.t("footFlareModalTitle")}</h4>
+          <p>${I18N.t("footFlareModalSub")}</p>
+        </div>
+        <button type="button" class="btn btn-solid" id="btnOpenFootFlareWizard" style="font-weight:750; background:var(--cyan); color:#040914;">${I18N.t("btnFootFlareWizard")}</button>
+      `;
+      b.appendChild(fBtnCard);
+      fBtnCard.querySelector("#btnOpenFootFlareWizard")?.addEventListener("click", () => openFootFlareWizard());
+    }
     (sec.fields || []).forEach(f => b.appendChild(fieldEl(f)));
     if (sec.log) b.appendChild(logEl());
     s.appendChild(b);
@@ -694,6 +720,7 @@ function applyLanguage() {
   setTxt("lblPhotoResTibia", "photoTibiaLbl");
   setTxt("lblPhotoResBusto", "photoTorsoLbl");
   setTxt("lblPhotoResBraccio", "photoArmLbl");
+  setTxt("lblPhotoResSpalle", "photoShoulderLbl");
   setTxt("lblPhotoSitBonesNote", "photoSitBonesNote");
   setTxt("btnApplyPhotoMeasurements", "btnApplyPhotoMeasurements");
 
@@ -717,6 +744,10 @@ function applyLanguage() {
   setTxt("lblBikeMetricReach", "bikePhotoReachLbl");
   setTxt("lblBikeMetricTilt", "bikePhotoTiltLbl");
   setTxt("lblBikeMetricWb", "bikePhotoWheelbaseLbl");
+  setTxt("lblBikeMetricStack", "bikePhotoStackLbl");
+  setTxt("lblBikeMetricFReach", "bikePhotoFReachLbl");
+  setTxt("lblBikeMetricRatio", "bikePhotoRatioLbl");
+  setTxt("lblBikeMetricSpacers", "bikePhotoSpacersLbl");
   setTxt("btnUploadBikePhotoFile", "btnUploadBikePhoto");
   setTxt("btnStartBikePhotoCam", "btnStartBikePhotoCam");
   setTxt("btnApplyBikePhotoMeasurements", "bikePhotoApplyBtn");
@@ -725,6 +756,46 @@ function applyLanguage() {
   if (bInst1) bInst1.innerHTML = I18N.t("bikePhotoInst1");
   const bInst2 = document.getElementById("lblBikePhotoInst2");
   if (bInst2) bInst2.innerHTML = I18N.t("bikePhotoInst2");
+
+  // Sit-bone modal translations
+  setTxt("txtMenuItemSitBone", "txtMenuItemSitBone");
+  setTxt("sitBoneModalTitle", "sitBoneModalTitle");
+  setTxt("sitBoneModalSub", "sitBoneModalSub");
+  setTxt("lblSitBoneInstTitle", "lblSitBoneInstTitle");
+  setTxt("lblSitBoneDist", "lblSitBoneDist");
+  setTxt("lblSitBoneRoad", "lblSitBoneRoad");
+  setTxt("lblSitBoneEndurance", "lblSitBoneEndurance");
+  setTxt("lblSitBoneMtb", "lblSitBoneMtb");
+  setTxt("btnUploadSitBoneFile", "btnUploadSitBoneFile");
+  setTxt("btnStartSitBoneCam", "btnStartSitBoneCam");
+  setTxt("btnApplySitBoneMeasurements", "btnApplySitBoneMeasurements");
+
+  const sInst1 = document.getElementById("lblSitBoneInst1");
+  if (sInst1) sInst1.innerHTML = I18N.t("lblSitBoneInst1");
+  const sInst2 = document.getElementById("lblSitBoneInst2");
+  if (sInst2) sInst2.innerHTML = I18N.t("lblSitBoneInst2");
+  const sInst3 = document.getElementById("lblSitBoneInst3");
+  if (sInst3) sInst3.innerHTML = I18N.t("lblSitBoneInst3");
+
+  // Foot flare modal translations
+  setTxt("txtMenuItemFootFlare", "txtMenuItemFootFlare");
+  setTxt("footFlareModalTitle", "footFlareModalTitle");
+  setTxt("footFlareModalSub", "footFlareModalSub");
+  setTxt("lblFootFlareInstTitle", "lblFootFlareInstTitle");
+  setTxt("lblFootAngleL", "lblFootAngleL");
+  setTxt("lblFootAngleR", "lblFootAngleR");
+  setTxt("lblFootAsym", "lblFootAsym");
+  setTxt("lblFootRecFloat", "lblFootRecFloat");
+  setTxt("btnUploadFootFlareFile", "btnUploadFootFlareFile");
+  setTxt("btnStartFootFlareCam", "btnStartFootFlareCam");
+  setTxt("btnApplyFootFlareMeasurements", "btnApplyFootFlareMeasurements");
+
+  const fInst1 = document.getElementById("lblFootFlareInst1");
+  if (fInst1) fInst1.innerHTML = I18N.t("lblFootFlareInst1");
+  const fInst2 = document.getElementById("lblFootFlareInst2");
+  if (fInst2) fInst2.innerHTML = I18N.t("lblFootFlareInst2");
+  const fInst3 = document.getElementById("lblFootFlareInst3");
+  if (fInst3) fInst3.innerHTML = I18N.t("lblFootFlareInst3");
 
   const tipEl = document.getElementById("videoTipText");
   if (tipEl) tipEl.innerHTML = I18N.t("videoTip");
@@ -1563,6 +1634,10 @@ async function processPhotoForAnthropometry(imageElement) {
     setVal("photoResTibia", result.measurements.tibia);
     setVal("photoResBusto", result.measurements.busto);
     setVal("photoResBraccio", result.measurements.braccio);
+    setVal("photoResSpalle", result.measurements.spalle);
+
+    const manubrioEl = document.getElementById("photoRecManubrioVal");
+    if (manubrioEl) manubrioEl.textContent = String(result.measurements.manubrioConsigliato || 420);
 
     const reviewCanvas = document.getElementById("photoReviewCanvas");
     if (reviewCanvas) {
@@ -1589,6 +1664,8 @@ function applyPhotoMeasurementsToFitSheet() {
   const tibia = parseFloat(document.getElementById("photoResTibia")?.value) || (lastPhotoAnalysisResult?.measurements.tibia);
   const busto = parseFloat(document.getElementById("photoResBusto")?.value) || (lastPhotoAnalysisResult?.measurements.busto);
   const braccio = parseFloat(document.getElementById("photoResBraccio")?.value) || (lastPhotoAnalysisResult?.measurements.braccio);
+  const spalle = parseFloat(document.getElementById("photoResSpalle")?.value) || (lastPhotoAnalysisResult?.measurements.spalle);
+  const recManubrio = lastPhotoAnalysisResult?.measurements.manubrioConsigliato;
 
   // Update state values
   state.v.altezza = String(Math.round(knownHeight));
@@ -1597,13 +1674,15 @@ function applyPhotoMeasurementsToFitSheet() {
   if (tibia) state.v.tibia = String(Math.round(tibia));
   if (busto) state.v.busto = String(Math.round(busto));
   if (braccio) state.v.braccio = String(Math.round(braccio));
+  if (spalle) state.v.spalle = String(Math.round(spalle));
+  if (recManubrio && !state.v.manubrio_larg) state.v.manubrio_larg = String(recManubrio);
 
   const today = new Date().toLocaleDateString(I18N.currentLang === "en" ? "en-US" : "it-IT");
   state.log.push([
     today,
     "Rilevamento Misure da Foto (AI)",
     "-",
-    `Cavallo ${cavallo}mm, Femore ${femore}mm, Tibia ${tibia}mm, Busto ${busto}mm, Braccio ${braccio}mm`,
+    `Cavallo ${cavallo}mm, Femore ${femore}mm, Tibia ${tibia}mm, Busto ${busto}mm, Braccio ${braccio}mm, Spalle ${spalle}mm (Manubrio raccomandato ${recManubrio}mm)`,
     "Photo anthropometry"
   ]);
 
@@ -1706,6 +1785,10 @@ function updateBikeTelemetryUI(m) {
   setV("bikeValReach", m.saddleToBarReachMm);
   setV("bikeValTilt", m.saddleTiltDeg > 0 ? `+${m.saddleTiltDeg}` : m.saddleTiltDeg);
   setV("bikeValWb", m.wheelbaseMm);
+  setV("bikeValStack", m.frameStackMm);
+  setV("bikeValFReach", m.frameReachMm);
+  setV("bikeValSRRatio", m.stackToReachRatio);
+  setV("bikeValSpacers", m.spacerStackMm);
 }
 
 function processBikePhoto(imgElement) {
@@ -1801,13 +1884,16 @@ function applyBikePhotoMeasurements() {
   if (m.saddleToBarDropMm !== undefined) state.v.drop_sm = String(m.saddleToBarDropMm);
   if (m.saddleToBarReachMm > 0) state.v.reach_sm = String(m.saddleToBarReachMm);
   if (m.saddleTiltDeg !== undefined) state.v.incl_sella = String(m.saddleTiltDeg);
+  if (m.frameStackMm > 0) state.v.stack = String(m.frameStackMm);
+  if (m.frameReachMm > 0) state.v.reach_telaio = String(m.frameReachMm);
+  if (m.spacerStackMm > 0) state.v.spessori = String(m.spacerStackMm);
 
   const today = new Date().toLocaleDateString(I18N.currentLang === "en" ? "en-US" : "it-IT");
   state.log.push([
     today,
     "Rilevamento Setup Bici da Foto (Lente 3x)",
     "-",
-    `Altezza Sella ${m.saddleHeightMm}mm, Arretramento ${m.saddleSetbackMm}mm, Drop ${m.saddleToBarDropMm}mm, Reach ${m.saddleToBarReachMm}mm, Inclinazione ${m.saddleTiltDeg}°`,
+    `Altezza Sella ${m.saddleHeightMm}mm, Arretramento ${m.saddleSetbackMm}mm, Drop ${m.saddleToBarDropMm}mm, Reach ${m.saddleToBarReachMm}mm, Stack ${m.frameStackMm}mm, Reach Telaio ${m.frameReachMm}mm`,
     "Bike photo calibration"
   ]);
 
@@ -1871,6 +1957,386 @@ function initBikePhotoWizardEvents() {
   });
   document.getElementById("btnVideoTabBikePhoto")?.addEventListener("click", () => {
     openBikePhotoWizard();
+  });
+}
+
+// ===================== SIT-BONE CARDBOARD IMPRESSION WIZARD =====================
+let sitBoneEngine = null;
+let sitBoneCamStream = null;
+let sitBoneCountdownTimer = null;
+
+function openSitBoneWizard() {
+  const modal = document.getElementById("modalSitBoneMeasure");
+  if (!modal) return;
+
+  const canvas = document.getElementById("sitBoneCanvas");
+  if (canvas && !sitBoneEngine) {
+    sitBoneEngine = new SitBoneMeasureEngine(canvas);
+    sitBoneEngine.onMeasurementsChanged = (m) => updateSitBoneTelemetryUI(m);
+  }
+
+  resetSitBoneWizardUI();
+  modal.showModal();
+}
+
+function closeSitBoneWizard() {
+  stopSitBoneCamera();
+  const modal = document.getElementById("modalSitBoneMeasure");
+  if (modal) modal.close();
+}
+
+function resetSitBoneWizardUI() {
+  stopSitBoneCamera();
+  document.getElementById("sitBoneStep1Box")?.style.setProperty("display", "block");
+  document.getElementById("sitBoneCamContainer")?.style.setProperty("display", "none");
+  document.getElementById("sitBoneStageContainer")?.style.setProperty("display", "none");
+  document.getElementById("btnApplySitBoneMeasurements")?.style.setProperty("display", "none");
+}
+
+function updateSitBoneTelemetryUI(m) {
+  if (!m) return;
+  const setV = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v); };
+  setV("sitBoneDistVal", m.sitBoneDistMm);
+  setV("sitBoneRoadVal", m.recSaddleRoadMm);
+  setV("sitBoneEnduranceVal", m.recSaddleEnduranceMm);
+  setV("sitBoneMtbVal", m.recSaddleMtbMm);
+}
+
+function processSitBonePhoto(imgElement) {
+  const step1 = document.getElementById("sitBoneStep1Box");
+  const stage = document.getElementById("sitBoneStageContainer");
+  const btnApply = document.getElementById("btnApplySitBoneMeasurements");
+
+  if (step1) step1.style.display = "none";
+  if (stage) stage.style.display = "block";
+  if (btnApply) btnApply.style.display = "inline-block";
+
+  if (sitBoneEngine) {
+    sitBoneEngine.loadImage(imgElement);
+  }
+}
+
+async function startSitBoneCamera() {
+  const container = document.getElementById("sitBoneCamContainer");
+  const video = document.getElementById("sitBoneCamVideo");
+  const countdownEl = document.getElementById("sitBoneCountdown");
+  if (!container || !video) return;
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: "environment" }
+    });
+    sitBoneCamStream = stream;
+    video.srcObject = stream;
+    await video.play();
+    container.style.display = "block";
+
+    let count = 5;
+    if (countdownEl) {
+      countdownEl.style.display = "flex";
+      countdownEl.textContent = count;
+      clearInterval(sitBoneCountdownTimer);
+      sitBoneCountdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownEl.textContent = count;
+        } else {
+          clearInterval(sitBoneCountdownTimer);
+          countdownEl.style.display = "none";
+          captureSitBoneSnapshot();
+        }
+      }, 1000);
+    }
+  } catch (err) {
+    alert("Impossibile accedere alla fotocamera o permessi negati.");
+  }
+}
+
+function stopSitBoneCamera() {
+  clearInterval(sitBoneCountdownTimer);
+  if (sitBoneCamStream) {
+    sitBoneCamStream.getTracks().forEach(t => t.stop());
+    sitBoneCamStream = null;
+    const video = document.getElementById("sitBoneCamVideo");
+    if (video) video.srcObject = null;
+  }
+  const container = document.getElementById("sitBoneCamContainer");
+  if (container) container.style.display = "none";
+}
+
+function captureSitBoneSnapshot() {
+  const video = document.getElementById("sitBoneCamVideo");
+  if (!video) return;
+
+  const snapCanvas = document.createElement("canvas");
+  snapCanvas.width = video.videoWidth || 1280;
+  snapCanvas.height = video.videoHeight || 720;
+  const sCtx = snapCanvas.getContext("2d");
+  sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+
+  stopSitBoneCamera();
+
+  const img = new Image();
+  img.src = snapCanvas.toDataURL("image/jpeg", 0.95);
+  img.onload = () => processSitBonePhoto(img);
+}
+
+function applySitBoneMeasurements() {
+  if (!sitBoneEngine || !sitBoneEngine.measurements) return;
+  const m = sitBoneEngine.measurements;
+
+  if (m.sitBoneDistMm > 0) {
+    state.v.ischi_mm = String(m.sitBoneDistMm);
+    if (!state.v.sella_larg) {
+      state.v.sella_larg = String(m.recSaddleRoadMm);
+    }
+  }
+
+  const today = new Date().toLocaleDateString(I18N.currentLang === "en" ? "en-US" : "it-IT");
+  state.log.push([
+    today,
+    "Analizzatore Ossa Ischiatiche (Foto)",
+    "-",
+    `Distanza Ischiale ${m.sitBoneDistMm}mm (Sella consigliata: Strada ${m.recSaddleRoadMm}mm, Gravel ${m.recSaddleEnduranceMm}mm)`,
+    "Sit-bone cardboard calibration"
+  ]);
+
+  queueSave();
+  renderForm();
+  updateStaticCalculator();
+  closeSitBoneWizard();
+
+  setStatusBadge(I18N.t("sitBoneAppliedToast"));
+  alert("✅ " + I18N.t("sitBoneAppliedToast"));
+}
+
+function initSitBoneWizardEvents() {
+  const btnClose = document.getElementById("btnCloseSitBoneWizard");
+  const btnCancel = document.getElementById("btnCancelSitBoneWizard");
+  const btnUpload = document.getElementById("btnUploadSitBoneFile");
+  const fileInput = document.getElementById("sitBoneFileInput");
+  const btnStartCam = document.getElementById("btnStartSitBoneCam");
+  const btnSnap = document.getElementById("btnTriggerSitBoneSnap");
+  const btnCancelCam = document.getElementById("btnCancelSitBoneCam");
+  const btnRetake = document.getElementById("btnRetakeSitBone");
+  const btnApply = document.getElementById("btnApplySitBoneMeasurements");
+
+  btnClose?.addEventListener("click", closeSitBoneWizard);
+  btnCancel?.addEventListener("click", closeSitBoneWizard);
+
+  if (btnUpload && fileInput) {
+    btnUpload.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processSitBonePhoto(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  btnStartCam?.addEventListener("click", () => startSitBoneCamera());
+  btnSnap?.addEventListener("click", () => captureSitBoneSnapshot());
+  btnCancelCam?.addEventListener("click", () => stopSitBoneCamera());
+  btnRetake?.addEventListener("click", () => resetSitBoneWizardUI());
+  btnApply?.addEventListener("click", () => applySitBoneMeasurements());
+
+  document.getElementById("btnMenuSitBonePhoto")?.addEventListener("click", () => {
+    document.getElementById("menuDropdownPanel")?.setAttribute("hidden", "");
+    openSitBoneWizard();
+  });
+}
+
+// ===================== FOOT ROTATION & CLEAT FLOAT WIZARD =====================
+let footEngine = null;
+let footCamStream = null;
+let footCountdownTimer = null;
+
+function openFootFlareWizard() {
+  const modal = document.getElementById("modalFootFlareMeasure");
+  if (!modal) return;
+
+  const canvas = document.getElementById("footFlareCanvas");
+  if (canvas && !footEngine) {
+    footEngine = new FootMeasureEngine(canvas);
+    footEngine.onMeasurementsChanged = (m) => updateFootFlareTelemetryUI(m);
+  }
+
+  resetFootFlareWizardUI();
+  modal.showModal();
+}
+
+function closeFootFlareWizard() {
+  stopFootFlareCamera();
+  const modal = document.getElementById("modalFootFlareMeasure");
+  if (modal) modal.close();
+}
+
+function resetFootFlareWizardUI() {
+  stopFootFlareCamera();
+  document.getElementById("footFlareStep1Box")?.style.setProperty("display", "block");
+  document.getElementById("footFlareCamContainer")?.style.setProperty("display", "none");
+  document.getElementById("footFlareStageContainer")?.style.setProperty("display", "none");
+  document.getElementById("btnApplyFootFlareMeasurements")?.style.setProperty("display", "none");
+}
+
+function updateFootFlareTelemetryUI(m) {
+  if (!m) return;
+  const setV = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v); };
+  setV("footValAngleL", m.leftAngleDeg > 0 ? `+${m.leftAngleDeg}` : m.leftAngleDeg);
+  setV("footValAngleR", m.rightAngleDeg > 0 ? `+${m.rightAngleDeg}` : m.rightAngleDeg);
+  setV("footValAsym", m.asymmetryDeg);
+  setV("footValRecFloat", m.recFloatType);
+  setV("footValRecBrands", `${m.recFloatShimano} / ${m.recFloatLook}`);
+}
+
+function processFootFlarePhoto(imgElement) {
+  const step1 = document.getElementById("footFlareStep1Box");
+  const stage = document.getElementById("footFlareStageContainer");
+  const btnApply = document.getElementById("btnApplyFootFlareMeasurements");
+
+  if (step1) step1.style.display = "none";
+  if (stage) stage.style.display = "block";
+  if (btnApply) btnApply.style.display = "inline-block";
+
+  if (footEngine) {
+    footEngine.loadImage(imgElement);
+  }
+}
+
+async function startFootFlareCamera() {
+  const container = document.getElementById("footFlareCamContainer");
+  const video = document.getElementById("footFlareCamVideo");
+  const countdownEl = document.getElementById("footFlareCountdown");
+  if (!container || !video) return;
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: "environment" }
+    });
+    footCamStream = stream;
+    video.srcObject = stream;
+    await video.play();
+    container.style.display = "block";
+
+    let count = 5;
+    if (countdownEl) {
+      countdownEl.style.display = "flex";
+      countdownEl.textContent = count;
+      clearInterval(footCountdownTimer);
+      footCountdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownEl.textContent = count;
+        } else {
+          clearInterval(footCountdownTimer);
+          countdownEl.style.display = "none";
+          captureFootFlareSnapshot();
+        }
+      }, 1000);
+    }
+  } catch (err) {
+    alert("Impossibile accedere alla fotocamera o permessi negati.");
+  }
+}
+
+function stopFootFlareCamera() {
+  clearInterval(footCountdownTimer);
+  if (footCamStream) {
+    footCamStream.getTracks().forEach(t => t.stop());
+    footCamStream = null;
+    const video = document.getElementById("footFlareCamVideo");
+    if (video) video.srcObject = null;
+  }
+  const container = document.getElementById("footFlareCamContainer");
+  if (container) container.style.display = "none";
+}
+
+function captureFootFlareSnapshot() {
+  const video = document.getElementById("footFlareCamVideo");
+  if (!video) return;
+
+  const snapCanvas = document.createElement("canvas");
+  snapCanvas.width = video.videoWidth || 1280;
+  snapCanvas.height = video.videoHeight || 720;
+  const sCtx = snapCanvas.getContext("2d");
+  sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+
+  stopFootFlareCamera();
+
+  const img = new Image();
+  img.src = snapCanvas.toDataURL("image/jpeg", 0.95);
+  img.onload = () => processFootFlarePhoto(img);
+}
+
+function applyFootFlareMeasurements() {
+  if (!footEngine || !footEngine.measurements) return;
+  const m = footEngine.measurements;
+
+  const note = `Rotazione piedi: Sx ${m.leftAngleDeg}°, Dx ${m.rightAngleDeg}° (Asimmetria ${m.asymmetryDeg}°). Float: ${m.recFloatType} (${m.recFloatShimano} / ${m.recFloatLook}).`;
+  state.v.tacchette_note = (state.v.tacchette_note ? state.v.tacchette_note + " | " : "") + note;
+
+  const today = new Date().toLocaleDateString(I18N.currentLang === "en" ? "en-US" : "it-IT");
+  state.log.push([
+    today,
+    "Analisi Rotazione Piede & Tacchette (Foto)",
+    "-",
+    `Sx ${m.leftAngleDeg}°, Dx ${m.rightAngleDeg}°, Asimmetria ${m.asymmetryDeg}°, Float raccomandato ${m.recFloatType}`,
+    "Dangling-feet tibial torsion analysis"
+  ]);
+
+  queueSave();
+  renderForm();
+  closeFootFlareWizard();
+
+  setStatusBadge(I18N.t("footFlareAppliedToast"));
+  alert("✅ " + I18N.t("footFlareAppliedToast"));
+}
+
+function initFootFlareWizardEvents() {
+  const btnClose = document.getElementById("btnCloseFootFlareWizard");
+  const btnCancel = document.getElementById("btnCancelFootFlareWizard");
+  const btnUpload = document.getElementById("btnUploadFootFlareFile");
+  const fileInput = document.getElementById("footFlareFileInput");
+  const btnStartCam = document.getElementById("btnStartFootFlareCam");
+  const btnSnap = document.getElementById("btnTriggerFootFlareSnap");
+  const btnCancelCam = document.getElementById("btnCancelFootFlareCam");
+  const btnRetake = document.getElementById("btnRetakeFootFlare");
+  const btnApply = document.getElementById("btnApplyFootFlareMeasurements");
+
+  btnClose?.addEventListener("click", closeFootFlareWizard);
+  btnCancel?.addEventListener("click", closeFootFlareWizard);
+
+  if (btnUpload && fileInput) {
+    btnUpload.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processFootFlarePhoto(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  btnStartCam?.addEventListener("click", () => startFootFlareCamera());
+  btnSnap?.addEventListener("click", () => captureFootFlareSnapshot());
+  btnCancelCam?.addEventListener("click", () => stopFootFlareCamera());
+  btnRetake?.addEventListener("click", () => resetFootFlareWizardUI());
+  btnApply?.addEventListener("click", () => applyFootFlareMeasurements());
+
+  document.getElementById("btnMenuFootFlarePhoto")?.addEventListener("click", () => {
+    document.getElementById("menuDropdownPanel")?.setAttribute("hidden", "");
+    openFootFlareWizard();
   });
 }
 
@@ -2416,6 +2882,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   initDeviceOrientation();
   initPhotoWizardEvents();
   initBikePhotoWizardEvents();
+  initSitBoneWizardEvents();
+  initFootFlareWizardEvents();
 
   setTimeout(() => {
     if (poseEngine) {
