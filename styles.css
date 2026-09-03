@@ -630,6 +630,25 @@ td:nth-child(n+2) {
   margin-bottom: 12px;
 }
 
+.masthead-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1 1 auto;
+}
+
+.masthead-quick-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.masthead-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -2195,14 +2214,244 @@ dialog.app-modal.photo-modal {
 }
 
 /* ===================== RESPONSIVE & ACCESSIBILITY ===================== */
+.photo-results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
 @media (max-width: 768px) {
-  .masthead { padding: 12px 14px 0; }
-  .bar-in { padding: 8px 14px; }
-  .wrap { padding: 16px 12px 80px; }
-  .f-in { flex: 1 1 100%; }
-  .block-head .note { display: none; }
-  .video-top-toolbar { flex-direction: column; align-items: stretch; }
-  .video-source-group { justify-content: stretch; }
+  .masthead {
+    padding: 8px 12px 0;
+  }
+  .masthead-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .masthead-brand-row {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    border-radius: var(--r-sm);
+  }
+  .brand-logo svg {
+    width: 18px;
+    height: 18px;
+  }
+  .brand-titles h1 {
+    font-size: 15px;
+  }
+  .brand-titles .kicker {
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+  }
+  .masthead-quick-controls {
+    gap: 5px;
+  }
+  .masthead-quick-controls .theme-btn {
+    padding: 4px 6px !important;
+  }
+  .masthead-quick-controls .theme-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+  .masthead-quick-controls .lang-seg button,
+  .masthead-quick-controls .seg button {
+    padding: 4px 6px !important;
+    font-size: 11px;
+  }
+  .masthead-nav-controls {
+    width: 100%;
+    display: flex;
+    gap: 6px;
+  }
+  .masthead-nav-controls .menu-dropdown-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .masthead-nav-controls .btn-menu {
+    width: 100%;
+    padding: 7px 9px;
+    font-size: 11px;
+    justify-content: space-between;
+  }
+  #activeProfileBadge {
+    max-width: none !important;
+    flex: 1 1 auto;
+    text-align: left;
+  }
+  #txtMenuLabel {
+    flex: 1 1 auto;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .profile-dropdown-panel {
+    left: 0 !important;
+    right: auto !important;
+    width: min(320px, calc(100vw - 20px)) !important;
+  }
+  #menuDropdownPanel {
+    right: 0 !important;
+    left: auto !important;
+    width: min(300px, calc(100vw - 20px)) !important;
+  }
+
+  .nav-tabs {
+    gap: 4px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 2px;
+  }
+  .nav-tab {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 11.5px;
+  }
+
+  .bar-in {
+    padding: 6px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .wrap {
+    padding: 14px 10px 80px;
+  }
+  .f-in {
+    flex: 1 1 100%;
+  }
+  .block-head .note {
+    display: none;
+  }
+  .video-top-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .video-source-group {
+    justify-content: stretch;
+  }
+
+  /* Modals Full Responsiveness */
+  dialog.app-modal,
+  dialog.app-modal.photo-modal,
+  dialog.app-modal.bike-photo-modal {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    margin: 8px auto !important;
+    border-radius: var(--r) !important;
+  }
+
+  .modal-header {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+  }
+
+  .modal-header h3 {
+    font-size: 13.5px !important;
+    line-height: 1.3 !important;
+  }
+
+  .modal-header p {
+    font-size: 10.5px !important;
+  }
+
+  .modal-body {
+    padding: 12px 14px !important;
+    max-height: calc(100dvh - 120px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .modal-footer {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .modal-footer .btn {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+  }
+
+  .photo-results-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  #photoReviewCanvas {
+    max-height: 320px !important;
+  }
+
+  .bike-photo-split {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .bike-canvas-stage-wrap {
+    min-height: 220px !important;
+    max-height: 48vh !important;
+  }
+
+  .bike-telemetry-sidebar {
+    width: 100% !important;
+    padding: 12px !important;
+    gap: 8px !important;
+  }
+
+  .bike-metric-tile {
+    padding: 8px 10px !important;
+  }
+
+  .bike-metric-tile-label {
+    font-size: 10.5px !important;
+  }
+
+  .bike-metric-tile-val {
+    font-size: 14px !important;
+  }
+
+  .photo-wizard-btn-card,
+  .bike-wizard-btn-card {
+    padding: 12px 14px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .photo-wizard-btn-card .btn,
+  .bike-wizard-btn-card .btn {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 440px) {
+  .brand-titles .kicker {
+    display: none;
+  }
+  .brand-titles h1 {
+    font-size: 14px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

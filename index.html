@@ -19,50 +19,55 @@
   <header class="masthead">
     <div class="masthead-in">
       <div class="masthead-top">
-        <div class="brand">
-          <div class="brand-logo" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="18.5" cy="17.5" r="3.5"/>
-              <circle cx="5.5" cy="17.5" r="3.5"/>
-              <circle cx="15" cy="5" r="1"/>
-              <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
-            </svg>
+        <div class="masthead-brand-row">
+          <div class="brand">
+            <div class="brand-logo" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18.5" cy="17.5" r="3.5"/>
+                <circle cx="5.5" cy="17.5" r="3.5"/>
+                <circle cx="15" cy="5" r="1"/>
+                <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+              </svg>
+            </div>
+            <div class="brand-titles">
+              <div class="kicker" id="txtKicker">Studio Biomeccanico & Posizionamento Bici</div>
+              <h1 id="txtBrandTitle">VELOFIT STUDIO</h1>
+            </div>
           </div>
-          <div class="brand-titles">
-            <div class="kicker" id="txtKicker">Studio Biomeccanico & Posizionamento Bici</div>
-            <h1 id="txtBrandTitle">VELOFIT STUDIO</h1>
+
+          <!-- Quick Switches: Theme + Lang -->
+          <div class="masthead-quick-controls">
+            <!-- Theme Switcher (System / Light / Dark) -->
+            <div class="seg theme-seg" role="group" aria-label="Tema / Theme">
+              <button id="themeSystem" class="theme-btn" title="Tema di sistema" aria-pressed="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                </svg>
+              </button>
+              <button id="themeLight" class="theme-btn" title="Tema chiaro" aria-pressed="false">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                </svg>
+              </button>
+              <button id="themeDark" class="theme-btn" title="Tema scuro" aria-pressed="false">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Language Toggle Switcher -->
+            <div class="seg lang-seg" role="group" aria-label="Lingua / Language">
+              <button id="langIT" aria-pressed="true">IT</button>
+              <button id="langEN" aria-pressed="false">EN</button>
+            </div>
           </div>
         </div>
 
-        <div style="display:flex; gap:8px; align-items:center;">
-          
-          <!-- Theme Switcher (System / Light / Dark) -->
-          <div class="seg theme-seg" role="group" aria-label="Tema / Theme" style="margin-right:2px;">
-            <button id="themeSystem" class="theme-btn" title="Tema di sistema" aria-pressed="true" style="padding:5px 8px; display:inline-flex; align-items:center;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-              </svg>
-            </button>
-            <button id="themeLight" class="theme-btn" title="Tema chiaro" aria-pressed="false" style="padding:5px 8px; display:inline-flex; align-items:center;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-              </svg>
-            </button>
-            <button id="themeDark" class="theme-btn" title="Tema scuro" aria-pressed="false" style="padding:5px 8px; display:inline-flex; align-items:center;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-              </svg>
-            </button>
-          </div>
-
-          <!-- Language Toggle Switcher -->
-          <div class="seg" role="group" aria-label="Lingua / Language" style="margin-right:2px;">
-            <button id="langIT" aria-pressed="true" style="padding:5px 8px;">IT</button>
-            <button id="langEN" aria-pressed="false" style="padding:5px 8px;">EN</button>
-          </div>
-
+        <!-- Action & Profile Dropdowns -->
+        <div class="masthead-nav-controls">
           <!-- Profile Switcher Dropdown (Client-Only Multi-Bike) -->
-          <div class="menu-dropdown-wrap" id="profileDropdownWrap">
+          <div class="menu-dropdown-wrap profile-dropdown-wrap" id="profileDropdownWrap">
             <button class="btn-menu btn-profile" id="btnToggleProfile" aria-expanded="false" aria-haspopup="true" title="Gestisci schede e bici">
               <span class="menu-icon">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -722,7 +727,7 @@
 
       <!-- Step 2: Review Canvas & Metric Extraction -->
       <div id="photoResultsContainer" style="display:none;">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; align-items:start;">
+        <div class="photo-results-grid">
           <!-- Left: Canvas with Skeletons & Segment Overlays -->
           <div style="background:#06090F; border-radius:var(--r-sm); overflow:hidden; border:1px solid var(--card-border); text-align:center;">
             <canvas id="photoReviewCanvas" width="600" height="750" style="width:100%; height:auto; max-height:420px; object-fit:contain; display:block;"></canvas>
