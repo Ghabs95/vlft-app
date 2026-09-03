@@ -2035,3 +2035,112 @@ dialog.app-modal.photo-modal {
     display: block !important;
   }
 }
+
+/* ===================== BIKE PHOTO MEASUREMENT MODAL ===================== */
+dialog.app-modal.bike-photo-modal {
+  max-width: 1060px;
+  width: 95vw;
+}
+
+.bike-wizard-btn-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: linear-gradient(135deg, #182232 0%, #0E1520 100%);
+  border: 1px solid var(--amber);
+  border-radius: var(--r);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+}
+
+.bike-wizard-btn-text h4 {
+  font-size: 14.5px;
+  font-weight: 750;
+  color: var(--amber);
+  margin-bottom: 3px;
+}
+
+.bike-wizard-btn-text p {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.bike-photo-split {
+  display: grid;
+  grid-template-columns: 1fr 310px;
+  gap: 20px;
+  align-items: start;
+}
+
+.bike-canvas-stage-wrap {
+  position: relative;
+  background: #05080E;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+}
+
+#bikePhotoCanvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.bike-telemetry-sidebar {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bike-metric-tile {
+  background: #090E17;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bike-metric-tile-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.bike-metric-tile-val {
+  font-family: var(--mono);
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.bike-metric-tile-unit {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+@media (max-width: 860px) {
+  .bike-photo-split {
+    grid-template-columns: 1fr;
+  }
+}
+

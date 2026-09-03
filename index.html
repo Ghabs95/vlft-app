@@ -77,6 +77,9 @@
               <button class="menu-item" id="btnMenuOpenPhoto">
                 <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span> <span id="txtMenuItemPhoto">Misure da Foto (AI)</span>
               </button>
+              <button class="menu-item" id="btnMenuBikePhoto">
+                <span class="menu-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l3-3 3 3"/><path d="M12 17.5V14l4-3 2.5 6.5"/></svg></span> <span id="txtMenuItemBikePhoto">Misura Bici da Foto</span>
+              </button>
               
               <div class="menu-divider"></div>
               <div class="menu-group-title" id="txtMenuSecExport">Esportazione & Condivisione</div>
@@ -160,6 +163,7 @@
             <button class="btn btn-solid" id="btnUploadVideo">Carica Video</button>
             <button class="btn btn-accent" id="btnToggleCamera">Avvia Fotocamera</button>
             <button class="btn btn-outline" id="btnVideoTabOpenPhoto" title="Rileva cavallo, femore, tibia e busto da foto">📐 Misure da Foto</button>
+            <button class="btn btn-outline" id="btnVideoTabBikePhoto" title="Rileva setup e geometria bici da foto">🚲 Setup Bici da Foto</button>
             <button class="btn btn-danger" id="btnRecordVideo" style="display:none; font-weight:700;">Registra Video (20s)</button>
             <button class="btn btn-outline" id="btnDownloadClip" style="display:none;">Scarica Clip</button>
             <button class="btn" id="btnPlayDemo">Demo Ciclista</button>
@@ -522,7 +526,7 @@
             <!-- Visualizer -->
             <div class="sim-canvas-card">
               <div class="sim-svg-wrapper" id="cockpitSvgContainer"></div>
-              <div style="display:flex; justify-content:space-around; align-items:center; margin-top:10px; font-family:var(--mono); font-size:13px; color:#F3F4F6;">
+              <div style="display:flex; justify-content:space-around; align-items:center; margin-top:10px; font-family:var(--mono); font-size:13px; color:var(--ink);">
                 <div><span id="lblDeltaReachTxt">Variazione Reach:</span> <b id="simDeltaReach" style="color:var(--cyan);">-</b></div>
                 <div><span id="lblDeltaStackTxt">Variazione Altezza/Stack:</span> <b id="simDeltaStack" style="color:var(--tape);">-</b></div>
               </div>
@@ -749,6 +753,115 @@
     </div>
   </dialog>
 
+  <!-- ===================== BIKE SETUP PHOTO MEASUREMENT MODAL ===================== -->
+  <dialog class="app-modal bike-photo-modal" id="modalBikePhotoMeasure">
+    <div class="modal-header">
+      <div>
+        <h3 id="bikePhotoModalTitle">Rilevamento Setup Bici da Foto (Lente 3x)</h3>
+        <p style="font-size:12px; color:var(--muted); margin:2px 0 0;" id="bikePhotoModalSub">Calcola altezza sella, arretramento, dislivello e reach tramite fotogrammetria assistita</p>
+      </div>
+      <button class="helpbtn" id="btnCloseBikePhotoWizard">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:82vh; overflow-y:auto;">
+
+      <!-- Step 1: Calibration & Photo Upload Controls -->
+      <div id="bikePhotoStep1Box">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:rgba(245, 158, 11, 0.06); border:1px solid rgba(245, 158, 11, 0.25); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:12.5px; font-weight:700; font-family:var(--mono); color:var(--amber); display:block; margin-bottom:3px;" id="lblBikePhotoWheelPreset">Standard Ruota (Calibrazione Metrica):</label>
+            <span style="font-size:11px; color:var(--muted);">Fornisce l'ancoraggio millimetrico esatto (ISO rim/tire diameter) per azzerare l'errore di scala.</span>
+          </div>
+          <select id="bikeWheelPresetSelect" style="width:auto; font-family:var(--mono); font-size:12.5px; font-weight:600; padding:6px 10px; border:1px solid var(--amber); border-radius:6px; background:#0B1017; color:#FFFFFF;">
+            <option value="700c" selected>700c Strada / Gravel (ISO 622mm)</option>
+            <option value="29mtb">29" MTB (ISO 622mm)</option>
+            <option value="650b">650b / 27.5" (ISO 584mm)</option>
+            <option value="26mtb">26" MTB (ISO 559mm)</option>
+          </select>
+        </div>
+
+        <!-- Instructions Box -->
+        <div style="background:rgba(255, 255, 255, 0.02); border:1px solid var(--card-border); border-left:4px solid var(--amber); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; font-family:var(--mono); color:var(--amber); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.04em;" id="lblBikePhotoInstTitle">Istruzioni per la ripresa laterale:</div>
+          <ul style="font-size:11.5px; color:var(--ink-2); line-height:1.55; margin:0; padding-left:18px;">
+            <li id="lblBikePhotoInst1">Scatta una foto perfettamente perpendicolare (90°) alla bicicletta, in piano su cavalletto o appoggiata a un muro chiaro.</li>
+            <li id="lblBikePhotoInst2">Trascina i mirini sui punti di riferimento. Quando tocchi o trascini un perno, apparirà una lente d'ingrandimento 3x per centrare con precisione millimetrica perni, movimento centrale, punta sella e manubrio.</li>
+          </ul>
+        </div>
+
+        <!-- Action buttons to Upload or Snap -->
+        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+          <input type="file" id="bikePhotoFileInput" accept="image/*" style="display:none">
+          <button class="btn btn-solid" id="btnUploadBikePhotoFile" style="padding:9px 18px; font-size:12px;">Carica Foto Bici</button>
+          <button class="btn btn-accent" id="btnStartBikePhotoCam" style="padding:9px 18px; font-size:12px;">Scatta con Timer (5s)</button>
+        </div>
+
+        <!-- Live Camera Viewfinder -->
+        <div id="bikePhotoCamContainer" style="display:none; position:relative; width:100%; max-width:520px; margin:0 auto 16px; border-radius:var(--r); overflow:hidden; background:#000; border:1px solid var(--card-border);">
+          <video id="bikePhotoCamVideo" playsinline muted style="width:100%; height:auto; display:block;"></video>
+          <div id="bikePhotoCountdown" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:900; font-family:var(--mono); color:var(--amber);">5</div>
+          <div style="position:absolute; bottom:12px; left:0; right:0; display:flex; justify-content:center; gap:8px;">
+            <button class="btn btn-solid" id="btnTriggerBikePhotoSnap">📸 Scatta Ora</button>
+            <button class="btn btn-outline" id="btnCancelBikePhotoCam">Annulla</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Interactive Stage & Telemetry Split -->
+      <div id="bikePhotoStageContainer" style="display:none;">
+        <div class="bike-photo-split">
+          
+          <!-- Left: Canvas Stage with Loupe -->
+          <div class="bike-canvas-stage-wrap">
+            <canvas id="bikePhotoCanvas"></canvas>
+          </div>
+
+          <!-- Right: Live Measurements Sidebar -->
+          <div class="bike-telemetry-sidebar">
+            <div style="font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; color:var(--amber); text-transform:uppercase;">MISURE RILEVATE (LIVE)</div>
+
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblBikeMetricHs">Altezza Sella (Hs):</span>
+              <span class="bike-metric-tile-val"><span id="bikeValHs">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblBikeMetricSb">Arretramento (Sb):</span>
+              <span class="bike-metric-tile-val"><span id="bikeValSb">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblBikeMetricDrop">Dislivello Sella-Bar:</span>
+              <span class="bike-metric-tile-val"><span id="bikeValDrop">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblBikeMetricReach">Distanza Sella-Bar:</span>
+              <span class="bike-metric-tile-val"><span id="bikeValReach">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblBikeMetricTilt">Inclinazione Sella:</span>
+              <span class="bike-metric-tile-val"><span id="bikeValTilt">0.0</span><span class="bike-metric-tile-unit">°</span></span>
+            </div>
+
+            <div class="bike-metric-tile">
+              <span class="bike-metric-tile-label" id="lblBikeMetricWb">Passo Ruote (Wb):</span>
+              <span class="bike-metric-tile-val"><span id="bikeValWb">0</span><span class="bike-metric-tile-unit">mm</span></span>
+            </div>
+
+            <button class="btn btn-outline" id="btnRetakeBikePhoto" style="margin-top:6px; font-size:11.5px; width:100%;">Carica un'altra foto</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="btnCancelBikePhotoWizard">Annulla</button>
+      <button class="btn btn-solid" id="btnApplyBikePhotoMeasurements" style="display:none; background:#10B981; border-color:#10B981; color:#040914; font-weight:750;">Applica alla Scheda Bici</button>
+    </div>
+  </dialog>
+
   <!-- App Scripts & WASM Binary Bridge -->
   <script src="wasm-bundle.js"></script>
   <script src="wasm-loader.js"></script>
@@ -758,6 +871,7 @@
   <script src="bike-geometry.js"></script>
   <script src="diagnostic-engine.js"></script>
   <script src="pose-engine.js"></script>
+  <script src="bike-measure-engine.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

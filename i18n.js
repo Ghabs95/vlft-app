@@ -244,6 +244,25 @@ const I18N = {
       photoAppliedToast: "Misure corporee applicate con successo alla scheda dati!",
       photoErrorNoPerson: "Nessuna figura umana intera rilevata. Assicurati che testa e piedi siano ben visibili nella foto.",
 
+      // Bike Photo Measurement Wizard
+      bikePhotoWizardBtn: "Misura Bici da Foto",
+      bikePhotoWizardTitle: "Rilevamento Setup Bici da Foto (Lente 3x)",
+      bikePhotoWizardSub: "Calcola altezza sella, arretramento, dislivello sella-manubrio e reach tramite fotogrammetria assistita",
+      bikePhotoWheelPresetLabel: "Standard Ruota (Calibrazione):",
+      bikePhotoInstTitle: "Istruzioni per la ripresa laterale:",
+      bikePhotoInst1: "Scatta una foto perfettamente perpendicolare (90°) alla bicicletta, in piano su un cavalletto o appoggiata a un muro.",
+      bikePhotoInst2: "Trascina i mirini sui punti di riferimento. Quando tocchi o trascini un perno, apparirà una lente d'ingrandimento 3x per centrare con precisione millimetrica perni, movimento centrale, punta sella e manubrio.",
+      bikePhotoSaddleHeightLbl: "Altezza Sella (Hs):",
+      bikePhotoSetbackLbl: "Arretramento (Sb):",
+      bikePhotoDropLbl: "Dislivello Sella-Manubrio:",
+      bikePhotoReachLbl: "Distanza Sella-Manubrio:",
+      bikePhotoTiltLbl: "Inclinazione Sella:",
+      bikePhotoWheelbaseLbl: "Passo Ruote Rilevato:",
+      bikePhotoApplyBtn: "Applica alla Scheda Bici",
+      bikePhotoAppliedToast: "Misure della bicicletta applicate con successo al setup attuale!",
+      btnUploadBikePhoto: "📁 Carica Foto Bici",
+      btnStartBikePhotoCam: "📷 Scatta con Timer (5s)",
+
       // Badges
       badgeEssential: "essenziale",
       badgeDetail: "dettaglio"
@@ -455,6 +474,25 @@ const I18N = {
       btnApplyPhotoMeasurements: "✅ Apply to Fit Sheet",
       photoAppliedToast: "Body measurements applied successfully to fit sheet!",
       photoErrorNoPerson: "No complete human figure detected. Ensure head and feet are fully visible in the photo.",
+
+      // Bike Photo Measurement Wizard
+      bikePhotoWizardBtn: "Measure Bike from Photo",
+      bikePhotoWizardTitle: "Bike Setup from Photo (3x Loupe)",
+      bikePhotoWizardSub: "Calculate saddle height, setback, bar drop, and reach via assisted photogrammetry",
+      bikePhotoWheelPresetLabel: "Wheel Standard (Calibration):",
+      bikePhotoInstTitle: "Instructions for lateral photo capture:",
+      bikePhotoInst1: "Take a lateral photo strictly perpendicular (90°) to the bicycle, level on a trainer or resting against a plain wall.",
+      bikePhotoInst2: "Drag the crosshair pins to key components. When touching or dragging a pin, a 3x magnifying loupe will appear to center axles, BB spindle, saddle nose, and handlebar with sub-millimeter precision.",
+      bikePhotoSaddleHeightLbl: "Saddle Height (Hs):",
+      bikePhotoSetbackLbl: "Saddle Setback (Sb):",
+      bikePhotoDropLbl: "Saddle-to-Bar Drop:",
+      bikePhotoReachLbl: "Saddle Nose-to-Bar Reach:",
+      bikePhotoTiltLbl: "Saddle Tilt Angle:",
+      bikePhotoWheelbaseLbl: "Detected Wheelbase:",
+      bikePhotoApplyBtn: "Apply to Bike Setup",
+      bikePhotoAppliedToast: "Bike measurements successfully applied to current setup!",
+      btnUploadBikePhoto: "📁 Upload Bike Photo",
+      btnStartBikePhotoCam: "📷 Take Photo with Timer (5s)",
 
       // Badges
       badgeEssential: "essential",

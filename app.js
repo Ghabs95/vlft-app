@@ -465,6 +465,19 @@ function renderForm() {
       b.appendChild(pBtnCard);
       pBtnCard.querySelector("#btnOpenPhotoWizard")?.addEventListener("click", () => openPhotoWizard());
     }
+    if (sec.id === "regolazioni") {
+      const bBtnCard = document.createElement("div");
+      bBtnCard.className = "bike-wizard-btn-card";
+      bBtnCard.innerHTML = `
+        <div class="bike-wizard-btn-text">
+          <h4>${I18N.t("bikePhotoWizardTitle")}</h4>
+          <p>${I18N.t("bikePhotoWizardSub")}</p>
+        </div>
+        <button type="button" class="btn btn-solid" id="btnOpenBikePhotoWizard" style="font-weight:750; background:var(--amber); color:#040914;">${I18N.t("bikePhotoWizardBtn")}</button>
+      `;
+      b.appendChild(bBtnCard);
+      bBtnCard.querySelector("#btnOpenBikePhotoWizard")?.addEventListener("click", () => openBikePhotoWizard());
+    }
     (sec.fields || []).forEach(f => b.appendChild(fieldEl(f)));
     if (sec.log) b.appendChild(logEl());
     s.appendChild(b);
@@ -690,6 +703,28 @@ function applyLanguage() {
   if (pInst2) pInst2.innerHTML = I18N.t("photoInstruction2");
   const pInst3 = document.getElementById("lblPhotoInst3");
   if (pInst3) pInst3.innerHTML = I18N.t("photoInstruction3");
+
+  // Bike photo modal translations
+  setTxt("txtMenuItemBikePhoto", "txtMenuItemBikePhoto");
+  setTxt("btnVideoTabBikePhoto", "btnVideoTabBikePhoto");
+  setTxt("bikePhotoModalTitle", "bikePhotoWizardTitle");
+  setTxt("bikePhotoModalSub", "bikePhotoWizardSub");
+  setTxt("lblBikePhotoWheelPreset", "bikePhotoWheelPresetLabel");
+  setTxt("lblBikePhotoInstTitle", "bikePhotoInstTitle");
+  setTxt("lblBikeMetricHs", "bikePhotoSaddleHeightLbl");
+  setTxt("lblBikeMetricSb", "bikePhotoSetbackLbl");
+  setTxt("lblBikeMetricDrop", "bikePhotoDropLbl");
+  setTxt("lblBikeMetricReach", "bikePhotoReachLbl");
+  setTxt("lblBikeMetricTilt", "bikePhotoTiltLbl");
+  setTxt("lblBikeMetricWb", "bikePhotoWheelbaseLbl");
+  setTxt("btnUploadBikePhotoFile", "btnUploadBikePhoto");
+  setTxt("btnStartBikePhotoCam", "btnStartBikePhotoCam");
+  setTxt("btnApplyBikePhotoMeasurements", "bikePhotoApplyBtn");
+
+  const bInst1 = document.getElementById("lblBikePhotoInst1");
+  if (bInst1) bInst1.innerHTML = I18N.t("bikePhotoInst1");
+  const bInst2 = document.getElementById("lblBikePhotoInst2");
+  if (bInst2) bInst2.innerHTML = I18N.t("bikePhotoInst2");
 
   const tipEl = document.getElementById("videoTipText");
   if (tipEl) tipEl.innerHTML = I18N.t("videoTip");
@@ -1627,6 +1662,218 @@ function initPhotoWizardEvents() {
   });
 }
 
+// ===================== BIKE PHOTO MEASUREMENT WIZARD =====================
+let bikeMeasureEngine = null;
+let bikePhotoCamStream = null;
+let bikePhotoCountdownTimer = null;
+let currentBikePhotoImage = null;
+
+function openBikePhotoWizard() {
+  const modal = document.getElementById("modalBikePhotoMeasure");
+  if (!modal) return;
+
+  const canvas = document.getElementById("bikePhotoCanvas");
+  if (canvas && !bikeMeasureEngine) {
+    bikeMeasureEngine = new BikeMeasureEngine(canvas);
+    bikeMeasureEngine.onMeasurementsChanged = (m) => updateBikeTelemetryUI(m);
+  }
+
+  resetBikePhotoWizardUI();
+  modal.showModal();
+}
+
+function closeBikePhotoWizard() {
+  stopBikePhotoCamera();
+  const modal = document.getElementById("modalBikePhotoMeasure");
+  if (modal) modal.close();
+}
+
+function resetBikePhotoWizardUI() {
+  stopBikePhotoCamera();
+  document.getElementById("bikePhotoStep1Box")?.style.setProperty("display", "block");
+  document.getElementById("bikePhotoCamContainer")?.style.setProperty("display", "none");
+  document.getElementById("bikePhotoStageContainer")?.style.setProperty("display", "none");
+  document.getElementById("btnApplyBikePhotoMeasurements")?.style.setProperty("display", "none");
+  currentBikePhotoImage = null;
+}
+
+function updateBikeTelemetryUI(m) {
+  if (!m) return;
+  const setV = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v); };
+  setV("bikeValHs", m.saddleHeightMm);
+  setV("bikeValSb", m.saddleSetbackMm);
+  setV("bikeValDrop", m.saddleToBarDropMm);
+  setV("bikeValReach", m.saddleToBarReachMm);
+  setV("bikeValTilt", m.saddleTiltDeg > 0 ? `+${m.saddleTiltDeg}` : m.saddleTiltDeg);
+  setV("bikeValWb", m.wheelbaseMm);
+}
+
+function processBikePhoto(imgElement) {
+  currentBikePhotoImage = imgElement;
+  const step1 = document.getElementById("bikePhotoStep1Box");
+  const stage = document.getElementById("bikePhotoStageContainer");
+  const btnApply = document.getElementById("btnApplyBikePhotoMeasurements");
+
+  if (step1) step1.style.display = "none";
+  if (stage) stage.style.display = "block";
+  if (btnApply) btnApply.style.display = "inline-block";
+
+  const presetSelect = document.getElementById("bikeWheelPresetSelect");
+  const presetKey = presetSelect?.value || "700c";
+
+  if (bikeMeasureEngine) {
+    bikeMeasureEngine.setWheelPreset(presetKey);
+    bikeMeasureEngine.loadImage(imgElement);
+  }
+}
+
+async function startBikePhotoCamera() {
+  const container = document.getElementById("bikePhotoCamContainer");
+  const video = document.getElementById("bikePhotoCamVideo");
+  const countdownEl = document.getElementById("bikePhotoCountdown");
+  if (!container || !video) return;
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: "environment" }
+    });
+    bikePhotoCamStream = stream;
+    video.srcObject = stream;
+    await video.play();
+    container.style.display = "block";
+
+    let count = 5;
+    if (countdownEl) {
+      countdownEl.style.display = "flex";
+      countdownEl.textContent = count;
+      clearInterval(bikePhotoCountdownTimer);
+      bikePhotoCountdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownEl.textContent = count;
+        } else {
+          clearInterval(bikePhotoCountdownTimer);
+          countdownEl.style.display = "none";
+          captureBikePhotoSnapshot();
+        }
+      }, 1000);
+    }
+  } catch (err) {
+    alert("Impossibile accedere alla fotocamera o permessi negati.");
+  }
+}
+
+function stopBikePhotoCamera() {
+  clearInterval(bikePhotoCountdownTimer);
+  if (bikePhotoCamStream) {
+    bikePhotoCamStream.getTracks().forEach(t => t.stop());
+    bikePhotoCamStream = null;
+    const video = document.getElementById("bikePhotoCamVideo");
+    if (video) video.srcObject = null;
+  }
+  const container = document.getElementById("bikePhotoCamContainer");
+  if (container) container.style.display = "none";
+}
+
+function captureBikePhotoSnapshot() {
+  const video = document.getElementById("bikePhotoCamVideo");
+  if (!video) return;
+
+  const snapCanvas = document.createElement("canvas");
+  snapCanvas.width = video.videoWidth || 1280;
+  snapCanvas.height = video.videoHeight || 720;
+  const sCtx = snapCanvas.getContext("2d");
+  sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+
+  stopBikePhotoCamera();
+
+  const img = new Image();
+  img.src = snapCanvas.toDataURL("image/jpeg", 0.95);
+  img.onload = () => processBikePhoto(img);
+}
+
+function applyBikePhotoMeasurements() {
+  if (!bikeMeasureEngine || !bikeMeasureEngine.measurements) return;
+  const m = bikeMeasureEngine.measurements;
+
+  if (m.saddleHeightMm > 0) state.v.h_sella = String(m.saddleHeightMm);
+  if (m.saddleSetbackMm !== undefined) state.v.arretramento = String(m.saddleSetbackMm);
+  if (m.saddleToBarDropMm !== undefined) state.v.drop_sm = String(m.saddleToBarDropMm);
+  if (m.saddleToBarReachMm > 0) state.v.reach_sm = String(m.saddleToBarReachMm);
+  if (m.saddleTiltDeg !== undefined) state.v.incl_sella = String(m.saddleTiltDeg);
+
+  const today = new Date().toLocaleDateString(I18N.currentLang === "en" ? "en-US" : "it-IT");
+  state.log.push([
+    today,
+    "Rilevamento Setup Bici da Foto (Lente 3x)",
+    "-",
+    `Altezza Sella ${m.saddleHeightMm}mm, Arretramento ${m.saddleSetbackMm}mm, Drop ${m.saddleToBarDropMm}mm, Reach ${m.saddleToBarReachMm}mm, Inclinazione ${m.saddleTiltDeg}°`,
+    "Bike photo calibration"
+  ]);
+
+  queueSave();
+  renderForm();
+  updateStaticCalculator();
+  updateCockpitSimulation();
+  closeBikePhotoWizard();
+
+  setStatusBadge(I18N.t("bikePhotoAppliedToast"));
+  alert("✅ " + I18N.t("bikePhotoAppliedToast"));
+}
+
+function initBikePhotoWizardEvents() {
+  const btnClose = document.getElementById("btnCloseBikePhotoWizard");
+  const btnCancel = document.getElementById("btnCancelBikePhotoWizard");
+  const btnUpload = document.getElementById("btnUploadBikePhotoFile");
+  const fileInput = document.getElementById("bikePhotoFileInput");
+  const btnStartCam = document.getElementById("btnStartBikePhotoCam");
+  const btnSnap = document.getElementById("btnTriggerBikePhotoSnap");
+  const btnCancelCam = document.getElementById("btnCancelBikePhotoCam");
+  const btnRetake = document.getElementById("btnRetakeBikePhoto");
+  const btnApply = document.getElementById("btnApplyBikePhotoMeasurements");
+  const presetSelect = document.getElementById("bikeWheelPresetSelect");
+
+  btnClose?.addEventListener("click", closeBikePhotoWizard);
+  btnCancel?.addEventListener("click", closeBikePhotoWizard);
+
+  if (btnUpload && fileInput) {
+    btnUpload.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const img = new Image();
+          img.src = re.target.result;
+          img.onload = () => processBikePhoto(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  presetSelect?.addEventListener("change", (e) => {
+    if (bikeMeasureEngine) {
+      bikeMeasureEngine.setWheelPreset(e.target.value);
+    }
+  });
+
+  btnStartCam?.addEventListener("click", () => startBikePhotoCamera());
+  btnSnap?.addEventListener("click", () => captureBikePhotoSnapshot());
+  btnCancelCam?.addEventListener("click", () => stopBikePhotoCamera());
+  btnRetake?.addEventListener("click", () => resetBikePhotoWizardUI());
+  btnApply?.addEventListener("click", () => applyBikePhotoMeasurements());
+
+  // Direct shortcuts from dropdown menu and video tab
+  document.getElementById("btnMenuBikePhoto")?.addEventListener("click", () => {
+    document.getElementById("menuDropdownPanel")?.setAttribute("hidden", "");
+    openBikePhotoWizard();
+  });
+  document.getElementById("btnVideoTabBikePhoto")?.addEventListener("click", () => {
+    openBikePhotoWizard();
+  });
+}
+
 function startDemoLoop() {
   stopWebcam();
   const canvas = document.getElementById("poseCanvas");
@@ -2168,6 +2415,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initImportExport();
   initDeviceOrientation();
   initPhotoWizardEvents();
+  initBikePhotoWizardEvents();
 
   setTimeout(() => {
     if (poseEngine) {
