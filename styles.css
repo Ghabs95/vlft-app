@@ -353,6 +353,26 @@
   border-color: #E2E8F0;
 }
 
+[data-theme="light"] .modal-header h3 {
+  color: #0F172A !important;
+}
+
+[data-theme="light"] .modal-header p {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .modal-header .helpbtn {
+  background: #FFFFFF !important;
+  color: #334155 !important;
+  border-color: #CBD5E1 !important;
+}
+
+[data-theme="light"] .modal-header .helpbtn:hover {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #94A3B8 !important;
+}
+
 [data-theme="light"] .photo-wizard-btn-card,
 [data-theme="light"] .bike-wizard-btn-card {
   background: #FFFFFF !important;
@@ -1881,7 +1901,7 @@ dialog::backdrop {
 .modal-header h3 {
   font-size: 16px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--ink);
 }
 
 .modal-body {
