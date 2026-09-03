@@ -693,16 +693,15 @@ function applyLanguage() {
   setTxt("txtMenuItemSample", "menuItemSample");
   setTxt("txtMenuItemImport", "menuItemImport");
   setTxt("txtMenuItemPhoto", "txtMenuItemPhoto");
+  setTxt("txtMenuItemBikePhoto", "txtMenuItemBikePhoto");
+  setTxt("txtMenuItemSitBone", "txtMenuItemSitBone");
+  setTxt("txtMenuItemFootFlare", "txtMenuItemFootFlare");
   setTxt("txtMenuSecExport", "menuSecExport");
   setTxt("txtMenuItemExportMd", "menuItemExportMd");
   setTxt("txtMenuItemExportJson", "menuItemExportJson");
   setTxt("txtMenuItemCopy", "menuItemCopy");
   setTxt("txtMenuItemReset", "menuItemReset");
-  setTxt("btnLoadSample", "btnLoadSample");
-  setTxt("btnOpenImport", "btnImport");
-  setTxt("btnExportMd", "btnExportMd");
-  setTxt("btnExportJson", "btnExportJson");
-  setTxt("btnCopyMd", "btnCopy");
+
   setTxt("tabNavForm", "tabForm");
   setTxt("tabNavVideo", "tabVideo");
   setTxt("tabNavDiag", "tabDiagnostics");
@@ -716,6 +715,7 @@ function applyLanguage() {
 
   setTxt("btnUploadVideo", "btnUploadVideo");
   setTxt("btnVideoTabOpenPhoto", "btnVideoTabOpenPhoto");
+  setTxt("btnVideoTabBikePhoto", "btnVideoTabBikePhoto");
   setTxt("btnPlayDemo", "btnPlayDemo");
   setTxt("btnRecordVideo", "btnRecordVideo");
   setTxt("btnDownloadClip", "btnDownloadRecordedVideo");
@@ -726,11 +726,26 @@ function applyLanguage() {
   setTxt("btnCaptureSnapshot", "btnSnapshot");
   setTxt("btnSaveAnglesToForm", "btnSaveAngles");
   setTxt("countdownLabel", "countdownGetReady");
+  setTxt("btnStopRecImmediate", "statusStop");
+  setTxt("camWarningText", "camWarningNonPerp");
 
   const camModeSelect = document.getElementById("camModeSelect");
   if (camModeSelect && camModeSelect.options.length >= 2) {
     camModeSelect.options[0].text = I18N.t("camModeRiderOnBike");
     camModeSelect.options[1].text = I18N.t("camModeBikeOnly");
+  }
+
+  const viewModeSelect = document.getElementById("viewModeSelect");
+  if (viewModeSelect && viewModeSelect.options.length >= 2) {
+    viewModeSelect.options[0].text = I18N.t("optLateral");
+    viewModeSelect.options[1].text = I18N.t("optFrontal");
+  }
+
+  const sideSelect = document.getElementById("sideSelect");
+  if (sideSelect && sideSelect.options.length >= 3) {
+    sideSelect.options[0].text = I18N.t("optSideAuto");
+    sideSelect.options[1].text = I18N.t("optSideRight");
+    sideSelect.options[2].text = I18N.t("optSideLeft");
   }
 
   // Photo modal translations
@@ -742,6 +757,8 @@ function applyLanguage() {
   setTxt("lblPhotoPrivacy", "photoPrivacyNote");
   setTxt("btnUploadPhotoFile", "btnUploadPhoto");
   setTxt("btnStartPhotoCam", "btnStartPhotoCam");
+  setTxt("btnTriggerPhotoSnap", "btnTriggerPhotoSnap");
+  setTxt("btnCancelPhotoCam", "btnCancel");
   setTxt("lblPhotoProcessing", "photoProcessing");
   setTxt("lblPhotoDetectedTitle", "photoDetectedTitle");
   setTxt("lblPhotoResCavallo", "photoInseamLbl");
@@ -751,6 +768,8 @@ function applyLanguage() {
   setTxt("lblPhotoResBraccio", "photoArmLbl");
   setTxt("lblPhotoResSpalle", "photoShoulderLbl");
   setTxt("lblPhotoSitBonesNote", "photoSitBonesNote");
+  setTxt("btnRetakePhoto", "btnRetakePhotoFull");
+  setTxt("btnCancelPhotoWizard", "btnCancel");
   setTxt("btnApplyPhotoMeasurements", "btnApplyPhotoMeasurements");
 
   const pInst1 = document.getElementById("lblPhotoInst1");
@@ -761,12 +780,15 @@ function applyLanguage() {
   if (pInst3) pInst3.innerHTML = I18N.t("photoInstruction3");
 
   // Bike photo modal translations
-  setTxt("txtMenuItemBikePhoto", "txtMenuItemBikePhoto");
-  setTxt("btnVideoTabBikePhoto", "btnVideoTabBikePhoto");
   setTxt("bikePhotoModalTitle", "bikePhotoWizardTitle");
   setTxt("bikePhotoModalSub", "bikePhotoWizardSub");
   setTxt("lblBikePhotoWheelPreset", "bikePhotoWheelPresetLabel");
   setTxt("lblBikePhotoInstTitle", "bikePhotoInstTitle");
+  setTxt("btnUploadBikePhotoFile", "btnUploadBikePhoto");
+  setTxt("btnStartBikePhotoCam", "btnStartBikePhotoCam");
+  setTxt("btnTriggerBikePhotoSnap", "btnTriggerSnap");
+  setTxt("btnCancelBikePhotoCam", "btnCancel");
+  setTxt("lblBikeLiveTitle", "lblBikeLiveTitle");
   setTxt("lblBikeMetricHs", "bikePhotoSaddleHeightLbl");
   setTxt("lblBikeMetricSb", "bikePhotoSetbackLbl");
   setTxt("lblBikeMetricDrop", "bikePhotoDropLbl");
@@ -777,8 +799,8 @@ function applyLanguage() {
   setTxt("lblBikeMetricFReach", "bikePhotoFReachLbl");
   setTxt("lblBikeMetricRatio", "bikePhotoRatioLbl");
   setTxt("lblBikeMetricSpacers", "bikePhotoSpacersLbl");
-  setTxt("btnUploadBikePhotoFile", "btnUploadBikePhoto");
-  setTxt("btnStartBikePhotoCam", "btnStartBikePhotoCam");
+  setTxt("btnRetakeBikePhoto", "btnRetakePhoto");
+  setTxt("btnCancelBikePhotoWizard", "btnCancel");
   setTxt("btnApplyBikePhotoMeasurements", "bikePhotoApplyBtn");
 
   const bInst1 = document.getElementById("lblBikePhotoInst1");
@@ -786,17 +808,29 @@ function applyLanguage() {
   const bInst2 = document.getElementById("lblBikePhotoInst2");
   if (bInst2) bInst2.innerHTML = I18N.t("bikePhotoInst2");
 
+  const wheelPresetSelect = document.getElementById("bikeWheelPresetSelect");
+  if (wheelPresetSelect && wheelPresetSelect.options.length >= 4) {
+    wheelPresetSelect.options[0].text = I18N.t("optWheel700c");
+    wheelPresetSelect.options[1].text = I18N.t("optWheel29");
+    wheelPresetSelect.options[2].text = I18N.t("optWheel650b");
+    wheelPresetSelect.options[3].text = I18N.t("optWheel26");
+  }
+
   // Sit-bone modal translations
-  setTxt("txtMenuItemSitBone", "txtMenuItemSitBone");
   setTxt("sitBoneModalTitle", "sitBoneModalTitle");
   setTxt("sitBoneModalSub", "sitBoneModalSub");
   setTxt("lblSitBoneInstTitle", "lblSitBoneInstTitle");
+  setTxt("btnUploadSitBoneFile", "btnUploadSitBoneFile");
+  setTxt("btnStartSitBoneCam", "btnStartSitBoneCam");
+  setTxt("btnTriggerSitBoneSnap", "btnTriggerSnap");
+  setTxt("btnCancelSitBoneCam", "btnCancel");
+  setTxt("lblSitBoneHeaderTitle", "lblSitBoneHeaderTitle");
   setTxt("lblSitBoneDist", "lblSitBoneDist");
   setTxt("lblSitBoneRoad", "lblSitBoneRoad");
   setTxt("lblSitBoneEndurance", "lblSitBoneEndurance");
   setTxt("lblSitBoneMtb", "lblSitBoneMtb");
-  setTxt("btnUploadSitBoneFile", "btnUploadSitBoneFile");
-  setTxt("btnStartSitBoneCam", "btnStartSitBoneCam");
+  setTxt("btnRetakeSitBone", "btnRetakePhoto");
+  setTxt("btnCancelSitBoneWizard", "btnCancel");
   setTxt("btnApplySitBoneMeasurements", "btnApplySitBoneMeasurements");
 
   const sInst1 = document.getElementById("lblSitBoneInst1");
@@ -807,16 +841,20 @@ function applyLanguage() {
   if (sInst3) sInst3.innerHTML = I18N.t("lblSitBoneInst3");
 
   // Foot flare modal translations
-  setTxt("txtMenuItemFootFlare", "txtMenuItemFootFlare");
   setTxt("footFlareModalTitle", "footFlareModalTitle");
   setTxt("footFlareModalSub", "footFlareModalSub");
   setTxt("lblFootFlareInstTitle", "lblFootFlareInstTitle");
+  setTxt("btnUploadFootFlareFile", "btnUploadFootFlareFile");
+  setTxt("btnStartFootFlareCam", "btnStartFootFlareCam");
+  setTxt("btnTriggerFootFlareSnap", "btnTriggerSnap");
+  setTxt("btnCancelFootFlareCam", "btnCancel");
+  setTxt("lblFootFlareHeaderTitle", "lblFootFlareHeaderTitle");
   setTxt("lblFootAngleL", "lblFootAngleL");
   setTxt("lblFootAngleR", "lblFootAngleR");
   setTxt("lblFootAsym", "lblFootAsym");
   setTxt("lblFootRecFloat", "lblFootRecFloat");
-  setTxt("btnUploadFootFlareFile", "btnUploadFootFlareFile");
-  setTxt("btnStartFootFlareCam", "btnStartFootFlareCam");
+  setTxt("btnRetakeFootFlare", "btnRetakePhoto");
+  setTxt("btnCancelFootFlareWizard", "btnCancel");
   setTxt("btnApplyFootFlareMeasurements", "btnApplyFootFlareMeasurements");
 
   const fInst1 = document.getElementById("lblFootFlareInst1");
@@ -825,6 +863,10 @@ function applyLanguage() {
   if (fInst2) fInst2.innerHTML = I18N.t("lblFootFlareInst2");
   const fInst3 = document.getElementById("lblFootFlareInst3");
   if (fInst3) fInst3.innerHTML = I18N.t("lblFootFlareInst3");
+
+  // Glossary headers
+  setTxt("glossaryTitleHeading", "glossaryTitle");
+  setTxt("glossaryNoteHeading", "glossaryNote");
 
   const tipEl = document.getElementById("videoTipText");
   if (tipEl) tipEl.innerHTML = I18N.t("videoTip");
@@ -900,6 +942,7 @@ function applyLanguage() {
   setTxt("importDropSubTxt", "importDropSub");
   setTxt("importPasteLabel", "importPasteLbl");
   setTxt("btnProcessImport", "btnProcessImport");
+  setTxt("btnImportLoadSample", "menuItemSample");
 
   renderForm();
   renderGlossary();
@@ -925,7 +968,7 @@ function initDiagnosticsModule() {
       txt += `- ${act.reason}\n\n`;
     });
     navigator.clipboard.writeText(txt).then(() => {
-      setStatusBadge("Piano copiato / Copied");
+      setStatusBadge(I18N.t("statusPlanCopied"));
     });
   });
 
@@ -1236,7 +1279,7 @@ function initVideoModule() {
       a.href = dataUrl;
       a.download = `bikefit-snapshot-${Date.now()}.png`;
       a.click();
-      setStatusBadge("Snapshot saved");
+      setStatusBadge(I18N.t("statusSnapshotSaved"));
     });
   }
 
@@ -1306,7 +1349,7 @@ async function startWebcam() {
       if (btnRec) btnRec.style.display = "inline-block";
     };
   } catch (err) {
-    alert("Camera access error. Please check browser permissions.");
+    alert(I18N.t("statusCameraError"));
   }
 }
 
@@ -1599,7 +1642,7 @@ async function startPhotoCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert("Camera permission denied or camera not available.");
+    alert(I18N.t("statusCameraError"));
   }
 }
 
@@ -1871,7 +1914,7 @@ async function startBikePhotoCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert("Impossibile accedere alla fotocamera o permessi negati.");
+    alert(I18N.t("statusCameraError"));
   }
 }
 
@@ -2077,7 +2120,7 @@ async function startSitBoneCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert("Impossibile accedere alla fotocamera o permessi negati.");
+    alert(I18N.t("statusCameraError"));
   }
 }
 
@@ -2270,7 +2313,7 @@ async function startFootFlareCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert("Impossibile accedere alla fotocamera o permessi negati.");
+    alert(I18N.t("statusCameraError"));
   }
 }
 
@@ -2598,7 +2641,7 @@ function initDualVideoModule() {
     btnSyncBDC.addEventListener("click", () => {
       dualVideoSync.syncOffset = v2.currentTime - v1.currentTime;
       dualVideoSync.isSynced = true;
-      setStatusBadge("Phase Locked at BDC!");
+      setStatusBadge(I18N.t("statusPhaseLocked"));
     });
   }
 
@@ -2693,7 +2736,7 @@ function initImportExport() {
         updateCockpitSimulation();
         renderDiagnostics();
         if (modalImport) modalImport.close();
-        setStatusBadge("Sample loaded");
+        setStatusBadge(I18N.t("statusSampleLoaded"));
       }
     });
   }
@@ -2713,9 +2756,9 @@ function initImportExport() {
       updateCockpitSimulation();
       renderDiagnostics();
       if (modalImport) modalImport.close();
-      alert("✅ Data imported successfully!");
+      alert("✅ " + I18N.t("statusDataImported"));
     } catch (e) {
-      alert("Error importing: " + e.message);
+      alert(I18N.t("statusImportError") + e.message);
     }
   }
 
@@ -2761,7 +2804,7 @@ function initImportExport() {
     btnExportMd.addEventListener("click", () => {
       const md = BikeFitIO.buildMarkdown(state, SCHEMA, ZONE);
       downloadBlob(md, "bike-position-sheet.md", "text/markdown;charset=utf-8");
-      setStatusBadge(".md downloaded");
+      setStatusBadge(I18N.t("statusMdDownloaded"));
     });
   }
 
@@ -2769,7 +2812,7 @@ function initImportExport() {
     btnExportJson.addEventListener("click", () => {
       const jsonStr = BikeFitIO.buildJSON(state);
       downloadBlob(jsonStr, "bike-fit-data.json", "application/json;charset=utf-8");
-      setStatusBadge(".json downloaded");
+      setStatusBadge(I18N.t("statusJsonDownloaded"));
     });
   }
 
@@ -2778,12 +2821,12 @@ function initImportExport() {
       const md = BikeFitIO.buildMarkdown(state, SCHEMA, ZONE);
       try {
         await navigator.clipboard.writeText(md);
-        setStatusBadge("Copied to clipboard");
+        setStatusBadge(I18N.t("statusCopied"));
       } catch (e) {
         const ta = document.createElement("textarea");
         ta.value = md; document.body.appendChild(ta); ta.select();
         document.execCommand("copy"); ta.remove();
-        setStatusBadge("Copied to clipboard");
+        setStatusBadge(I18N.t("statusCopied"));
       }
     });
   }
@@ -2798,7 +2841,7 @@ function initImportExport() {
         updateStaticCalculator();
         renderDiagnostics();
         updateActiveProfileBadge();
-        setStatusBadge(I18N.t("btnReset"));
+        setStatusBadge(I18N.t("statusReady"));
       }
     });
   }

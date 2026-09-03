@@ -317,7 +317,47 @@ const I18N = {
 
       // Badges
       badgeEssential: "essenziale",
-      badgeDetail: "dettaglio"
+      badgeDetail: "dettaglio",
+
+      // Missing navigation / actions
+      txtMenuItemBikePhoto: "Misura Bici da Foto",
+      btnVideoTabBikePhoto: "🚲 Setup Bici da Foto",
+
+      // Missing modal buttons & titles
+      btnTriggerSnap: "📸 Scatta Ora",
+      btnTriggerPhotoSnap: "Scatta Ora",
+      btnCancel: "Annulla",
+      btnRetakePhoto: "Carica un'altra foto",
+      btnRetakePhotoFull: "Carica o Scatta un'altra foto",
+      lblBikeLiveTitle: "MISURE RILEVATE (LIVE)",
+      lblSitBoneHeaderTitle: "ANALISI OSSA ISCHIATICHE",
+      lblFootFlareHeaderTitle: "ROTAZIONE NATURALE PIEDI",
+
+      // Wheel preset options
+      optWheel700c: "700c Strada / Gravel (ISO 622mm)",
+      optWheel29: "29\" MTB (ISO 622mm)",
+      optWheel650b: "650b / 27.5\" (ISO 584mm)",
+      optWheel26: "26\" MTB (ISO 559mm)",
+
+      // Glossary headers
+      glossaryTitle: "Glossario Illustrato & Riferimenti",
+      glossaryNote: "Tutti i termini tecnici del bike fitting",
+
+      // Statuses & Toasts
+      statusPlanCopied: "Piano d'azione copiato negli appunti",
+      statusSnapshotSaved: "Frame salvato con angoli",
+      statusPhaseLocked: "Fase bloccata al BDC!",
+      statusSampleLoaded: "Esempio caricato",
+      statusMdDownloaded: "Dossier .md scaricato",
+      statusJsonDownloaded: "Dati .json scaricati",
+      statusCopied: "Copiato negli appunti",
+      statusCameraError: "Impossibile accedere alla fotocamera o permessi negati.",
+      statusDataImported: "Dati importati con successo!",
+      statusImportError: "Errore durante l'importazione: ",
+      statusStop: "⏹ Ferma",
+      camWarningNonPerp: "Camera non perpendicolare",
+      diagCritical: "Critici",
+      diagModerate: "Moderati"
     },
 
     en: {
@@ -600,7 +640,47 @@ const I18N = {
 
       // Badges
       badgeEssential: "essential",
-      badgeDetail: "detail"
+      badgeDetail: "detail",
+
+      // Missing navigation / actions
+      txtMenuItemBikePhoto: "Measure Bike from Photo",
+      btnVideoTabBikePhoto: "🚲 Bike Setup from Photo",
+
+      // Missing modal buttons & titles
+      btnTriggerSnap: "📸 Snap Now",
+      btnTriggerPhotoSnap: "Snap Now",
+      btnCancel: "Cancel",
+      btnRetakePhoto: "Upload another photo",
+      btnRetakePhotoFull: "Upload or Snap another photo",
+      lblBikeLiveTitle: "DETECTED MEASUREMENTS (LIVE)",
+      lblSitBoneHeaderTitle: "SIT-BONE ANALYSIS",
+      lblFootFlareHeaderTitle: "NATURAL FOOT ROTATION",
+
+      // Wheel preset options
+      optWheel700c: "700c Road / Gravel (ISO 622mm)",
+      optWheel29: "29\" MTB (ISO 622mm)",
+      optWheel650b: "650b / 27.5\" (ISO 584mm)",
+      optWheel26: "26\" MTB (ISO 559mm)",
+
+      // Glossary headers
+      glossaryTitle: "Illustrated Glossary & References",
+      glossaryNote: "All technical bike fitting terminology",
+
+      // Statuses & Toasts
+      statusPlanCopied: "Action plan copied to clipboard",
+      statusSnapshotSaved: "Snapshot saved with angles",
+      statusPhaseLocked: "Phase locked at BDC!",
+      statusSampleLoaded: "Sample loaded",
+      statusMdDownloaded: ".md dossier downloaded",
+      statusJsonDownloaded: ".json data downloaded",
+      statusCopied: "Copied to clipboard",
+      statusCameraError: "Camera permission denied or camera not available.",
+      statusDataImported: "Data imported successfully!",
+      statusImportError: "Error importing: ",
+      statusStop: "⏹ Stop",
+      camWarningNonPerp: "Camera not perpendicular",
+      diagCritical: "Critical",
+      diagModerate: "Moderate"
     }
   }
 };
