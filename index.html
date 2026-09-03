@@ -130,10 +130,19 @@
             <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/mov" style="display:none">
             <button class="btn btn-solid" id="btnUploadVideo">📁 Carica Video</button>
             <button class="btn btn-accent" id="btnToggleCamera">📷 Avvia Fotocamera</button>
+            <button class="btn btn-solid" id="btnRecordVideo" style="display:none; background:#DC2626; color:#fff; font-weight:600;">🔴 Registra Video (20s)</button>
+            <button class="btn btn-outline" id="btnDownloadClip" style="display:none;">💾 Scarica Clip</button>
             <button class="btn" id="btnPlayDemo">🚴 Demo Ciclista</button>
           </div>
 
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;"><span id="lblCamModeTxt">Modalità Camera:</span>
+              <select id="camModeSelect" style="width:auto; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
+                <option value="rider" selected>🚴 Ciclista in Sella</option>
+                <option value="bike">🚲 Setup Bici (Vuota)</option>
+              </select>
+            </label>
+
             <label style="font-size:12px; font-family:var(--mono); color:#9CA3AF;"><span id="lblViewModeTxt">Inquadratura:</span>
               <select id="viewModeSelect" style="width:auto; padding:4px 8px; font-size:12px; background:#1F2937; color:#fff; border-color:#374151;">
                 <option value="lateral" selected>Laterale (Angoli & Cadenza)</option>
@@ -160,7 +169,17 @@
           <video id="videoPlayer" playsinline muted loop></video>
           <canvas id="poseCanvas" width="800" height="600"></canvas>
           <div class="countdown-overlay" id="countdownOverlay">
-            <div class="countdown-number" id="countdownNumber">3</div>
+            <div class="countdown-number" id="countdownNumber">5</div>
+            <div class="countdown-label" id="countdownLabel" style="font-size:16px; font-family:var(--mono); color:#E2E8F0; margin-top:14px; text-transform:uppercase; letter-spacing:1px; font-weight:700;">PREPARATI A PEDALARE!</div>
+          </div>
+          <div class="rec-badge" id="recBadge" style="display:none;">
+            <span class="rec-dot"></span>
+            <span id="recTimerText" style="font-family:var(--mono); font-weight:700;">REC 00:00 / 00:20</span>
+            <button class="btn btn-xs" id="btnStopRecImmediate" style="margin-left:10px; padding:3px 8px; font-size:11px; background:#EF4444; color:#fff; border:none; border-radius:4px; cursor:pointer;">⏹ Ferma</button>
+          </div>
+          <div class="cam-warning-bar" id="camWarningBar" style="display:none;">
+            <span class="cam-warning-icon">⚠️</span>
+            <span id="camWarningText">Camera non perpendicolare</span>
           </div>
         </div>
 
@@ -566,6 +585,138 @@
     <div class="modal-footer">
       <button class="btn btn-tape" onclick="document.getElementById('btnLoadSample').click()" id="btnImportLoadSample">⚡ Carica Esempio Argon 18</button>
       <button class="btn btn-solid" id="btnProcessImport">Importa Dati</button>
+    </div>
+  </dialog>
+
+  <!-- ===================== PHOTO ANTHROPOMETRY MODAL ===================== -->
+  <dialog class="app-modal photo-modal" id="modalPhotoMeasure">
+    <div class="modal-header">
+      <div>
+        <h3 id="photoModalTitle">Rilevamento Misure Corporee da Foto (AI)</h3>
+        <p style="font-size:12px; color:var(--muted); margin:2px 0 0;" id="photoModalSub">Estrae automaticamente cavallo, femore, tibia, busto e braccia</p>
+      </div>
+      <button class="helpbtn" id="btnClosePhotoWizard">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:80vh; overflow-y:auto;">
+
+      <!-- Step 1: Known Height & Setup Guidelines -->
+      <div class="photo-wizard-step" id="photoStep1Box">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px; padding:14px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:13px; font-weight:700; font-family:var(--mono); color:var(--ink); display:block; margin-bottom:4px;" id="lblPhotoHeightPrompt">Tua altezza reale (cm):</label>
+            <span style="font-size:11px; color:var(--muted);" id="lblPhotoHeightHelp">Necessaria come ancora metrica per convertire i pixel in millimetri reali.</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="photoKnownHeightInput" placeholder="es. 178" min="120" max="230" style="width:110px; font-size:16px; font-weight:700; font-family:var(--mono); padding:6px 10px; border:2px solid var(--accent); border-radius:6px;">
+            <span style="font-size:13px; font-weight:700; font-family:var(--mono); color:var(--ink-2);">cm</span>
+          </div>
+        </div>
+
+        <!-- Instructions Box -->
+        <div style="background:#F1F5F9; border-left:4px solid var(--accent); border-radius:4px; padding:12px 14px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; color:var(--ink); margin-bottom:6px;" id="lblPhotoInstTitle">Come posizionarsi per una misurazione accurata:</div>
+          <ul style="font-size:11px; color:var(--ink-2); line-height:1.6; margin:0; padding-left:18px;">
+            <li id="lblPhotoInst1"><b>Posa ad A:</b> in piedi, schiena dritta, gambe leggermente divaricate (~20 cm), braccia staccate dal corpo (~30°).</li>
+            <li id="lblPhotoInst2"><b>Abbigliamento:</b> completo da ciclismo aderente (salopette + maglia/intimo tecnico) o intimo, a tua preferenza.</li>
+            <li id="lblPhotoInst3"><b>Fotocamera:</b> posizionata ad altezza ombelico (~90-100 cm da terra), a 2.5 - 3 metri, inquadratura intera dalla testa ai piedi.</li>
+            <li style="color:#059669; font-weight:600;" id="lblPhotoPrivacy">🔒 <b>Privacy garantita:</b> elaborazione 100% in locale nel browser. Nessuna foto viene inviata a server esterni.</li>
+          </ul>
+        </div>
+
+        <!-- Input Actions (Upload or Camera Snapshot) -->
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px;">
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none">
+          <button class="btn btn-solid" id="btnUploadPhotoFile" style="padding:10px 18px; font-size:13px;">📁 Carica Foto</button>
+          <button class="btn btn-accent" id="btnStartPhotoCam" style="padding:10px 18px; font-size:13px;">📷 Scatta con Timer (5s)</button>
+        </div>
+
+        <!-- Live Camera Viewfinder (for taking snapshot) -->
+        <div id="photoCamContainer" style="display:none; position:relative; width:100%; max-width:480px; margin:0 auto 16px; border-radius:8px; overflow:hidden; background:#000;">
+          <video id="photoCamVideo" playsinline muted style="width:100%; height:auto; display:block;"></video>
+          <div class="countdown-overlay" id="photoCamCountdown" style="display:none;">
+            <div class="countdown-number" id="photoCountdownNum">5</div>
+          </div>
+          <div style="position:absolute; bottom:12px; left:0; right:0; text-align:center;">
+            <button class="btn btn-solid" id="btnTriggerPhotoSnap" style="background:#DC2626; color:#fff; font-weight:700;">📸 Scatta Ora</button>
+            <button class="btn btn-outline" id="btnCancelPhotoCam" style="margin-left:8px; background:#1E293B; color:#fff;">Annulla</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Processing Spinner / Status -->
+      <div id="photoProcessingIndicator" style="display:none; text-align:center; padding:30px 10px;">
+        <div class="spinner" style="display:inline-block; width:36px; height:36px; border:3px solid #E2E8F0; border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+        <p style="margin-top:12px; font-size:13px; font-family:var(--mono); color:var(--ink-2);" id="lblPhotoProcessing">Analisi MediaPipe dei punti corporei in corso...</p>
+      </div>
+
+      <!-- Error Message -->
+      <div id="photoErrorMsg" style="display:none; background:#FEF2F2; border:1px solid #F87171; border-radius:6px; padding:12px; margin-bottom:14px; color:#991B1B; font-size:12px;"></div>
+
+      <!-- Step 2: Review Canvas & Metric Extraction -->
+      <div id="photoResultsContainer" style="display:none;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:start;">
+          <!-- Left: Canvas with Skeletons & Segment Overlays -->
+          <div style="background:#0F172A; border-radius:6px; overflow:hidden; border:1px solid #334155; text-align:center;">
+            <canvas id="photoReviewCanvas" width="600" height="750" style="width:100%; height:auto; max-height:420px; object-fit:contain; display:block;"></canvas>
+          </div>
+
+          <!-- Right: Detected Segment Summary & Form -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <h4 style="font-size:13px; font-weight:700; font-family:var(--mono); color:var(--ink); margin:0 0 4px;" id="lblPhotoDetectedTitle">Misure Rilevate:</h4>
+
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
+              <span style="font-size:12px; font-weight:600; color:#10B981;" id="lblPhotoResCavallo">Cavallo (Inseam):</span>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <input type="number" id="photoResCavallo" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+                <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
+              </div>
+            </div>
+
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
+              <span style="font-size:12px; font-weight:600; color:#0284C7;" id="lblPhotoResFemore">Femore (Thigh):</span>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <input type="number" id="photoResFemore" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+                <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
+              </div>
+            </div>
+
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
+              <span style="font-size:12px; font-weight:600; color:#2563EB;" id="lblPhotoResTibia">Tibia (Lower leg):</span>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <input type="number" id="photoResTibia" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+                <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
+              </div>
+            </div>
+
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
+              <span style="font-size:12px; font-weight:600; color:#D97706;" id="lblPhotoResBusto">Busto (Torso):</span>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <input type="number" id="photoResBusto" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+                <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
+              </div>
+            </div>
+
+            <div class="photo-metric-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid var(--line); border-radius:6px;">
+              <span style="font-size:12px; font-weight:600; color:#DB2777;" id="lblPhotoResBraccio">Braccio (Arm):</span>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <input type="number" id="photoResBraccio" style="width:85px; font-family:var(--mono); font-weight:700; text-align:right; padding:4px 6px;">
+                <span style="font-size:11px; font-family:var(--mono); color:var(--muted);">mm</span>
+              </div>
+            </div>
+
+            <div style="font-size:11px; color:var(--muted); line-height:1.4; margin-top:4px; font-style:italic;" id="lblPhotoSitBonesNote">
+              Nota: La larghezza delle ossa ischiatiche non è visibile da foto e va rilevata tramite l'impronta su cartone.
+            </div>
+
+            <button class="btn btn-outline" id="btnRetakePhoto" style="margin-top:8px; font-size:12px;">🔄 Carica o Scatta un'altra foto</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="btnCancelPhotoWizard">Annulla</button>
+      <button class="btn btn-solid" id="btnApplyPhotoMeasurements" style="display:none; background:#10B981; color:#fff; font-weight:600;">✅ Applica alla Scheda Dati</button>
     </div>
   </dialog>
 
