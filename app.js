@@ -237,6 +237,40 @@ let webcamStream = null;
 let demoAnimationTimer = null;
 let dualVideoSync = { syncOffset: 0, isSynced: false };
 
+function getCameraErrorMessage(error) {
+  const errorKey = {
+    NotAllowedError: "statusCameraPermissionDenied",
+    SecurityError: "statusCameraPermissionDenied",
+    NotFoundError: "statusCameraNotFound",
+    NotReadableError: "statusCameraInUse",
+    AbortError: "statusCameraInUse",
+    OverconstrainedError: "statusCameraNotFound"
+  }[error?.name] || "statusCameraError";
+  return I18N.t(errorKey);
+}
+
+async function requestCameraStream(facingMode, dimensions) {
+  if (!window.isSecureContext) {
+    throw new Error("Camera access requires a secure context.");
+  }
+  if (!navigator.mediaDevices?.getUserMedia) {
+    throw new Error("Camera API unavailable.");
+  }
+
+  const preferredConstraints = {
+    video: { ...dimensions, facingMode: { ideal: facingMode } },
+    audio: false
+  };
+  try {
+    return await navigator.mediaDevices.getUserMedia(preferredConstraints);
+  } catch (error) {
+    if (error.name !== "OverconstrainedError" && error.name !== "NotFoundError") {
+      throw error;
+    }
+    return navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+  }
+}
+
 function saveToLocalStorage() {
   try {
     if (typeof ProfileManager !== "undefined") {
@@ -1179,8 +1213,8 @@ function initVideoModule() {
         stopWebcam();
         btnCamera.textContent = I18N.t("btnToggleCamOn");
       } else {
-        startWebcam();
-        btnCamera.textContent = I18N.t("btnToggleCamOff");
+        const started = await startWebcam();
+        if (started) btnCamera.textContent = I18N.t("btnToggleCamOff");
       }
     });
   }
@@ -1332,10 +1366,7 @@ async function startWebcam() {
   const canvas = document.getElementById("poseCanvas");
   const btnRec = document.getElementById("btnRecordVideo");
   try {
-    webcamStream = await navigator.mediaDevices.getUserMedia({
-      video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "environment" },
-      audio: false
-    });
+    webcamStream = await requestCameraStream("environment", { width: { ideal: 1280 }, height: { ideal: 720 } });
     video.srcObject = webcamStream;
     video.play();
     video.onloadedmetadata = () => {
@@ -1348,8 +1379,10 @@ async function startWebcam() {
       }
       if (btnRec) btnRec.style.display = "inline-block";
     };
+    return true;
   } catch (err) {
-    alert(I18N.t("statusCameraError"));
+    alert(getCameraErrorMessage(err));
+    return false;
   }
 }
 
@@ -1611,10 +1644,7 @@ async function startPhotoCamera() {
   const countdownNum = document.getElementById("photoCountdownNum");
 
   try {
-    photoCamStream = await navigator.mediaDevices.getUserMedia({
-      video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" },
-      audio: false
-    });
+    photoCamStream = await requestCameraStream("user", { width: { ideal: 1280 }, height: { ideal: 960 } });
     if (video) {
       video.srcObject = photoCamStream;
       video.play();
@@ -1642,7 +1672,7 @@ async function startPhotoCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(I18N.t("statusCameraError"));
+    alert(getCameraErrorMessage(err));
   }
 }
 
@@ -1889,9 +1919,7 @@ async function startBikePhotoCamera() {
   if (!container || !video) return;
 
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: "environment" }
-    });
+    const stream = await requestCameraStream("environment", { width: { ideal: 1920 }, height: { ideal: 1080 } });
     bikePhotoCamStream = stream;
     video.srcObject = stream;
     await video.play();
@@ -1914,7 +1942,7 @@ async function startBikePhotoCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(I18N.t("statusCameraError"));
+    alert(getCameraErrorMessage(err));
   }
 }
 
@@ -2095,9 +2123,7 @@ async function startSitBoneCamera() {
   if (!container || !video) return;
 
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: "environment" }
-    });
+    const stream = await requestCameraStream("environment", { width: { ideal: 1920 }, height: { ideal: 1080 } });
     sitBoneCamStream = stream;
     video.srcObject = stream;
     await video.play();
@@ -2120,7 +2146,7 @@ async function startSitBoneCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(I18N.t("statusCameraError"));
+    alert(getCameraErrorMessage(err));
   }
 }
 
@@ -2288,9 +2314,7 @@ async function startFootFlareCamera() {
   if (!container || !video) return;
 
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: "environment" }
-    });
+    const stream = await requestCameraStream("environment", { width: { ideal: 1920 }, height: { ideal: 1080 } });
     footCamStream = stream;
     video.srcObject = stream;
     await video.play();
@@ -2313,7 +2337,7 @@ async function startFootFlareCamera() {
       }, 1000);
     }
   } catch (err) {
-    alert(I18N.t("statusCameraError"));
+    alert(getCameraErrorMessage(err));
   }
 }
 
